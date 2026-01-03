@@ -16,6 +16,7 @@ import ArticlesButton from '@/components/UI/Button';
 // import { ChromePicker } from 'react-color';
 // import { useSocketStore } from '@/hooks/useSocketStore';
 import { useStore } from '@/hooks/useStore';
+import { useGameStore } from '@/hooks/useGameStore';
 
 // import GameScoreboard from 'components/Games/GameScoreboard'
 
@@ -56,6 +57,12 @@ export default function LobbyPage() {
     const creditsModal = useStore((state) => state.creditsModal)
     const setCreditsModal = useStore((state) => state.setCreditsModal)
 
+    const setGameOver = useGameStore((state) => state.setGameOver)
+
+    useEffect(() => {
+        setGameOver(false)
+    }, [])
+
     return (
 
         <div className="game-landing-page">
@@ -69,7 +76,9 @@ export default function LobbyPage() {
                 /> */}
             </div>
 
-            <div className="container d-flex flex-column-reverse flex-lg-row justify-content-center align-items-center">
+            <div className="container d-flex flex-column justify-content-center align-items-center">
+
+                <img src="img/icon.png" height={200} alt="Logo" />
 
                 <div
                     className="card card-articles card-sm mb-3 mb-lg-0"

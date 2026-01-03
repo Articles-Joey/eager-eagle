@@ -112,6 +112,13 @@ export const useGameStore = create((set) => ({
         }))
     },
 
+    canvasClicked: false,
+    setCanvasClicked: (newValue) => {
+        set((prev) => ({
+            canvasClicked: newValue
+        }))
+    },
+
     teleport: false,
     setTeleport: (newValue) => {
         set((prev) => ({

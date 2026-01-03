@@ -32,6 +32,10 @@ export const useStore = create()(
 
       },
       setCharacter: (value) => set({ character: value }),
+
+      sidebar: true,
+      toggleSidebar: () => set({ sidebar: !get().sidebar }),
+      setSidebar: (value) => set({ sidebar: value }),
       
       musicVolume: 0.5,
       setMusicVolume: (value) => set({ musicVolume: value }),

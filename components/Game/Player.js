@@ -43,6 +43,7 @@ function Player(props) {
     const setPlayerLocation = useGameStore((state) => state.setPlayerLocation)
     const setGameOver = useGameStore((state) => state.setGameOver)
     const gameOver = useGameStore((state) => state.gameOver)
+    const canvasClicked = useGameStore((state) => state.canvasClicked)
 
     // const {
     //     touchControls, setTouchControls
@@ -241,7 +242,7 @@ function Player(props) {
 
         let vy = vel.current[1]
 
-        if (jump) {
+        if (jump || canvasClicked) {
             if (!jumpPressed.current) {
                 jumpPressed.current = true
 

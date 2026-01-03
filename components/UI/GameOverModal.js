@@ -4,6 +4,8 @@ import ArticlesButton from "./Button";
 import { useGameStore } from "@/hooks/useGameStore";
 import { useHotkeys } from "react-hotkeys-hook";
 
+import "@/styles/components/GameOverModal.scss"
+
 export default function GameOverModal({
     show,
     setShow
@@ -24,6 +26,7 @@ export default function GameOverModal({
             className="articles-modal game-over-modal"
             size='md'
             show={showModal}
+            backdropClassName="game-over-modal-backdrop"
             centered
             onExited={() => {
                 setShow(false)

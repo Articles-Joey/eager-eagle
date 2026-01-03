@@ -21,6 +21,7 @@ import Player from "./Player";
 import { useStore } from "@/hooks/useStore";
 // import { ModelBuildingOne } from "../Models/Building 1";
 import ObstacleManager from "./ObstacleManager";
+import { useGameStore } from "@/hooks/useGameStore";
 // import Npcs from "./Players";
 
 const game_name = 'Eager Eagle'
@@ -51,9 +52,21 @@ const game_key = 'eager-eagle'
 function GameCanvas(props) {
 
     const debug = useStore((state) => state.debug)
+    const setCanvasClicked = useGameStore((state) => state.setCanvasClicked)
 
     return (
-        <Canvas camera={{ position: [0, 20, 20], fov: 50 }}>
+        <Canvas
+            camera={{
+                position: [30, 3, 0],
+                fov: 50
+            }}
+            onPointerDown={() => {
+                setCanvasClicked(true)
+            }}
+            onPointerUp={() => {
+                setCanvasClicked(false)
+            }}
+        >
 
             <OrbitControls
             // autoRotate={gameState?.status == 'In Lobby'}

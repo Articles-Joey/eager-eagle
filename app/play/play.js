@@ -21,6 +21,7 @@ import { useControllerStore } from '@/hooks/useControllerStore';
 import LeftPanelContent from '@/components/UI/LeftPanel';
 // import { useSocketStore } from '@/hooks/useSocketStore';
 import { useGameStore } from '@/hooks/useGameStore';
+import { useStore } from '@/hooks/useStore';
 
 const GameCanvas = dynamic(() => import('@/components/Game/GameCanvas'), {
     ssr: false,
@@ -53,7 +54,7 @@ export default function GamePage() {
     const serverGameState = useGameStore((state) => state.serverGameState)
     const setServerGameState = useGameStore((state) => state.setServerGameState)
 
-
+    const sidebar = useStore((state) => state.sidebar)
 
     const [showMenu, setShowMenu] = useState(false)
 
@@ -86,7 +87,7 @@ export default function GamePage() {
     return (
 
         <div
-            className={`${game_key}-game-page ${isFullscreen && 'fullscreen'}`}
+            className={`${game_key}-game-page ${isFullscreen && 'fullscreen'} ${sidebar ? 'sidebar-enabled' : ''}`}
             id={`${game_key}-game-page`}
         >
 

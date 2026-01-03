@@ -10,7 +10,13 @@ const BUILDING_COUNT = 5
 const GAP = 20
 
 export default function ObstacleManager() {
-    const { addDistance, distance, maxDistance, setMaxDistance, gameOver } = useGameStore()
+
+    // const { addDistance, distance, maxDistance, setMaxDistance, gameOver } = useGameStore()
+    const addDistance = useGameStore((state) => state.addDistance)
+    const distance = useGameStore((state) => state.distance)
+    const maxDistance = useGameStore((state) => state.maxDistance)
+    const setMaxDistance = useGameStore((state) => state.setMaxDistance)
+    const gameOver = useGameStore((state) => state.gameOver)
     
     // Initialize buildings with staggered positions
     const [buildings, setBuildings] = useState(() => {

@@ -49,15 +49,12 @@ export default function LeftPanelContent(props) {
     const toggleDarkMode = useStore((state) => state.toggleDarkMode)
     // const setDarkMode = useStore((state) => state.setDarkMode)
 
-    const {
-        cameraMode, setCameraMode,
-        teleport, setTeleport,
-        playerLocation, setPlayerLocation,
-        // maxHeight, setMaxHeight,
-        shift,
-        // touchControls, setTouchControls
-    } = useGameStore()
+    const sidebar = useStore((state) => state.sidebar)
+    const toggleSidebar = useStore((state) => state.toggleSidebar)
 
+    const cameraMode = useGameStore((state) => state.cameraMode)
+    const setCameraMode = useGameStore((state) => state.setCameraMode)
+    const setTeleport = useGameStore((state) => state.setTeleport)
     const maxDistance = useGameStore((state) => state.maxDistance)
     const distance = useGameStore((state) => state.distance)
 
@@ -105,9 +102,9 @@ export default function LeftPanelContent(props) {
                         <ArticlesButton
                             className="w-50"
                             small
-                            active={false}
+                            active={sidebar}
                             onClick={() => {
-                                // setShowMenu(prev => !prev)
+                                toggleSidebar()
                             }}
                         >
                             <i className="fad fa-arrow-alt-square-left"></i>

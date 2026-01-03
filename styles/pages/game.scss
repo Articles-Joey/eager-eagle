@@ -86,7 +86,7 @@
         bottom: 50px;
         left: 0;
         width: 100%;
-        top: 50px;
+        top: 0px;
         // height: calc(100vh - 50px);
         z-index: 2;
         background-color: rgba(0, 0, 0, 0.75);
@@ -98,6 +98,10 @@
 
         &.show {
             transform: translateY(0);
+        }
+
+        @include media-breakpoint-up(lg) {
+            display: none;
         }
 
     }
