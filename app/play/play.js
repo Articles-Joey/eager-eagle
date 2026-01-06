@@ -54,9 +54,13 @@ export default function GamePage() {
     const serverGameState = useGameStore((state) => state.serverGameState)
     const setServerGameState = useGameStore((state) => state.setServerGameState)
 
-    const sidebar = useStore((state) => state.sidebar)
+    const distance = useGameStore((state) => state.distance)
 
-    const [showMenu, setShowMenu] = useState(false)
+    const sidebar = useStore((state) => state.sidebar)
+    const showMenu = useStore((state) => state.showMenu)
+    const setShowMenu = useStore((state) => state.setShowMenu)
+
+    // const [showMenu, setShowMenu] = useState(false)
 
     // const [touchControlsEnabled, setTouchControlsEnabled] = useLocalStorageNew("game:touchControlsEnabled", false)
 
@@ -81,50 +85,57 @@ export default function GamePage() {
         isFullscreen,
         requestFullscreen,
         exitFullscreen,
-        setShowMenu
+        // setShowMenu
     }
 
     return (
 
         <div
             className={`${game_key}-game-page ${isFullscreen && 'fullscreen'} ${sidebar ? 'sidebar-enabled' : ''}`}
-            id={`${game_key}-game-page`}
+        // id={`${game_key}-game-page`}
         >
 
-            <div className="menu-bar card card-articles p-1 justify-content-center">
+            <div className=''>
+                <div className="menu-bar card card-articles p-1 justify-content-center border-0 rounded-0">
 
-                <div className='flex-header align-items-center'>
+                    <div className='flex-header align-items-center justify-content-center'>
 
-                    <ArticlesButton
-                        small
-                        active={showMenu}
-                        onClick={() => {
-                            setShowMenu(prev => !prev)
-                        }}
-                    >
-                        <i className="fad fa-bars"></i>
-                        <span>Menu</span>
-                    </ArticlesButton>
+                        <ArticlesButton
+                            // small
+                            active={showMenu}
+                            onClick={() => {
+                                setShowMenu(!showMenu)
+                            }}
+                        >
+                            <i className="fad fa-bars"></i>
+                            <span>Menu</span>
+                        </ArticlesButton>
 
-                    <div>
-                        {/* Y: {(playerLocation?.y || 0)} */}
+
+
                     </div>
 
                 </div>
-
             </div>
 
-            <div className={`mobile-menu ${showMenu && 'show'}`}>
-                <LeftPanelContent
-                    {...panelProps}
-                />
+            <div className={`mobile-menu ${(showMenu || (!sidebar && showMenu)) && 'show'}`}>
+                <div
+                    style={{
+                        maxWidth: '300px',
+                        margin: '0 auto'
+                    }}
+                >
+                    <LeftPanelContent
+                        {...panelProps}
+                    />
+                </div>
             </div>
 
             {/* <TouchControls
                 touchControlsEnabled={touchControlsEnabled}
             /> */}
 
-            <div className='panel-left card rounded-0 d-none d-lg-flex'>
+            <div className='panel-left card rounded-0'>
 
                 <LeftPanelContent
                     {...panelProps}
@@ -143,6 +154,10 @@ export default function GamePage() {
             </div> */}
 
             <div className='canvas-wrap'>
+
+                {!sidebar && <div className='distance-badge badge bg-black text-white border'>
+                    Distance: {distance}
+                </div>}
 
                 <GameCanvas
                     key={sceneKey}

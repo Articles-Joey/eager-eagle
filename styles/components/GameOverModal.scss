@@ -1,14 +1,19 @@
 @use "@/styles/components/global.scss" as *;
 
-.game-over-modal, .game-over-modal-backdrop {
+.game-over-modal,
+.game-over-modal-backdrop {
     --bs-modal-zindex: 1;
     --bs-backdrop-zindex: 1;
     height: initial;
-    bottom: 50px;
+    bottom: 50px!important;
 
-    @include media-breakpoint-up(lg) {
-        bottom: 0px;
-        left: 300px;
+    &.sidebar-enabled {
+        bottom: 0px !important;
+        left: 300px !important;
+        // @include media-breakpoint-up(lg) {
+        //     bottom: 0px!important;
+        //     left: 300px!important;
+        // }
     }
 
 }

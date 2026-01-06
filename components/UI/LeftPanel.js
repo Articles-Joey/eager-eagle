@@ -25,11 +25,11 @@ export default function LeftPanelContent(props) {
         isFullscreen,
         requestFullscreen,
         exitFullscreen,
-        setShowMenu
+        // setShowMenu
     } = props;
 
     const {
-        touchControls: touchControlsEnabled, 
+        touchControls: touchControlsEnabled,
         setTouchControls: setTouchControlsEnabled
     } = useTouchControlsStore()
 
@@ -38,6 +38,9 @@ export default function LeftPanelContent(props) {
     // } = useSocketStore(state => ({
     //     socket: state.socket,
     // }));
+
+    // const showMenu = useStore((state) => state.showMenu)
+    const setShowMenu = useStore((state) => state.setShowMenu)
 
     const debug = useStore((state) => state.debug)
     const toggleDebug = useStore((state) => state.toggleDebug)
@@ -72,6 +75,9 @@ export default function LeftPanelContent(props) {
                         <Link
                             href={'/'}
                             className="w-50"
+                            onClick={() => {
+                                setShowMenu(false)
+                            }}
                         >
                             <ArticlesButton
                                 className="w-100"
@@ -109,6 +115,17 @@ export default function LeftPanelContent(props) {
                         >
                             <i className="fad fa-arrow-alt-square-left"></i>
                             <span>Sidebar</span>
+                        </ArticlesButton>
+
+                        <ArticlesButton
+                            small
+                            className="w-50"
+                            onClick={() => {
+                                toggleDarkMode()
+                            }}
+                        >
+                            <i className="fad fa-eye-dropper"></i>
+                            <span>{darkMode ? ' Dark Mode' : 'Light Mode'}</span>
                         </ArticlesButton>
 
                     </div>
@@ -360,10 +377,6 @@ export default function LeftPanelContent(props) {
                                 </DropdownButton>
                             </div>
 
-                        </div>
-
-                        <div className='d-flex'>
-
                             <div className='w-50'>
 
                                 <ArticlesButton
@@ -416,62 +429,11 @@ export default function LeftPanelContent(props) {
 
                             </div>
 
-                            <div className='w-50'>
+                        </div>
 
-                                <ArticlesButton
-                                    small
-                                    className="w-100"
-                                    onClick={() => {
-                                        toggleDarkMode()
-                                    }}
-                                >
-                                    <i className="fad fa-eye-dropper"></i>
-                                    <span>{darkMode ? ' Dark Mode' : 'Light Mode'}</span>
-                                </ArticlesButton>
+                        <div className='d-flex'>
 
-                                {/* <DropdownButton
-                                    variant="articles w-100"
-                                    size='sm'
-                                    id="dropdown-basic-button"
-                                    className="dropdown-articles"
-                                    title={
-                                        <span>
-                                            <i className="fad fa-eye-dropper"></i>
-                                            <span>Theme</span>
-                                        </span>
-                                    }
-                                >
 
-                                    <div style={{ maxHeight: '600px', overflowY: 'auto', width: '200px' }}>
-
-                                        {[
-                                            {
-                                                name: 'Dark',
-                                            },
-                                            {
-                                                name: 'Light',
-                                            }
-                                        ]
-                                            .map(location =>
-                                                <Dropdown.Item
-                                                    key={location.name}
-                                                    active={cameraMode == location.name}
-                                                    onClick={() => {
-                                                        setCameraMode(location.name)
-                                                        setShowMenu(false)
-                                                    }}
-                                                    className="d-flex justify-content-between"
-                                                >
-                                                    <i className="fad fa-camera"></i>
-                                                    {location.name}
-                                                </Dropdown.Item>
-                                            )}
-
-                                    </div>
-
-                                </DropdownButton> */}
-
-                            </div>
 
                         </div>
 

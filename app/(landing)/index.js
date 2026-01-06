@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useContext, useState } from 'react';
+import { useEffect, useContext, useState, useRef, Suspense } from 'react';
 
 import Image from 'next/image'
 import Link from 'next/link'
@@ -14,9 +14,14 @@ import ArticlesButton from '@/components/UI/Button';
 // import { useLocalStorageNew } from '@/hooks/useLocalStorageNew';
 // import IsDev from '@/components/IsDev';
 // import { ChromePicker } from 'react-color';
+import { useControllerStore } from '@/hooks/useControllerStore';
 // import { useSocketStore } from '@/hooks/useSocketStore';
 import { useStore } from '@/hooks/useStore';
 import { useGameStore } from '@/hooks/useGameStore';
+import GameScoreboard from '@/components/GameScoreboard';
+import ArticlesAd from '@/components/ArticlesAd';
+import { useLandingNavigation } from '@/hooks/useLandingNavigation';
+import ReturnToLauncherButton from '@/components/UI/ReturnToLauncherButton';
 
 // import GameScoreboard from 'components/Games/GameScoreboard'
 
@@ -52,12 +57,19 @@ export default function LobbyPage() {
     const setInfoModal = useStore((state) => state.setInfoModal)
 
     const settingsModal = useStore((state) => state.showSettingsModal)
-    const setSettingsModal = useStore((state) => state.setShowSettingsModal)
+    const setSettingsModal = useStore((state) => state.setSettingsModal)
 
     const creditsModal = useStore((state) => state.creditsModal)
     const setCreditsModal = useStore((state) => state.setCreditsModal)
 
     const setGameOver = useGameStore((state) => state.setGameOver)
+
+    const controllerState = useControllerStore((state) => state.controllerState)
+
+    const hasController = controllerState?.buttons?.length > 0
+
+    const elementsRef = useRef([]);
+    useLandingNavigation(elementsRef);
 
     useEffect(() => {
         setGameOver(false)
@@ -76,13 +88,16 @@ export default function LobbyPage() {
                 /> */}
             </div>
 
-            <div className="container d-flex flex-column justify-content-center align-items-center">
+            <div
+                className="container d-flex flex-column justify-content-center align-items-center"
+                style={{ "width": "20rem" }}
+            >
 
                 <img src="img/icon.png" height={200} alt="Logo" />
 
                 <div
-                    className="card card-articles card-sm mb-3 mb-lg-0"
-                    style={{ "width": "20rem" }}
+                    className="card card-articles card-sm mb-3"
+
                 >
 
                     {/* <div style={{ position: 'relative', height: '200px' }}>
@@ -105,15 +120,27 @@ export default function LobbyPage() {
                                     setValue={setNickname}
                                     noMargin
                                 /> */}
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    value={nickname}
-                                    placeholder="Enter your nickname"
-                                    onChange={(e) => {
-                                        setNickname(e.target.value)
-                                    }}
-                                />
+                                <div className='d-flex'>
+                                    <input
+                                        ref={el => elementsRef.current[0] = el}
+                                        type="text"
+                                        className="form-control"
+                                        value={nickname}
+                                        placeholder="Enter your nickname"
+                                        onChange={(e) => {
+                                            setNickname(e.target.value)
+                                        }}
+                                    />
+                                    <ArticlesButton
+                                        className="ms-2"
+                                        small
+                                        onClick={() => {
+                                            useStore.getState().randomNickname()
+                                        }}
+                                    >
+                                        <i className="fas fa-random me-0"></i>
+                                    </ArticlesButton>
+                                </div>
                             </div>
 
                             <div className='mt-1' style={{ fontSize: '0.8rem' }}>Visible to all players</div>
@@ -123,17 +150,53 @@ export default function LobbyPage() {
 
                     <div className="card-body">
 
-                        <Link href={{
-                            pathname: `/play`
-                        }}>
+                        <Link
+                            href={{
+                                pathname: `/play`
+                            }}
+                        >
                             <ArticlesButton
+                                ref={el => elementsRef.current[1] = el}
+                                // active={activeIndex === 0}
                                 className={`w-100`}
-                                small
+                                // small
+                                large
                             >
                                 <i className="fas fa-play"></i>
                                 Play Single Player
                             </ArticlesButton>
                         </Link>
+
+                        <div
+                            className={`mt-3 controller-button-group ${hasController && 'hasController'}`}
+                        >
+                            <Link href={{
+                                pathname: `/play`
+                            }}>
+                                <ArticlesButton
+                                    ref={el => elementsRef.current[2] = el}
+                                    // active={activeIndex === 1}
+                                    className={`w-50`}
+                                    small
+                                >
+                                    <i className="fas fa-palette"></i>
+                                    Customize
+                                </ArticlesButton>
+                            </Link>
+                            <Link href={{
+                                pathname: `/play`
+                            }}>
+                                <ArticlesButton
+                                    ref={el => elementsRef.current[3] = el}
+                                    // active={activeIndex === 2}
+                                    className={`w-50`}
+                                    small
+                                >
+                                    <i className="fas fa-coins"></i>
+                                    Rewards
+                                </ArticlesButton>
+                            </Link>
+                        </div>
 
                         {/* <div className="fw-bold mb-1 small text-center">
                             {lobbyDetails.players.length || 0} player{lobbyDetails.players.length > 1 && 's'} in the lobby.
@@ -204,9 +267,11 @@ export default function LobbyPage() {
 
                     </div>
 
-                    <div className="card-footer d-flex flex-wrap justify-content-center">
+                    <div className={`card-footer landing-footer d-flex flex-wrap justify-content-center ${hasController && "hasController"}`}>
 
                         <ArticlesButton
+                            ref={el => elementsRef.current[4] = el}
+                            // active={activeIndex === 3}
                             className={`w-50`}
                             small
                             onClick={() => {
@@ -218,6 +283,8 @@ export default function LobbyPage() {
                         </ArticlesButton>
 
                         <ArticlesButton
+                            ref={el => elementsRef.current[5] = el}
+                            // active={activeIndex === 4}
                             className={`w-50`}
                             small
                             onClick={() => {
@@ -234,6 +301,8 @@ export default function LobbyPage() {
                             className="w-50"
                         >
                             <ArticlesButton
+                                ref={el => elementsRef.current[6] = el}
+                                // active={activeIndex === 5}
                                 className={`w-100`}
                                 onClick={() => {
 
@@ -258,6 +327,8 @@ export default function LobbyPage() {
                         </Link> */}
 
                         <ArticlesButton
+                            ref={el => elementsRef.current[7] = el}
+                            // active={activeIndex === 6}
                             className={`w-50`}
                             small
                             onClick={() => {
@@ -272,9 +343,18 @@ export default function LobbyPage() {
 
                 </div>
 
-                {/* <GameScoreboard game="Death Race" /> */}
+                <Suspense>
+                    <ReturnToLauncherButton />
+                </Suspense>
 
-                {/* <Ad section={"Games"} section_id={game_name} /> */}
+                <GameScoreboard
+                    game="Eager Eagle"
+                />
+
+                <ArticlesAd
+                    section={"Games"}
+                    section_id={game_name}
+                />
 
             </div>
         </div>

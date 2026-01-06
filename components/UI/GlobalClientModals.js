@@ -37,13 +37,15 @@ export default function GlobalClientModals() {
     const infoModal = useStore((state) => state.infoModal)
     const setInfoModal = useStore((state) => state.setInfoModal)
 
-    const showSettingsModal = useStore((state) => state.showSettingsModal)
-    const setShowSettingsModal = useStore((state) => state.setShowSettingsModal)
+    const settingsModal = useStore((state) => state.settingsModal)
+    const setSettingsModal = useStore((state) => state.setSettingsModal)
 
     const creditsModal = useStore((state) => state.creditsModal)
     const setCreditsModal = useStore((state) => state.setCreditsModal)
 
-    const { gameOver, setGameOver } = useGameStore()
+    // const { gameOver, setGameOver } = useGameStore()
+    const gameOver = useGameStore((state) => state.gameOver)
+    const setGameOver = useGameStore((state) => state.setGameOver)
 
     return (
         <>
@@ -76,10 +78,10 @@ export default function GlobalClientModals() {
                 />
             }
 
-            {showSettingsModal &&
+            {settingsModal &&
                 <SettingsModal
-                    show={showSettingsModal}
-                    setShow={setShowSettingsModal}
+                    show={settingsModal}
+                    setShow={setSettingsModal}
                 />
             }
 

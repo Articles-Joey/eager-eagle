@@ -16,6 +16,7 @@ import LayoutClient from './layout-client';
 import { Suspense } from 'react';
 import GlobalClientModals from '@/components/UI/GlobalClientModals';
 import DarkModeHandler from '@/components/UI/DarkModeHandler';
+import ControllerInputHandler from '@/components/ControllerInputHandler';
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -46,7 +47,8 @@ export default function RootLayout({ children }) {
       </head>
 
       <body
-      // className={`${geistSans.variable} ${geistMono.variable}`}
+        // className={`${geistSans.variable} ${geistMono.variable}`}
+        id={`eager-eagle-game-page`}
       >
 
         <Suspense>
@@ -60,6 +62,8 @@ export default function RootLayout({ children }) {
 
           {/* <AudioHandler /> */}
           <DarkModeHandler />
+
+          <ControllerInputHandler />
 
         </Suspense>
 

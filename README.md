@@ -12,6 +12,12 @@ First, run the development server:
 npm run dev
 ```
 
+# Articles Launcher Compatibility/Checklist
+✅ Controller Support
+✅ ReturnToLauncherButton
+✅ Scoreboard
+✅ Ads
+
 ## Multiplayer
 
 Aiming to have multiplayer via P2P and Websockets. Websocket backend code is not in this repo or available at this time. P2P code will be included here.

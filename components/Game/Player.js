@@ -109,7 +109,7 @@ function Player(props) {
         collisionFilterGroup: 1, // Player is in group 1
         collisionFilterMask: 2, // Player can collide with group 2 (rocks)
         onCollide: (e) => {
-            console.log("Player Collided", e?.body.userData?.number)
+            console.log("Player Collided", e?.body.userData?.type)
             setGameOver(true)
         }
     }))

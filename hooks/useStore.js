@@ -7,9 +7,20 @@ export const useStore = create()(
 
       nickname: "",
       setNickname: (value) => set({ nickname: value }),
+      randomNickname: (value) => {
+        const adjectives = ["Swift", "Brave", "Clever", "Mighty", "Fierce", "Nimble", "Wise", "Bold"];
+        const animals = ["Eagle", "Raven", "Crow", "Falcon", "Dragon", "Hawk"];
+        const randomAdjective = adjectives[Math.floor(Math.random() * adjectives.length)];
+        const randomAnimal = animals[Math.floor(Math.random() * animals.length)];
+        set({ nickname: `${randomAdjective}${randomAnimal}` })
+      },
 
       darkMode: true,
       toggleDarkMode: () => set({ darkMode: !get().darkMode }),
+      setDarkMode: (value) => set({ darkMode: value }),
+
+      graphicsQuality: "Medium",
+      setGraphicsQuality: (value) => set({ graphicsQuality: value }),
 
       theme: null,
       // toggleTheme: () => set({ theme: !get().theme }),
@@ -28,7 +39,7 @@ export const useStore = create()(
           enabled: true,
           type: 'Standard',
           color: 'red'
-        }        
+        }
 
       },
       setCharacter: (value) => set({ character: value }),
@@ -36,7 +47,10 @@ export const useStore = create()(
       sidebar: true,
       toggleSidebar: () => set({ sidebar: !get().sidebar }),
       setSidebar: (value) => set({ sidebar: value }),
-      
+
+      showMenu: false,
+      setShowMenu: (value) => set({ showMenu: value }),
+
       musicVolume: 0.5,
       setMusicVolume: (value) => set({ musicVolume: value }),
 
@@ -59,6 +73,15 @@ export const useStore = create()(
     {
       name: 'eager-eagle-game-store', // name of the item in the storage (must be unique)
       // storage: createJSONStorage(() => sessionStorage), // (optional) by default, 'localStorage' is used
+      partialize: (state) =>
+        Object.fromEntries(
+          Object.entries(state).filter(([key]) => ![
+            'infoModal',
+            'settingsModal',
+            'creditsModal',
+            'showMenu'
+          ].includes(key))
+        ),
     },
   ),
 )

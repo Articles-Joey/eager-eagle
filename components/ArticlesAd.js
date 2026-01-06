@@ -9,20 +9,20 @@ export default function ArticlesAd({ style }) {
     const darkMode = useStore((state) => state.darkMode)
 
     useEffect(() => {
-        if (!process.env.NEXT_PUBLIC_ARTICLES_OAUTH_ID) {
-            console.log("NEXT_PUBLIC_ARTICLES_OAUTH_ID is not set, skipping Articles Media Sign In button initialization.");
-        }
+        // if (!process.env.NEXT_PUBLIC_ARTICLES_OAUTH_ID) {
+        //     console.log("NEXT_PUBLIC_ARTICLES_OAUTH_ID is not set, skipping Articles Media Sign In button initialization.");
+        // }
     }, []);
 
     return (
-        <div>
+        <div className="">
 
             <Script
                 src={process.env.NODE_ENV === "development" ?
-                    `${process.env.NEXT_PUBLIC_LOCAL_ACCOUNTS_ADDRESS}/js/ad.js`
-                    // "https://accounts.articles.media/js/signin.js"
+                    // `${process.env.NEXT_PUBLIC_LOCAL_ACCOUNTS_ADDRESS}/js/ad.js`
+                    `https://accounts.articles.media/js/ad.js?darkMode=${darkMode}`
                     :
-                    "https://accounts.articles.media/js/ad.js"
+                    `https://accounts.articles.media/js/ad.js?darkMode=${darkMode}`
                 }
                 strategy="afterInteractive"
                 data-version="1"
@@ -40,7 +40,7 @@ export default function ArticlesAd({ style }) {
             />
 
             <div className={"articles-media-ad"}>
-
+                
             </div>
 
         </div>

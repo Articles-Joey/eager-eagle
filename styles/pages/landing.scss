@@ -23,14 +23,58 @@
         }
     }
 
-    .ad-wrap {
+    // .ad-wrap {
+    //     margin-top: 1rem;
+
+    //     @include media-breakpoint-up(lg) {
+    //         margin-top: 0rem;
+    //         display: block;
+    //         position: absolute;
+    //         right: 1rem;
+    //         top: 50%;
+    //         transform: translateY(-50%);
+    //     }
+    // }
+
+    .controller-button-group {
+        &.hasController {
+            flex-direction: column;
+
+            >* {
+                display: block;
+                width: 100% !important;
+
+                button {
+                    width: 100% !important;
+                }
+            }
+        }
+    }
+
+    .landing-footer {
+
+        &.hasController {
+            flex-direction: column;
+
+            >* {
+                display: block;
+                width: 100% !important;
+
+                button {
+                    width: 100% !important;
+                }
+            }
+        }
+    }
+
+    .game-scoreboard {
         margin-top: 1rem;
 
         @include media-breakpoint-up(lg) {
             margin-top: 0rem;
             display: block;
             position: absolute;
-            right: 1rem;
+            left: 1rem;
             top: 50%;
             transform: translateY(-50%);
         }

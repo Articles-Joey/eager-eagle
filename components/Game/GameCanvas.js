@@ -109,7 +109,9 @@ function GameCanvas(props) {
 
                     <Player />
 
-                    <ObstacleManager />
+                    <group>
+                        <ObstacleManager />
+                    </group>
 
                     {/* <Npc /> */}
                     {/* <Npcs /> */}
@@ -141,6 +143,7 @@ function Ground() {
         position: [0, -5, 0],
         collisionFilterGroup: 2, // Rocks are in group 2
         collisionFilterMask: 1,  // Rocks collide with players
+        userData: { type: 'ground' }
     }))
 
     const base_link = `${process.env.NEXT_PUBLIC_CDN}games/Assassin/`
