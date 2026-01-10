@@ -49,6 +49,8 @@ const game_key = 'eager-eagle'
 //     );
 // };
 
+// TODO Create a collision item that fips the camera 90deg at a time
+
 function GameCanvas(props) {
 
     const debug = useStore((state) => state.debug)

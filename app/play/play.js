@@ -22,6 +22,7 @@ import LeftPanelContent from '@/components/UI/LeftPanel';
 // import { useSocketStore } from '@/hooks/useSocketStore';
 import { useGameStore } from '@/hooks/useGameStore';
 import { useStore } from '@/hooks/useStore';
+import { useTouchControlsStore } from '@/hooks/useTouchControlsStore';
 
 const GameCanvas = dynamic(() => import('@/components/Game/GameCanvas'), {
     ssr: false,
@@ -59,6 +60,9 @@ export default function GamePage() {
     const sidebar = useStore((state) => state.sidebar)
     const showMenu = useStore((state) => state.showMenu)
     const setShowMenu = useStore((state) => state.setShowMenu)
+    const setIsDiving = useStore((state) => state.setIsDiving)
+
+    const enabled = useTouchControlsStore(state => state.enabled)
 
     // const [showMenu, setShowMenu] = useState(false)
 
@@ -154,6 +158,22 @@ export default function GamePage() {
             </div> */}
 
             <div className='canvas-wrap'>
+
+                {enabled &&
+                    <button
+                        className="dive-button"
+                        onMouseDown={() => setIsDiving(true)}
+                        onMouseUp={() => setIsDiving(false)}
+                        onMouseLeave={() => setIsDiving(false)}
+                        onTouchStart={(e) => {
+                            // e.preventDefault();
+                            setIsDiving(true)
+                        }}
+                        onTouchEnd={() => setIsDiving(false)}
+                    >
+                        <i className="fas fa-arrow-down"></i>
+                    </button>
+                }
 
                 {!sidebar && <div className='distance-badge badge bg-black text-white border'>
                     Distance: {distance}

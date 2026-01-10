@@ -10,6 +10,11 @@ import "bootstrap/dist/css/bootstrap.min.css";
 // import "./globals.css";
 import "@/styles/index.scss";
 
+import "@articles-media/articles-dev-box/dist/style.css";
+
+// import GlobalHead from "@articles-media/articles-dev-box/Global/GlobalHead";
+// import GlobalHead from '@articles-media/articles-dev-box/GlobalHead';
+
 // import SocketLogicHandler from "@/components/SocketLogicHandler";
 // import PeerHandler from '@/components/PeerHandler';
 import LayoutClient from './layout-client';
@@ -39,10 +44,15 @@ export default function RootLayout({ children }) {
 
       <head>
 
-        <link
+        {/* <link
           rel="stylesheet"
           href={`${process.env.NEXT_PUBLIC_CDN}fonts/fontawsome/css/all.min.css`}
-        />
+        /> */}
+        {/* <GlobalHead /> */}
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
+        <link href="https://fonts.googleapis.com/css2?family=Metal+Mania&display=swap" rel="stylesheet"></link>
 
       </head>
 

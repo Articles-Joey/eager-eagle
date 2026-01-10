@@ -1,7 +1,9 @@
 "use client"
-import { useEffect } from "react";
+// import { useEffect } from "react";
 // import { useStore } from "@/hooks/useStore";
-import { useStore } from "@/hooks/useStore";
+// import { useStore } from "@/hooks/useStore";
+
+import GlobalBody from '@articles-media/articles-dev-box/GlobalBody';
 
 export default function LayoutClient({ children }) {
 
@@ -26,6 +28,7 @@ export default function LayoutClient({ children }) {
 
     return (
         <>
+            <GlobalBody />
         </>
     );
 }

@@ -3,13 +3,16 @@ import { useCallback, useEffect, useState } from "react"
 function actionByKey(key) {
 	const keyActionMap = {
 		Space: 'jump',
+        ShiftLeft: 'dive',
+        ShiftRight: 'dive'
 	}
 	return keyActionMap[key]
 }
 
 export const useKeyboard = () => {
 	const [actions, setActions] = useState({
-		jump: false,
+        jump: false,
+        dive: false
 	})
 
 	const handleKeyDown = useCallback((e) => {

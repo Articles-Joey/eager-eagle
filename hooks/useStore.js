@@ -69,6 +69,13 @@ export const useStore = create()(
       creditsModal: false,
       setCreditsModal: (value) => set({ creditsModal: value }),
 
+      disableDeath: false,
+      toggleDisableDeath: () => set({ disableDeath: !get().disableDeath  }),
+      setDisableDeath: (value) => set({ disableDeath: value }),
+
+      isDiving: false,
+      setIsDiving: (value) => set({ isDiving: value }),
+
     }),
     {
       name: 'eager-eagle-game-store', // name of the item in the storage (must be unique)
@@ -79,7 +86,8 @@ export const useStore = create()(
             'infoModal',
             'settingsModal',
             'creditsModal',
-            'showMenu'
+            'showMenu',
+            'isDiving',
           ].includes(key))
         ),
     },

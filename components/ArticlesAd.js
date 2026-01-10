@@ -26,7 +26,8 @@ export default function ArticlesAd({ style }) {
                 }
                 strategy="afterInteractive"
                 data-version="1"
-                // data-articles-color-mode="Dark"
+                data-articles-color-mode={darkMode}
+                data-articles-button-style={darkMode ? "dark" : "light"}
                 // data-articles-button-style={style}
                 // data-articles-client-id={process.env.NEXT_PUBLIC_ARTICLES_OAUTH_ID}
                 // data-articles-redirect-uri="https://localhost:3002"

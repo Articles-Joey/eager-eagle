@@ -13,7 +13,10 @@ npm run dev
 ```
 
 # Articles Launcher Compatibility/Checklist
+✅ Keyboard Support
 ✅ Controller Support
+✅ Touch Support
+✅ Articles Dev Box & GlobalBody
 ✅ ReturnToLauncherButton
 ✅ Scoreboard
 ✅ Ads

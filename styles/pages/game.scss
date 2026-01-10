@@ -172,6 +172,28 @@
         width: 100vw;
         height: calc(100vh - 0px);
 
+        .dive-button {
+            position: absolute;
+            right: calc(50px + 1rem);
+            bottom: calc(50px + 1rem);
+            z-index: 1;
+            background-color: rgba(0, 0, 0, 0.75);
+            border: none;
+            color: white;
+            width: 100px;
+            height: 100px;
+            opacity: 0.8;
+            border-radius: 25px;
+            font-size: 1.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            &:hover {
+                opacity: 1.0;
+            }
+        }
+
         .distance-badge {
             position: absolute;
             left: 50%;

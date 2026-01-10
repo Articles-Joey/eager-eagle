@@ -39,11 +39,15 @@ function Player(props) {
     // const { setPlayerData, teleportPlayer, setTeleportPlayer } = props;
 
     const character = useStore((state) => state.character)
+    const isDiving = useStore((state) => state.isDiving)
 
     const setPlayerLocation = useGameStore((state) => state.setPlayerLocation)
     const setGameOver = useGameStore((state) => state.setGameOver)
     const gameOver = useGameStore((state) => state.gameOver)
     const canvasClicked = useGameStore((state) => state.canvasClicked)
+
+    // const toggleDisableDeath = useStore((state) => state.toggleDisableDeath)
+    // const disableDeath = useStore((state) => state.disableDeath)
 
     // const {
     //     touchControls, setTouchControls
@@ -97,7 +101,7 @@ function Player(props) {
 
     // }, [teleport]);
 
-    const { jump } = useKeyboard()
+    const { jump, dive } = useKeyboard()
 
     // const { camera } = useThree()
 
@@ -109,8 +113,19 @@ function Player(props) {
         collisionFilterGroup: 1, // Player is in group 1
         collisionFilterMask: 2, // Player can collide with group 2 (rocks)
         onCollide: (e) => {
+
+            const disableDeath = useStore.getState().disableDeath
+
             console.log("Player Collided", e?.body.userData?.type)
-            setGameOver(true)
+
+            if (disableDeath) {
+                console.log("Death disabled, ignoring collision")
+            } else {
+                console.log("Death")
+                setGameOver(true)
+            }
+
+
         }
     }))
 
@@ -122,6 +137,8 @@ function Player(props) {
 
     const vel = useRef([0, 0, 0])
     const jumpPressed = useRef(false)
+    const jumpRotation = useRef(0)
+
     useEffect(() => {
         api.velocity.subscribe((v) => vel.current = v)
     }, [api.velocity])
@@ -242,6 +259,8 @@ function Player(props) {
 
         let vy = vel.current[1]
 
+        jumpRotation.current = jumpRotation.current * 0.85
+
         if (jump || canvasClicked) {
             if (!jumpPressed.current) {
                 jumpPressed.current = true
@@ -250,10 +269,35 @@ function Player(props) {
                 //     vy = JUMP_FORCE
                 // }
                 vy = JUMP_FORCE
+                jumpRotation.current = degToRad(45)
 
             }
         } else {
             jumpPressed.current = false
+        }
+
+        if (dive || isDiving) {
+            vy -= 0.5; // Accelerate downward
+            if (playerModelRef.current) {
+                // Determine target rotation
+                const targetRotation = degToRad(-45);
+
+                // You might need to handle the specific rotation for each model separately or wrap them differently 
+                // but since we're rotating the container, let's try rotating the container's X axis.
+                // However, current container `playerModelRef` is also where position is set. `api.velocity` sets velocity.
+
+                // Let's modify the rotation of the inner models or the group itself.
+                // But the group position is updated every frame from api.position subscription.
+                // If I set rotation on playerModelRef.current here, it should stick for this frame.
+
+                playerModelRef.current.rotation.x = targetRotation
+            }
+        } else {
+            // Reset rotation
+            if (playerModelRef.current) {
+                // Smoothly return to 0? Or just set 0.
+                playerModelRef.current.rotation.x = jumpRotation.current;
+            }
         }
 
         api.velocity.set(0, vy, 0)
@@ -269,12 +313,12 @@ function Player(props) {
             <group
                 ref={playerModelRef}
             >
-                
+
                 {character.model === "Eagle" &&
-                    <ModelEagle 
-                    scale={0.02}
-                    position={[0, -0.5, -0.7]}
-                />
+                    <ModelEagle
+                        scale={0.02}
+                        position={[0, -0.5, -0.7]}
+                    />
                 }
                 {character.model === "Airplane" &&
                     <ModelAirplane
@@ -283,7 +327,7 @@ function Player(props) {
                         position={[0, 0, 0]}
                     />
                 }
-                
+
             </group>
 
             {/* <mesh ref={playerReachRef}>

@@ -28,10 +28,13 @@ export default function LeftPanelContent(props) {
         // setShowMenu
     } = props;
 
-    const {
-        touchControls: touchControlsEnabled,
-        setTouchControls: setTouchControlsEnabled
-    } = useTouchControlsStore()
+    // const {
+    //     touchControls: touchControlsEnabled,
+    //     setTouchControls: setTouchControlsEnabled
+    // } = useTouchControlsStore()
+
+    const enabled = useTouchControlsStore(state => state.enabled)
+    const setEnabled = useTouchControlsStore(state => state.setEnabled)
 
     // const {
     //     socket,
@@ -51,6 +54,9 @@ export default function LeftPanelContent(props) {
     const darkMode = useStore((state) => state.darkMode)
     const toggleDarkMode = useStore((state) => state.toggleDarkMode)
     // const setDarkMode = useStore((state) => state.setDarkMode)
+
+    const toggleDisableDeath = useStore((state) => state.toggleDisableDeath)
+    const disableDeath = useStore((state) => state.disableDeath)
 
     const sidebar = useStore((state) => state.sidebar)
     const toggleSidebar = useStore((state) => state.toggleSidebar)
@@ -209,9 +215,9 @@ export default function LeftPanelContent(props) {
                             <ArticlesButton
                                 size="sm"
                                 className="w-50"
-                                active={!touchControlsEnabled}
+                                active={!enabled}
                                 onClick={() => {
-                                    setTouchControlsEnabled(false)
+                                    setEnabled(false)
                                 }}
                             >
                                 <i className="fad fa-redo"></i>
@@ -221,9 +227,9 @@ export default function LeftPanelContent(props) {
                             <ArticlesButton
                                 size="sm"
                                 className="w-50"
-                                active={touchControlsEnabled}
+                                active={enabled}
                                 onClick={() => {
-                                    setTouchControlsEnabled(true)
+                                    setEnabled(true)
                                 }}
                             >
                                 <i className="fad fa-redo"></i>
@@ -266,71 +272,18 @@ export default function LeftPanelContent(props) {
                             </ArticlesButton>
                         </div>
 
-                        <div className='d-flex'>
+                        <div className='d-flex flex-wrap'>
 
-                            {/* Teleport Mode */}
-                            <div className='w-50 d-none'>
-                                <DropdownButton
-                                    variant="articles w-100"
-                                    size='sm'
-                                    id="dropdown-basic-button"
-                                    className="dropdown-articles"
-                                    title={
-                                        <span>
-                                            <i className="fad fa-ufo"></i>
-                                            <span>Teleport</span>
-                                        </span>
-                                    }
-                                >
-
-                                    <div style={{ maxHeight: '600px', overflowY: 'auto', width: '200px' }}>
-
-                                        {[
-                                            {
-                                                name: '20',
-                                                position: [-4, 20, 0]
-                                            },
-                                            {
-                                                name: '30',
-                                                position: [-4, 31, 0]
-                                            },
-                                            {
-                                                name: '100',
-                                                position: [-4, 101, 0]
-                                            },
-                                            {
-                                                name: 'Sprint 1 116',
-                                                position: [-28, 116.5, 0]
-                                            },
-                                            {
-                                                name: 'Sprint 2 132',
-                                                position: [27, 131, 0]
-                                            }
-                                        ]
-                                            .map(location =>
-                                                <Dropdown.Item
-                                                    key={location.name}
-                                                    onClick={() => {
-                                                        setTeleport(location.position)
-                                                        setShowMenu(false)
-                                                    }}
-                                                    className="d-flex justify-content-between"
-                                                >
-
-                                                    {/* {maxHeight > location.position[1] ?
-                                                        <i className="fad fa-unlock"></i>
-                                                        :
-                                                        <i className="fad fa-lock"></i>
-                                                    } */}
-
-                                                    {location.name}
-                                                </Dropdown.Item>
-                                            )}
-
-                                    </div>
-
-                                </DropdownButton>
-                            </div>
+                            <ArticlesButton
+                                size="sm"
+                                className="w-50"
+                                onClick={() => {
+                                    toggleDisableDeath()
+                                }}
+                            >
+                                <i className="fad fa-redo"></i>
+                                {disableDeath ? 'Enable' : 'Disable'} Death
+                            </ArticlesButton>
 
                             {/* Camera Mode */}
                             <div className='w-50'>
