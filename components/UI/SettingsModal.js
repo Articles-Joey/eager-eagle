@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import { Modal, Form } from "react-bootstrap"
 
 import ArticlesButton from "@/components/UI/Button";
 import { useStore } from "@/hooks/useStore";
+
+import B from "@articles-media/articles-gamepad-helper/dist/img/Xbox UI/B.svg";
+import { useModalNavigation } from "@/hooks/useModalNavigation";
 
 export default function FourFrogsSettingsModal({
     show,
@@ -16,11 +19,14 @@ export default function FourFrogsSettingsModal({
 
     const [tab, setTab] = useState('Graphics')
 
-    const darkMode = useStore(state => state.darkMode)  
+    const darkMode = useStore(state => state.darkMode)
     const setDarkMode = useStore(state => state.setDarkMode)
 
-    const graphicsQuality = useStore(state => state.graphicsQuality)  
+    const graphicsQuality = useStore(state => state.graphicsQuality)
     const setGraphicsQuality = useStore(state => state.setGraphicsQuality)
+
+    const elementsRef = useRef([]);
+    useModalNavigation(elementsRef, () => setShowModal(false));
 
     return (
         <>
@@ -81,27 +87,27 @@ export default function FourFrogsSettingsModal({
                             <>
                                 <div className="my-3">
                                     <ArticlesButton
-                                            variant="outline-dark"
-                                            className=""
-                                            active={darkMode}
-                                            onClick={() => { 
-                                                // setGraphicsQuality(level)
-                                                setDarkMode(true)
-                                            }}
-                                        >
-                                            Dark Mode
-                                        </ArticlesButton>
-                                        <ArticlesButton
-                                            variant="outline-dark"
-                                            className="me-2"
-                                            active={!darkMode}
-                                            onClick={() => { 
-                                                // setGraphicsQuality(level)
-                                                setDarkMode(false)
-                                            }}
-                                        >
-                                            Light Mode
-                                        </ArticlesButton>
+                                        variant="outline-dark"
+                                        className=""
+                                        active={darkMode}
+                                        onClick={() => {
+                                            // setGraphicsQuality(level)
+                                            setDarkMode(true)
+                                        }}
+                                    >
+                                        Dark Mode
+                                    </ArticlesButton>
+                                    <ArticlesButton
+                                        variant="outline-dark"
+                                        className="me-2"
+                                        active={!darkMode}
+                                        onClick={() => {
+                                            // setGraphicsQuality(level)
+                                            setDarkMode(false)
+                                        }}
+                                    >
+                                        Light Mode
+                                    </ArticlesButton>
                                 </div>
 
                                 <div className="mb-3">
@@ -112,7 +118,7 @@ export default function FourFrogsSettingsModal({
                                             className=""
                                             key={level}
                                             active={graphicsQuality == level}
-                                            onClick={() => { 
+                                            onClick={() => {
                                                 setGraphicsQuality(level)
                                             }}
                                         >
@@ -205,6 +211,7 @@ export default function FourFrogsSettingsModal({
                             }}
                         >
                             <i className="fad fa-times"></i>
+                            <img src={B.src} className="me-1" alt="Close" />
                             Close
                         </ArticlesButton>
 

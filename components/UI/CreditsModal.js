@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import { Modal } from "react-bootstrap"
 
 import ArticlesButton from "./Button";
+
+import B from "@articles-media/articles-gamepad-helper/dist/img/Xbox UI/B.svg";
+import { useModalNavigation } from "@/hooks/useModalNavigation";
 
 export default function CreditsModal({
     show,
@@ -10,6 +13,9 @@ export default function CreditsModal({
 }) {
 
     const [showModal, setShowModal] = useState(true)
+
+    const elementsRef = useRef([]);
+    useModalNavigation(elementsRef, () => setShowModal(false));
 
     return (
         <>
@@ -60,9 +66,15 @@ export default function CreditsModal({
 
                     <div></div>
 
-                    <ArticlesButton variant="outline-dark" onClick={() => {
-                        setShow(false)
-                    }}>
+                    <ArticlesButton
+                        ref={el => elementsRef.current[3] = el}
+                        variant="outline-dark"
+                        onClick={() => {
+                            setShow(false)
+                        }}
+                        className="d-flex align-items-center"
+                    >
+                        <img src={B.src} className="me-1" alt="Close" />
                         Close
                     </ArticlesButton>
 

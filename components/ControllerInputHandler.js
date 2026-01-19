@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useGameStore } from '@/hooks/useGameStore';
 import { useControllerStore } from '@/hooks/useControllerStore';
+import { useStore } from '@/hooks/useStore';
 
 export default function ControllerInputHandler() {
 
@@ -14,6 +15,7 @@ export default function ControllerInputHandler() {
     const gameOver = useGameStore((state) => state.gameOver)
     const setGameOver = useGameStore((state) => state.setGameOver)
     const setDistance = useGameStore((state) => state.setDistance)
+    const setIsDiving = useStore((state) => state.setIsDiving)
 
     const controllerState = useControllerStore((state) => state.controllerState)
     const setControllerState = useControllerStore((state) => state.setControllerState)
@@ -21,6 +23,7 @@ export default function ControllerInputHandler() {
     const setCanvasClicked = useGameStore((state) => state.setCanvasClicked)
 
     const prevJumpPressed = useRef(false)
+    const prevDivePressed = useRef(false)
 
     useEffect(() => {
         let animationFrameId;
@@ -85,16 +88,26 @@ export default function ControllerInputHandler() {
             // if (!controllerState?.buttons) return
 
             const isJumpPressed = controllerState?.buttons?.[0]?.pressed
+            
+            const diveButton = controllerState?.buttons?.[7]
+            const xButton = controllerState?.buttons?.[2]
+            const isDivePressed = diveButton?.pressed || (diveButton?.value > 0.1) || xButton?.pressed
 
             if (!gameOver) {
                 // Button A Jump
                 if (isJumpPressed && !prevJumpPressed.current) {
-                    console.log("Jump")
+                    console.log("Jump 123")
                     setCanvasClicked(true)
                 } else if (!isJumpPressed && prevJumpPressed.current) {
                     setCanvasClicked(false)
                 }
                 prevJumpPressed.current = isJumpPressed
+
+                if (isDivePressed !== prevDivePressed.current) {
+                    setIsDiving(!!isDivePressed)
+                    prevDivePressed.current = !!isDivePressed
+                }
+
                 return;
             }
 
@@ -105,7 +118,7 @@ export default function ControllerInputHandler() {
             // if (!controllerState?.buttons) return
 
             // Button A (index 0) => Play Again
-            if (controllerState?.buttons?.[0]?.pressed) {
+            if (isJumpPressed) {
                 setDistance(0)
                 setGameOver(false)
             }

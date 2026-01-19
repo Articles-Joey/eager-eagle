@@ -15,6 +15,13 @@ export const useStore = create()(
         set({ nickname: `${randomAdjective}${randomAnimal}` })
       },
 
+      nicknameKeyboard: false,
+      setNicknameKeyboard: (newValue) => {
+        set((prev) => ({
+          nicknameKeyboard: newValue
+        }))
+      },
+
       darkMode: true,
       toggleDarkMode: () => set({ darkMode: !get().darkMode }),
       setDarkMode: (value) => set({ darkMode: value }),
@@ -70,7 +77,7 @@ export const useStore = create()(
       setCreditsModal: (value) => set({ creditsModal: value }),
 
       disableDeath: false,
-      toggleDisableDeath: () => set({ disableDeath: !get().disableDeath  }),
+      toggleDisableDeath: () => set({ disableDeath: !get().disableDeath }),
       setDisableDeath: (value) => set({ disableDeath: value }),
 
       isDiving: false,

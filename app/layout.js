@@ -12,6 +12,8 @@ import "@/styles/index.scss";
 
 import "@articles-media/articles-dev-box/dist/style.css";
 
+import "@articles-media/articles-gamepad-helper/dist/articles-gamepad-helper.css";
+
 // import GlobalHead from "@articles-media/articles-dev-box/Global/GlobalHead";
 // import GlobalHead from '@articles-media/articles-dev-box/GlobalHead';
 

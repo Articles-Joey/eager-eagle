@@ -23,7 +23,7 @@ npm run dev
 
 ## Multiplayer
 
-Aiming to have multiplayer via P2P and Websockets. Websocket backend code is not in this repo or available at this time. P2P code will be included here.
+No multiplayer in this game but there is a scoreboard component so users can share scores with friends and others!
 
 ## Inspiration
 

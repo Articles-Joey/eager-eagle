@@ -34,6 +34,8 @@ import { useLandingNavigation } from '@/hooks/useLandingNavigation';
 
 import Ad from '@articles-media/articles-dev-box/Ad';
 import GameScoreboard from '@articles-media/articles-dev-box/GameScoreboard';
+import { useUserDetails, useUserToken } from '@articles-media/articles-dev-box';
+import { GamepadKeyboard, PieMenu } from '@articles-media/articles-gamepad-helper';
 
 const ReturnToLauncherButton = dynamic(() =>
     import('@articles-media/articles-dev-box').then((mod) => mod.ReturnToLauncherButton),
@@ -64,9 +66,11 @@ export default function LobbyPage() {
     // const userReduxState = false
 
     const darkMode = useStore((state) => state.darkMode)
+    const toggleDarkMode = useStore((state) => state.toggleDarkMode)
 
     const nickname = useStore(state => state.nickname)
     const setNickname = useStore(state => state.setNickname)
+    const nicknameKeyboard = useStore((state) => state.nicknameKeyboard)
 
     const infoModal = useStore((state) => state.infoModal)
     const setInfoModal = useStore((state) => state.setInfoModal)
@@ -90,9 +94,90 @@ export default function LobbyPage() {
         setGameOver(false)
     }, [])
 
+    const {
+        data: userToken,
+        error: userTokenError,
+        isLoading: userTokenLoading,
+        mutate: userTokenMutate
+    } = useUserToken(
+        "3049"
+    );
+
+    const {
+        data: userDetails,
+        error: userDetailsError,
+        isLoading: userDetailsLoading,
+        mutate: userDetailsMutate
+    } = useUserDetails({
+        token: userToken
+    });
+
     return (
 
         <div className="game-landing-page">
+
+            <GamepadKeyboard
+                disableToggle={true}
+                active={nicknameKeyboard}
+                onFinish={(text) => {
+                    console.log("FINISH KEYBOARD", text)
+                    useStore.getState().setNickname(text);
+                    useStore.getState().setNicknameKeyboard(false);
+                }}
+                onCancel={(text) => {
+                    console.log("CANCEL KEYBOARD", text)
+                    // useStore.getState().setNickname(text);
+                    useStore.getState().setNicknameKeyboard(false);
+                }}
+            />
+
+            <Suspense>
+                <PieMenu
+                    options={[
+                        {
+                            label: 'Settings',
+                            icon: 'fad fa-cog',
+                            callback: () => {
+                                setSettingsModal(prev => !prev)
+                            }
+                        },
+                        {
+                            label: 'Go Back',
+                            icon: 'fad fa-arrow-left',
+                            callback: () => {
+                                window.history.back()
+                            }
+                        },
+                        {
+                            label: 'Credits',
+                            icon: 'fad fa-info-circle',
+                            callback: () => {
+                                setCreditsModal(true)
+                            }
+                        },
+                        {
+                            label: 'Game Launcher',
+                            icon: 'fad fa-gamepad',
+                            callback: () => {
+                                window.location.href = 'https://games.articles.media';
+                            }
+                        },
+                        {
+                            label: `${darkMode ? "Light" : "Dark"} Mode`,
+                            icon: 'fad fa-palette',
+                            callback: () => {
+                                toggleDarkMode()
+                            }
+                        }
+                    ]}
+                    onFinish={(event) => {
+                        console.log("Event", event)
+                        if (event.callback) {
+                            event.callback()
+                        }
+                    }}
+                />
+            </Suspense>
 
             <div className='background-wrap'>
                 {/* <Image
@@ -109,7 +194,7 @@ export default function LobbyPage() {
 
                 <div
                     className='mx-auto'
-                    style={{ 
+                    style={{
                         "width": "20rem",
                         display: 'flex',
                         flexDirection: 'column',
@@ -155,6 +240,7 @@ export default function LobbyPage() {
                                             ref={el => elementsRef.current[0] = el}
                                             type="text"
                                             className="form-control"
+                                            id="nickname"
                                             value={nickname}
                                             placeholder="Enter your nickname"
                                             onChange={(e) => {
@@ -299,18 +385,31 @@ export default function LobbyPage() {
 
                         <div className={`card-footer landing-footer d-flex flex-wrap justify-content-center ${hasController && "hasController"}`}>
 
-                            <ArticlesButton
-                                ref={el => elementsRef.current[4] = el}
-                                // active={activeIndex === 3}
-                                className={`w-50`}
-                                small
-                                onClick={() => {
-                                    setSettingsModal(true)
-                                }}
-                            >
-                                <i className="fad fa-cog"></i>
-                                Settings
-                            </ArticlesButton>
+                            <div className='w-50 d-flex'>
+                                <ArticlesButton
+                                    ref={el => elementsRef.current[4] = el}
+                                    // active={activeIndex === 3}
+                                    className={`w-100 flex-grow-1`}
+                                    small
+                                    onClick={() => {
+                                        setSettingsModal(true)
+                                    }}
+                                >
+                                    <i className="fad fa-cog"></i>
+                                    Settings
+                                </ArticlesButton>
+                                <ArticlesButton
+                                    // ref={el => elementsRef.current[4] = el}
+                                    // active={activeIndex === 3}
+                                    className={`flex-grow-0`}
+                                    small
+                                    onClick={() => {
+                                        toggleDarkMode()
+                                    }}
+                                >
+                                    <i className="fad fa-sun"></i>
+                                </ArticlesButton>
+                            </div>
 
                             <ArticlesButton
                                 ref={el => elementsRef.current[5] = el}
@@ -392,6 +491,9 @@ export default function LobbyPage() {
                 section={"Games"}
                 section_id={game_name}
                 darkMode={darkMode ? true : false}
+                user_ad_token={userToken}
+                userDetails={userDetails}
+                userDetailsLoading={userDetailsLoading}
             />
 
         </div>

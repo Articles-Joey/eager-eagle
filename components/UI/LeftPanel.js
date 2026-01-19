@@ -67,6 +67,8 @@ export default function LeftPanelContent(props) {
     const maxDistance = useGameStore((state) => state.maxDistance)
     const distance = useGameStore((state) => state.distance)
 
+    const isDiving = useStore((state) => state.isDiving)
+
     return (
         <div className='w-100'>
 
@@ -180,7 +182,12 @@ export default function LeftPanelContent(props) {
                 <div className="card-body d-flex justify-content-between align-items-center">
 
                     <div>
-                        <div className="small text-muted">Distance: {distance}</div>
+                        <div className="small text-muted">
+                            Distance: {distance}
+                        </div>
+                        <div>
+                            D: {isDiving ? 'True' : 'False'}
+                        </div>
                     </div>
 
                     <div className="d-flex align-items-center">

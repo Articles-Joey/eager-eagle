@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 // import Image from "next/image";
 // import dynamic from 'next/dynamic'
@@ -20,6 +20,9 @@ import IsDev from "@/components/UI/IsDev";
 import ArticlesButton from "./Button";
 import Link from "next/link";
 
+import B from "@articles-media/articles-gamepad-helper/dist/img/Xbox UI/B.svg";
+import { useModalNavigation } from "@/hooks/useModalNavigation";
+
 export default function GameInfoModal({
     show,
     setShow,
@@ -34,6 +37,9 @@ export default function GameInfoModal({
     const userReduxState = false
 
     const [showVideo, setShowVideo] = useState()
+
+    const elementsRef = useRef([]);
+    useModalNavigation(elementsRef, () => setShowModal(false));
 
     return (
         <>
@@ -69,7 +75,7 @@ export default function GameInfoModal({
 
                 <Modal.Body className="flex-column p-3">
 
-                    
+
 
                 </Modal.Body>
 
@@ -80,6 +86,7 @@ export default function GameInfoModal({
                     <ArticlesButton variant="outline-dark" onClick={() => {
                         setShow(false)
                     }}>
+                        <img src={B.src} className="me-1" alt="Close" />
                         Close
                     </ArticlesButton>
 
