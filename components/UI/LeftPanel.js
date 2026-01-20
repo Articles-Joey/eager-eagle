@@ -69,6 +69,9 @@ export default function LeftPanelContent(props) {
 
     const isDiving = useStore((state) => state.isDiving)
 
+    // const settingsModal = useStore((state) => state.showSettingsModal)
+    const setSettingsModal = useStore((state) => state.setSettingsModal)
+
     return (
         <div className='w-100'>
 
@@ -123,6 +126,18 @@ export default function LeftPanelContent(props) {
                         >
                             <i className="fad fa-arrow-alt-square-left"></i>
                             <span>Sidebar</span>
+                        </ArticlesButton>
+
+                        <ArticlesButton
+                            className="w-50"
+                            small
+                            // active={}
+                            onClick={() => {
+                                setSettingsModal(true)
+                            }}
+                        >
+                            <i className="fad fa-cog"></i>
+                            <span>Settings</span>
                         </ArticlesButton>
 
                         <ArticlesButton

@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef } from "react"
 import * as THREE from "three"
 import { useGameStore } from "@/hooks/useGameStore"
 import { ModelHelicopter } from "../Models/Helicopter"
+// import { useStore } from "@/hooks/useStore"
 
 const SPAWN_DISTANCE = -50
 const DESPAWN_DISTANCE = 20
@@ -73,8 +74,8 @@ export default function MovingObstacle({ index }) {
     const bgGroupRef = useRef()
     const bgBuildings = useMemo(() => {
         return Array.from({ length: 5 }).map(() => ({
-            x: (Math.random() - 0.5) * 80, // Wider spread
-            z: -(Math.random() * 50 + 20), // 20 to 70 units behind
+            x: (Math.random() - 0.5) * 20, // Wider spread
+            z: -(Math.random() * 50 + -60), // 20 to 70 units behind
             scale: 2 + Math.random() * 3,  // 2x to 5x bigger
             rotY: Math.random() * Math.PI * 2
         }))
@@ -139,22 +140,28 @@ export default function MovingObstacle({ index }) {
         <group>
             
             {/* Background Scenery Group */}
-            <group ref={bgGroupRef}>
-                {bgBuildings.map((bg, i) => {
-                    const yPos = -Y_OFFSET + (args[1] * bg.scale) / 2 - 5 // Lower them a bit more (-5) to look buried/distant
-                    return (
-                        <group 
-                            key={i} 
-                            position={[bg.x, yPos, bg.z]} 
-                            scale={[bg.scale, bg.scale, bg.scale]} 
-                            rotation={[0, bg.rotY, 0]}
-                        >
-                            <group position={[-offset.x, -offset.y, -offset.z]}>
-                                <mesh geometry={nodes.skyscraper.geometry} material={materials.None} />
+            <group
+                position={[-50, 0, 0]}
+            >
+                <group 
+                    ref={bgGroupRef}
+                >
+                    {bgBuildings.map((bg, i) => {
+                        const yPos = -Y_OFFSET + (args[1] * bg.scale) / 2 - 2 // Lower them a bit more (-5) to look buried/distant
+                        return (
+                            <group 
+                                key={i} 
+                                position={[bg.x, yPos, bg.z]} 
+                                scale={[bg.scale, bg.scale, bg.scale]} 
+                                rotation={[0, bg.rotY, 0]}
+                            >
+                                <group position={[-offset.x, -offset.y, -offset.z]}>
+                                    <mesh geometry={nodes.skyscraper.geometry} material={materials.None} />
+                                </group>
                             </group>
-                        </group>
-                    )
-                })}
+                        )
+                    })}
+                </group>
             </group>
 
             <group ref={ref} dispose={null}>

@@ -53,6 +53,7 @@ const game_key = 'eager-eagle'
 
 function GameCanvas(props) {
 
+    const darkMode = useStore((state) => state.darkMode)
     const debug = useStore((state) => state.debug)
     const setCanvasClicked = useGameStore((state) => state.setCanvasClicked)
 
@@ -75,7 +76,12 @@ function GameCanvas(props) {
             />
 
             <Sky
-                sunPosition={[0, 100, 0]}
+                sunPosition={
+                    darkMode ?
+                        [0, -100, 0]
+                        :
+                        [0, 100, 0]
+                }
             />
 
             <ambientLight intensity={2.5} />

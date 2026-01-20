@@ -36,6 +36,8 @@ function myToFixed(i, digits) {
 
 function Player(props) {
 
+    const debug = useStore((state) => state.debug)
+
     // const { setPlayerData, teleportPlayer, setTeleportPlayer } = props;
 
     const character = useStore((state) => state.character)
@@ -345,7 +347,8 @@ function Player(props) {
                 // position={position}
                 material={material}
             >
-                <sphereGeometry args={[1, 32, 32]} />
+                
+                {debug && <sphereGeometry args={[1, 32, 32]} />}
 
                 {/* {character.model == 'Clownfish' && <ClownfishModel rotation={[0, Math.PI / 1, 0]} />}
                 {character.model == 'Bone Fish' && <BoneFishModel rotation={[0, -Math.PI / 2, 0]} />} */}

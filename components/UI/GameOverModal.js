@@ -86,6 +86,7 @@ export default function GameOverModal({
                     href={'/'}
                     // className="w-50"
                     onClick={() => {
+                        handleRestart()
                         setShowMenu(false)
                     }}
                 >

@@ -36,6 +36,7 @@ import Ad from '@articles-media/articles-dev-box/Ad';
 import GameScoreboard from '@articles-media/articles-dev-box/GameScoreboard';
 import { useUserDetails, useUserToken } from '@articles-media/articles-dev-box';
 import { GamepadKeyboard, PieMenu } from '@articles-media/articles-gamepad-helper';
+import ScoreCard from '@/components/UI/ScoreCard';
 
 const ReturnToLauncherButton = dynamic(() =>
     import('@articles-media/articles-dev-box').then((mod) => mod.ReturnToLauncherButton),
@@ -82,6 +83,7 @@ export default function LobbyPage() {
     const setCreditsModal = useStore((state) => state.setCreditsModal)
 
     const setGameOver = useGameStore((state) => state.setGameOver)
+    const maxDistance = useGameStore((state) => state.maxDistance)
 
     const controllerState = useControllerStore((state) => state.controllerState)
 
@@ -180,12 +182,22 @@ export default function LobbyPage() {
             </Suspense>
 
             <div className='background-wrap'>
-                {/* <Image
-                    src={`${process.env.NEXT_PUBLIC_CDN}games/Assassin/assassin-thumbnail.webp`}
-                    alt=""
-                    fill
-                    style={{ objectFit: 'cover', objectPosition: 'center', filter: 'blur(10px)' }}
-                /> */}
+                {darkMode ?
+                    <Image
+                        src={`/img/dark-preview.webp`}
+                        alt=""
+                        fill
+                    // style={{ objectFit: 'cover', objectPosition: 'center', filter: 'blur(10px)' }}
+                    />
+                    :
+                    <Image
+                        src={`/img/preview.webp`}
+                        alt=""
+                        fill
+                    // style={{ objectFit: 'cover', objectPosition: 'center', filter: 'blur(10px)' }}
+                    />
+                }
+
             </div>
 
             <div
@@ -209,6 +221,16 @@ export default function LobbyPage() {
                     />
 
                     <h1 className='metal-mania-regular mb-4'>{game_name}</h1>
+
+                    {maxDistance ?
+                        <div
+                            className='mb-3 d-flex align-items-stretch w-100'
+                        >
+                            <ScoreCard />
+                        </div>
+                        :
+                        null
+                    }
 
                     <div
                         className="card card-articles card-sm mb-3"

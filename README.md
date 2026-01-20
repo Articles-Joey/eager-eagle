@@ -13,13 +13,13 @@ npm run dev
 ```
 
 # Articles Launcher Compatibility/Checklist
-✅ Keyboard Support
-✅ Controller Support
-✅ Touch Support
-✅ Articles Dev Box & GlobalBody
-✅ ReturnToLauncherButton
-✅ Scoreboard
-✅ Ads
+✅ Keyboard Support  
+✅ Controller Support  
+✅ Touch Support  
+✅ Articles Dev Box & GlobalBody  
+✅ ReturnToLauncherButton  
+✅ Scoreboard  
+✅ Ads  
 
 ## Multiplayer
 
@@ -27,14 +27,13 @@ No multiplayer in this game but there is a scoreboard component so users can sha
 
 ## Inspiration
 
-[Flappy Bird](https://en.wikipedia.org/wiki/Flappy_Bird)
+[Flappy Bird](https://en.wikipedia.org/wiki/Flappy_Bird)  
 [Jetpack Joyride](https://en.wikipedia.org/wiki/Jetpack_Joyride)
 
 ## Attribution
 
-[Eagle Icon](https://www.flaticon.com/authors/maxicons)
-
-[Eagle Model - Google](https://poly.pizza/m/1Z5L1v0bfu7)
-[Airplane Model - Google](https://poly.pizza/m/8VysVKMXN2J)
-[Building One Model - Google](https://poly.pizza/m/fuAgJluDLwx)
-[Helicopter Model - Google](https://poly.pizza/m/cTzINMr0WdS)
+[Eagle Icon](https://www.flaticon.com/authors/maxicons)  
+[Eagle Model - Google](https://poly.pizza/m/1Z5L1v0bfu7)  
+[Airplane Model - Google](https://poly.pizza/m/8VysVKMXN2J)  
+[Building One Model - Google](https://poly.pizza/m/fuAgJluDLwx)  
+[Helicopter Model - Google](https://poly.pizza/m/cTzINMr0WdS)  
