@@ -23,6 +23,7 @@ import LeftPanelContent from '@/components/UI/LeftPanel';
 import { useGameStore } from '@/hooks/useGameStore';
 import { useStore } from '@/hooks/useStore';
 import { useTouchControlsStore } from '@/hooks/useTouchControlsStore';
+import AudioHandler from '@/components/Game/AudioHandler';
 
 const GameCanvas = dynamic(() => import('@/components/Game/GameCanvas'), {
     ssr: false,
@@ -99,6 +100,8 @@ export default function GamePage() {
         // id={`${game_key}-game-page`}
         >
 
+            <AudioHandler />
+
             <div className=''>
                 <div className="menu-bar card card-articles p-1 justify-content-center border-0 rounded-0">
 
@@ -114,8 +117,6 @@ export default function GamePage() {
                             <i className="fad fa-bars"></i>
                             <span>Menu</span>
                         </ArticlesButton>
-
-
 
                     </div>
 

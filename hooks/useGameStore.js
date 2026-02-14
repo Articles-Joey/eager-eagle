@@ -68,12 +68,12 @@ export const useGameStore = create((set) => ({
         }))
     },
 
-    maxDistance: 0,
-    setMaxDistance: (newValue) => {
-        set((prev) => ({
-            maxDistance: newValue
-        }))
-    },
+    // maxDistance: 0,
+    // setMaxDistance: (newValue) => {
+    //     set((prev) => ({
+    //         maxDistance: newValue
+    //     }))
+    // },
 
     distance: 0,
     setDistance: (newValue) => {

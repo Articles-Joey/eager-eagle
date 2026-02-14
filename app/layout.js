@@ -37,7 +37,7 @@ import ControllerInputHandler from '@/components/ControllerInputHandler';
 
 export const metadata = {
   title: "Eager Eagle",
-  description: "",
+  description: "Get the furthest you can while avoiding the obstacles. Unlock new customizations and abilities by unlocking distance milestones.",
 };
 
 export default function RootLayout({ children }) {

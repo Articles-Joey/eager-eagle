@@ -64,7 +64,7 @@ export default function LeftPanelContent(props) {
     const cameraMode = useGameStore((state) => state.cameraMode)
     const setCameraMode = useGameStore((state) => state.setCameraMode)
     const setTeleport = useGameStore((state) => state.setTeleport)
-    const maxDistance = useGameStore((state) => state.maxDistance)
+    const maxDistance = useStore((state) => state.maxDistance)
     const distance = useGameStore((state) => state.distance)
 
     const isDiving = useStore((state) => state.isDiving)
@@ -122,25 +122,38 @@ export default function LeftPanelContent(props) {
                             active={sidebar}
                             onClick={() => {
                                 toggleSidebar()
+                                setShowMenu(false)
                             }}
                         >
                             <i className="fad fa-arrow-alt-square-left"></i>
                             <span>Sidebar</span>
                         </ArticlesButton>
 
-                        <ArticlesButton
-                            className="w-50"
-                            small
-                            // active={}
-                            onClick={() => {
-                                setSettingsModal(true)
-                            }}
-                        >
-                            <i className="fad fa-cog"></i>
-                            <span>Settings</span>
-                        </ArticlesButton>
+                        <div className="w-50 d-flex">
+                            <ArticlesButton
+                                className="flex-grow-1"
+                                small
+                                // active={}
+                                onClick={() => {
+                                    setSettingsModal(true)
+                                }}
+                            >
+                                <i className="fad fa-cog"></i>
+                                <span>Settings</span>
+                            </ArticlesButton>
+                            <ArticlesButton
+                                className=""
+                                small
+                                // active={}
+                                onClick={() => {
+                                    toggleDarkMode()
+                                }}
+                            >
+                                {darkMode ? <i className="fad fa-sun"></i> : <i className="fad fa-moon"></i>}
+                            </ArticlesButton>
+                        </div>
 
-                        <ArticlesButton
+                        {/* <ArticlesButton
                             small
                             className="w-50"
                             onClick={() => {
@@ -149,7 +162,7 @@ export default function LeftPanelContent(props) {
                         >
                             <i className="fad fa-eye-dropper"></i>
                             <span>{darkMode ? ' Dark Mode' : 'Light Mode'}</span>
-                        </ArticlesButton>
+                        </ArticlesButton> */}
 
                     </div>
 

@@ -109,27 +109,86 @@ function Player(props) {
 
     const [ref, api] = useSphere(() => ({
         mass: 1,
-        args: [1],
+        args: [0.5],
         position: [0, 2, 0],
         fixedRotation: true,
         collisionFilterGroup: 1, // Player is in group 1
         collisionFilterMask: 2, // Player can collide with group 2 (rocks)
         onCollide: (e) => {
-
             const disableDeath = useStore.getState().disableDeath
-
             console.log("Player Collided", e?.body.userData?.type)
-
+            if (hitAudioRef.current) {
+                hitAudioRef.current.currentTime = 0;
+                hitAudioRef.current.play().catch(() => { });
+            }
             if (disableDeath) {
                 console.log("Death disabled, ignoring collision")
             } else {
                 console.log("Death")
                 setGameOver(true)
             }
-
-
         }
     }))
+
+    const windAudioRef = useRef(null);
+    const jumpAudioRef = useRef(null);
+    const hitAudioRef = useRef(null);
+    const windFadeTimeout = useRef(null);
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            if (!windAudioRef.current) {
+                windAudioRef.current = new Audio('audio/Wind.mp3');
+                windAudioRef.current.loop = true;
+                windAudioRef.current.volume = 0;
+            }
+            if (!jumpAudioRef.current) {
+                jumpAudioRef.current = new Audio('audio/Fly.mp3');
+            }
+            if (!hitAudioRef.current) {
+                hitAudioRef.current = new Audio('audio/Hit.mp3');
+            }
+        }
+        return () => {
+            if (windAudioRef.current) {
+                windAudioRef.current.pause();
+                windAudioRef.current = null;
+            }
+            if (jumpAudioRef.current) {
+                jumpAudioRef.current = null;
+            }
+            if (hitAudioRef.current) {
+                hitAudioRef.current = null;
+            }
+            if (windFadeTimeout.current) {
+                clearTimeout(windFadeTimeout.current);
+            }
+        };
+    }, []);
+
+    // Wind audio fade logic
+    useEffect(() => {
+        if (!windAudioRef.current) return;
+        if (isDiving) {
+            windAudioRef.current.volume = 1;
+            windAudioRef.current.play().catch(() => { });
+        } else {
+            // Fade out
+            let fadeStep = 0.05;
+            let fadeInterval = 50;
+            function fade() {
+                if (!windAudioRef.current) return;
+                let v = windAudioRef.current.volume;
+                if (v > 0) {
+                    windAudioRef.current.volume = Math.max(0, v - fadeStep);
+                    windFadeTimeout.current = setTimeout(fade, fadeInterval);
+                } else {
+                    windAudioRef.current.pause();
+                }
+            }
+            fade();
+        }
+    }, [isDiving]);
 
     const material = new MeshPhysicalMaterial({
         color: 'blue',
@@ -266,13 +325,12 @@ function Player(props) {
         if (jump || canvasClicked) {
             if (!jumpPressed.current) {
                 jumpPressed.current = true
-
-                // if (Math.abs(vy) < 0.05) {
-                //     vy = JUMP_FORCE
-                // }
                 vy = JUMP_FORCE
                 jumpRotation.current = degToRad(45)
-
+                if (jumpAudioRef.current) {
+                    jumpAudioRef.current.currentTime = 0;
+                    jumpAudioRef.current.play().catch(() => { });
+                }
             }
         } else {
             jumpPressed.current = false
@@ -347,8 +405,8 @@ function Player(props) {
                 // position={position}
                 material={material}
             >
-                
-                {debug && <sphereGeometry args={[1, 32, 32]} />}
+
+                {debug && <sphereGeometry args={[0.5, 32, 32]} />}
 
                 {/* {character.model == 'Clownfish' && <ClownfishModel rotation={[0, Math.PI / 1, 0]} />}
                 {character.model == 'Bone Fish' && <BoneFishModel rotation={[0, -Math.PI / 2, 0]} />} */}

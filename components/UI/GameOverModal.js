@@ -15,7 +15,9 @@ export default function GameOverModal({
 }) {
 
     const [showModal, setShowModal] = useState(true)
-    const { distance, maxDistance, setDistance, setMaxDistance } = useGameStore()
+    const { distance, setDistance } = useGameStore()
+
+    const maxDistance = useStore((state) => state.maxDistance)
 
     const sidebar = useStore((state) => state.sidebar)
     const showMenu = useStore((state) => state.showMenu)

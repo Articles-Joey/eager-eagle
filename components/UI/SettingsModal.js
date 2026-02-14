@@ -6,6 +6,7 @@ import ArticlesButton from "@/components/UI/Button";
 import { useStore } from "@/hooks/useStore";
 
 import B from "@articles-media/articles-gamepad-helper/dist/img/Xbox UI/B.svg";
+import Y from "@articles-media/articles-gamepad-helper/dist/img/Xbox UI/Y.svg";
 import { useModalNavigation } from "@/hooks/useModalNavigation";
 
 export default function FourFrogsSettingsModal({
@@ -19,11 +20,7 @@ export default function FourFrogsSettingsModal({
 
     const [tab, setTab] = useState('Graphics')
 
-    const darkMode = useStore(state => state.darkMode)
-    const setDarkMode = useStore(state => state.setDarkMode)
 
-    const graphicsQuality = useStore(state => state.graphicsQuality)
-    const setGraphicsQuality = useStore(state => state.setGraphicsQuality)
 
     const elementsRef = useRef([]);
     useModalNavigation(elementsRef, () => setShowModal(false));
@@ -84,95 +81,13 @@ export default function FourFrogsSettingsModal({
 
                     <div className="p-2">
                         {tab == 'Graphics' &&
-                            <>
-                                <div className="my-3">
-                                    <ArticlesButton
-                                        variant="outline-dark"
-                                        className=""
-                                        active={darkMode}
-                                        onClick={() => {
-                                            // setGraphicsQuality(level)
-                                            setDarkMode(true)
-                                        }}
-                                    >
-                                        Dark Mode
-                                    </ArticlesButton>
-                                    <ArticlesButton
-                                        variant="outline-dark"
-                                        className="me-2"
-                                        active={!darkMode}
-                                        onClick={() => {
-                                            // setGraphicsQuality(level)
-                                            setDarkMode(false)
-                                        }}
-                                    >
-                                        Light Mode
-                                    </ArticlesButton>
-                                </div>
-
-                                <div className="mb-3">
-                                    <div className="mb-0">Graphics Quality</div>
-                                    {['Low', 'Medium', 'High'].map(level =>
-                                        <ArticlesButton
-                                            variant="outline-dark"
-                                            className=""
-                                            key={level}
-                                            active={graphicsQuality == level}
-                                            onClick={() => {
-                                                setGraphicsQuality(level)
-                                            }}
-                                        >
-                                            {level}
-                                        </ArticlesButton>
-                                    )
-                                    }
-                                </div>
-                            </>
+                            <GraphicsSettings />
                         }
                         {tab == 'Controls' &&
-                            <div>
-                                {[
-                                    {
-                                        action: 'Jump',
-                                        defaultKeyboardKey: 'Space'
-                                    },
-                                    {
-                                        action: 'Use Item',
-                                        defaultKeyboardKey: 'Enter'
-                                    },
-                                ].map(obj =>
-                                    <div key={obj.action}>
-                                        <div className="flex-header border-bottom pb-1 mb-1">
-
-                                            <div>
-                                                <div>{obj.action}</div>
-                                                {obj.emote && <div className="span badge border bg-dark">Emote</div>}
-                                            </div>
-
-                                            <div>
-
-                                                <div className="badge badge-hover border bg-articles me-1">{obj.defaultKeyboardKey}</div>
-
-                                                <ArticlesButton
-                                                    className=""
-                                                    small
-                                                >
-                                                    Change Key
-                                                </ArticlesButton>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
+                            <ControlsSettings />
                         }
                         {tab == 'Audio' &&
-                            <>
-                                <Form.Label className="mb-0">Game Volume</Form.Label>
-                                <Form.Range />
-                                <Form.Label className="mb-0">Music Volume</Form.Label>
-                                <Form.Range />
-                            </>
+                            <AudioSettings />
                         }
                         {tab == 'Chat' &&
                             <>
@@ -199,38 +114,27 @@ export default function FourFrogsSettingsModal({
 
                 <Modal.Footer className="justify-content-between">
 
-                    {/* <div></div> */}
+                    <ArticlesButton
+                        variant="outline-danger "
+                        onClick={() => {
+                            setShow(false)
+                        }}
+                    >
+                        <i className="fad fa-eraser"></i>
+                        <img src={Y.src} className="me-1" alt="Close" />
+                        Reset
+                    </ArticlesButton>
 
-
-                    <div>
-
-                        <ArticlesButton
-                            variant="outline-dark"
-                            onClick={() => {
-                                setShow(false)
-                            }}
-                        >
-                            <i className="fad fa-times"></i>
-                            <img src={B.src} className="me-1" alt="Close" />
-                            Close
-                        </ArticlesButton>
-
-                        <ArticlesButton
-                            variant="outline-danger "
-                            onClick={() => {
-                                setShow(false)
-                            }}
-                        >
-                            <i className="fad fa-eraser"></i>
-                            Reset
-                        </ArticlesButton>
-
-                    </div>
-
-
-                    {/* <ArticlesButton variant="success" onClick={() => setValue(false)}>
-                    Save
-                </ArticlesButton> */}
+                    <ArticlesButton
+                        variant="outline-dark"
+                        onClick={() => {
+                            setShow(false)
+                        }}
+                    >
+                        <i className="fad fa-times"></i>
+                        <img src={B.src} className="me-1" alt="Close" />
+                        Close
+                    </ArticlesButton>
 
                 </Modal.Footer>
 
@@ -238,4 +142,153 @@ export default function FourFrogsSettingsModal({
         </>
     )
 
+}
+
+function GraphicsSettings() {
+
+    const darkMode = useStore(state => state.darkMode)
+    const setDarkMode = useStore(state => state.setDarkMode)
+
+    const graphicsQuality = useStore(state => state.graphicsQuality)
+    const setGraphicsQuality = useStore(state => state.setGraphicsQuality)
+
+    return (
+        <>
+            <div className="my-3">
+                <ArticlesButton
+                    variant="articles"
+                    className="border "
+                    active={darkMode}
+                    onClick={() => {
+                        // setGraphicsQuality(level)
+                        setDarkMode(true)
+                    }}
+                >
+                    Dark Mode
+                </ArticlesButton>
+                <ArticlesButton
+                    variant="articles"
+                    className="border me-2"
+                    active={!darkMode}
+                    onClick={() => {
+                        // setGraphicsQuality(level)
+                        setDarkMode(false)
+                    }}
+                >
+                    Light Mode
+                </ArticlesButton>
+            </div>
+
+            <div className="mb-3">
+                <div className="mb-0">Graphics Quality</div>
+                {['Low', 'Medium', 'High'].map(level =>
+                    <ArticlesButton
+                        variant="articles"
+                        className=""
+                        key={level}
+                        active={graphicsQuality == level}
+                        onClick={() => {
+                            setGraphicsQuality(level)
+                        }}
+                    >
+                        {level}
+                    </ArticlesButton>
+                )
+                }
+            </div>
+        </>
+    )
+}
+
+function AudioSettings() {
+
+    const setAudioSettings = useStore(state => state.setAudioSettings)
+    const audioSettings = useStore(state => state.audioSettings)
+
+    return (
+        <>
+
+            <div className="my-3">
+                <ArticlesButton
+                    variant="articles"
+                    className=""
+                    active={!audioSettings.enabled}
+                    onClick={() => {
+                        // setGraphicsQuality(level)
+                        setAudioSettings({ ...audioSettings, enabled: false })
+                    }}
+                >
+                    Disabled
+                </ArticlesButton>
+                <ArticlesButton
+                    variant="articles"
+                    className="me-2"
+                    active={audioSettings.enabled}
+                    onClick={() => {
+                        // setGraphicsQuality(level)
+                        setAudioSettings({ ...audioSettings, enabled: true })
+                    }}
+                >
+                    Enabled
+                </ArticlesButton>
+            </div>
+
+            <Form.Label className="mb-0">Game Volume - {audioSettings?.soundEffectsVolume}</Form.Label>
+            <Form.Range
+                value={audioSettings?.soundEffectsVolume}
+                onChange={(e) => setAudioSettings({
+                    ...audioSettings,
+                    soundEffectsVolume: Number(e.target.value),
+                })}
+            />
+            <Form.Label className="mb-0">Music Volume - {audioSettings?.backgroundMusicVolume}</Form.Label>
+            <Form.Range
+                value={audioSettings?.backgroundMusicVolume}
+                onChange={(e) => setAudioSettings({
+                    ...audioSettings,
+                    backgroundMusicVolume: Number(e.target.value),
+                })}
+            />
+        </>
+    )
+}
+
+function ControlsSettings() {
+    return (
+        <div>
+            {[
+                {
+                    action: 'Jump',
+                    defaultKeyboardKey: 'Space'
+                },
+                {
+                    action: 'Use Item',
+                    defaultKeyboardKey: 'Enter'
+                },
+            ].map(obj =>
+                <div key={obj.action}>
+                    <div className="flex-header border-bottom pb-1 mb-1">
+
+                        <div>
+                            <div>{obj.action}</div>
+                            {obj.emote && <div className="span badge border bg-dark">Emote</div>}
+                        </div>
+
+                        <div>
+
+                            <div className="badge badge-hover border bg-articles me-1">{obj.defaultKeyboardKey}</div>
+
+                            <ArticlesButton
+                                className=""
+                                small
+                            >
+                                Change Key
+                            </ArticlesButton>
+
+                        </div>
+                    </div>
+                </div>
+            )}
+        </div>
+    )
 }

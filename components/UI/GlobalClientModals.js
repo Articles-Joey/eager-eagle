@@ -4,6 +4,8 @@ import { useStore } from '@/hooks/useStore'
 import { useGameStore } from '@/hooks/useGameStore'
 // import { Suspense } from 'react';
 import dynamic from 'next/dynamic'
+import CustomizeModal from './CustomizeModal'
+import RewardsModal from './RewardsModal'
 // import { useStore } from '../hooks/useStore'
 // import CreditsModal from './CreditsModal'
 
@@ -43,9 +45,14 @@ export default function GlobalClientModals() {
     const creditsModal = useStore((state) => state.creditsModal)
     const setCreditsModal = useStore((state) => state.setCreditsModal)
 
-    // const { gameOver, setGameOver } = useGameStore()
     const gameOver = useGameStore((state) => state.gameOver)
     const setGameOver = useGameStore((state) => state.setGameOver)
+
+    const customizeModal = useStore((state) => state.customizeModal)
+    const setCustomizeModal = useStore((state) => state.setCustomizeModal)
+
+    const rewardsModal = useStore((state) => state.rewardsModal)
+    const setRewardsModal = useStore((state) => state.setRewardsModal)
 
     return (
         <>
@@ -82,6 +89,20 @@ export default function GlobalClientModals() {
                 <SettingsModal
                     show={settingsModal}
                     setShow={setSettingsModal}
+                />
+            }
+
+            {customizeModal &&
+                <CustomizeModal 
+                    show={customizeModal}
+                    setShow={setCustomizeModal}
+                />
+            }
+
+            {rewardsModal &&
+                <RewardsModal 
+                    show={rewardsModal}
+                    setShow={setRewardsModal}
                 />
             }
 

@@ -23,9 +23,10 @@ import Link from "next/link";
 import B from "@articles-media/articles-gamepad-helper/dist/img/Xbox UI/B.svg";
 import { useModalNavigation } from "@/hooks/useModalNavigation";
 
-export default function GameInfoModal({
+export default function CustomizeModal({
     show,
     setShow,
+    credits
 }) {
 
     const [showModal, setShowModal] = useState(true)
@@ -55,7 +56,7 @@ export default function GameInfoModal({
             )} */}
 
             <Modal
-                className="articles-modal games-info-modal"
+                className="articles-modal customize-modal"
                 size='md'
                 show={showModal}
                 centered
@@ -69,12 +70,23 @@ export default function GameInfoModal({
             >
 
                 <Modal.Header closeButton>
-                    <Modal.Title>Game Info</Modal.Title>
+                    <Modal.Title>Customize Game</Modal.Title>
                 </Modal.Header>
 
                 <Modal.Body className="flex-column p-3">
 
+                    {/* Eagle / Flappy Bird / Plane */}
+                    <div>Player: Eagle</div>
+                    <div>Accent Color: Blue</div>
 
+                    {/* Basic / Neon / Fire */}
+                    <div>Trail: Basic</div>
+
+                    {/* Buildings / Rocks / Light Post / Tubes */}
+                    <div>Ground Obstacles: Rocks</div>
+
+                    {/* Helicopters / Birds / Drones */}
+                    <div>Sky Obstacles: Helicopters</div>
 
                 </Modal.Body>
 

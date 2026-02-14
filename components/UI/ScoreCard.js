@@ -5,8 +5,8 @@ import { useGameStore } from "@/hooks/useGameStore"
 
 export default function ScoreCard({ score }) {
 
-    const maxDistance = useGameStore((state) => state.maxDistance)
-    const setMaxDistance = useGameStore((state) => state.setMaxDistance)
+    const maxDistance = useStore((state) => state.maxDistance)
+    const setMaxDistance = useStore((state) => state.setMaxDistance)
 
     return (
         <div

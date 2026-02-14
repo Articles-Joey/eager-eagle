@@ -22,11 +22,17 @@ import Link from "next/link";
 
 import B from "@articles-media/articles-gamepad-helper/dist/img/Xbox UI/B.svg";
 import { useModalNavigation } from "@/hooks/useModalNavigation";
+import rewards from "../rewards";
+import { useGameStore } from "@/hooks/useGameStore";
+import { useStore } from "@/hooks/useStore";
+import classNames from "classnames";
 
-export default function GameInfoModal({
+export default function RewardsModal({
     show,
     setShow,
 }) {
+
+    const maxDistance = useStore((state) => state.maxDistance)
 
     const [showModal, setShowModal] = useState(true)
 
@@ -55,7 +61,7 @@ export default function GameInfoModal({
             )} */}
 
             <Modal
-                className="articles-modal games-info-modal"
+                className="articles-modal rewards-modal"
                 size='md'
                 show={showModal}
                 centered
@@ -69,12 +75,30 @@ export default function GameInfoModal({
             >
 
                 <Modal.Header closeButton>
-                    <Modal.Title>Game Info</Modal.Title>
+                    <Modal.Title>Distance Rewards</Modal.Title>
                 </Modal.Header>
 
                 <Modal.Body className="flex-column p-3">
 
+                    {rewards.map((reward, index) => (
+                        <div
+                            key={index}
+                            className={classNames(
+                                `reward-item mb-3 p-3 border rounded`,
+                                { 
+                                    'unlocked': maxDistance >= reward.distance 
+                                }
+                            )}
+                        >
+                            
+                            <h5>{reward.name}</h5>
+                            <p>{reward.description}</p>
+                            
+                            <p className="mb-0"><strong>Distance Required:</strong> {reward.distance} meters</p>
+                            <p><strong>Lifetime Distance Required:</strong> {reward.lifetimeDistance} meters</p>
 
+                        </div>
+                    ))}
 
                 </Modal.Body>
 

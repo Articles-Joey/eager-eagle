@@ -1,0 +1,29 @@
+const rewards = [
+    {
+        name: "Jet Streams",
+        description: "Unlock the ability to fly faster and soar higher with jet streams. This reward allows you to temporarily boost your speed and altitude, giving you an edge in navigating through challenging obstacles and reaching new heights in the game.",
+        distance: 25,
+        lifetimeDistance: 100,
+    },
+    {
+        name: "Neon Trail",
+        description: "Unlock the ability to leave a glowing trail behind you, enhancing your visibility and style as you navigate through the game.",
+        distance: 50,
+        lifetimeDistance: 200,
+    },
+    {
+        name: "Diving",
+        description: "Unlock the ability to dive swiftly and navigate through tight spaces with precision.",
+        distance: 75,
+        lifetimeDistance: 300,
+    },
+    {
+        name: "Speed Boost",
+        description: "Unlock the ability to temporarily increase your speed, allowing you to cover more distance in less time.",
+        distance: 100,
+        lifetimeDistance: 400,
+    },
+
+]
+
+export default rewards

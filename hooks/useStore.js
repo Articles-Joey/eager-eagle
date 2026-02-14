@@ -63,7 +63,8 @@ export const useStore = create()(
 
       audioSettings: {
         enabled: true,
-        music_volume: 50,
+        backgroundMusicVolume: 100,
+        soundEffectsVolume: 100,
       },
       setAudioSettings: (value) => set({ audioSettings: value }),
 
@@ -76,6 +77,12 @@ export const useStore = create()(
       creditsModal: false,
       setCreditsModal: (value) => set({ creditsModal: value }),
 
+      customizeModal: false,
+      setCustomizeModal: (value) => set({ customizeModal: value }),
+
+      rewardsModal: false,
+      setRewardsModal: (value) => set({ rewardsModal: value }),
+
       disableDeath: false,
       toggleDisableDeath: () => set({ disableDeath: !get().disableDeath }),
       setDisableDeath: (value) => set({ disableDeath: value }),
@@ -83,9 +90,31 @@ export const useStore = create()(
       isDiving: false,
       setIsDiving: (value) => set({ isDiving: value }),
 
+      sceneSettings: false,
+      setSceneSettings: (newValue) => {
+        set((prev) => ({
+          sceneSettings: newValue
+        }))
+      },
+
+      lifetimeDistance: 0,
+      setLifetimeDistance: (newValue) => {
+        set((prev) => ({
+          lifetimeDistance: newValue
+        }))
+      },
+
+      maxDistance: 0,
+      setMaxDistance: (newValue) => {
+        set((prev) => ({
+          maxDistance: newValue
+        }))
+      },
+
     }),
     {
       name: 'eager-eagle-game-store', // name of the item in the storage (must be unique)
+      version: 2,
       // storage: createJSONStorage(() => sessionStorage), // (optional) by default, 'localStorage' is used
       partialize: (state) =>
         Object.fromEntries(
@@ -95,6 +124,9 @@ export const useStore = create()(
             'creditsModal',
             'showMenu',
             'isDiving',
+            // 'lifetimeDistance',
+            // 'audioSettings',
+            // 'maxDistance',
           ].includes(key))
         ),
     },

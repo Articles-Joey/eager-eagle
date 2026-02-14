@@ -1,0 +1,19 @@
+.rewards-modal {
+
+    .reward-item {
+        border-left: 5px solid gray!important;
+        border-bottom-left-radius: 0px!important;
+        opacity: 0.5;
+        transition-duration: 200ms;
+
+        &:hover {
+            opacity: 1;
+        }
+
+        &.unlocked {
+            border-left: 5px solid green!important;
+            opacity: 1;
+        }
+    }
+
+}

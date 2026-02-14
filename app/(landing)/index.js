@@ -82,8 +82,12 @@ export default function LobbyPage() {
     const creditsModal = useStore((state) => state.creditsModal)
     const setCreditsModal = useStore((state) => state.setCreditsModal)
 
+    const setCustomizeModal = useStore((state) => state.setCustomizeModal)
+    const setRewardsModal = useStore((state) => state.setRewardsModal)
+
     const setGameOver = useGameStore((state) => state.setGameOver)
-    const maxDistance = useGameStore((state) => state.maxDistance)
+    
+    const maxDistance = useStore((state) => state.maxDistance)
 
     const controllerState = useControllerStore((state) => state.controllerState)
 
@@ -118,22 +122,21 @@ export default function LobbyPage() {
 
         <div className="game-landing-page">
 
-            <GamepadKeyboard
-                disableToggle={true}
-                active={nicknameKeyboard}
-                onFinish={(text) => {
-                    console.log("FINISH KEYBOARD", text)
-                    useStore.getState().setNickname(text);
-                    useStore.getState().setNicknameKeyboard(false);
-                }}
-                onCancel={(text) => {
-                    console.log("CANCEL KEYBOARD", text)
-                    // useStore.getState().setNickname(text);
-                    useStore.getState().setNicknameKeyboard(false);
-                }}
-            />
-
             <Suspense>
+                <GamepadKeyboard
+                    disableToggle={true}
+                    active={nicknameKeyboard}
+                    onFinish={(text) => {
+                        console.log("FINISH KEYBOARD", text)
+                        useStore.getState().setNickname(text);
+                        useStore.getState().setNicknameKeyboard(false);
+                    }}
+                    onCancel={(text) => {
+                        console.log("CANCEL KEYBOARD", text)
+                        // useStore.getState().setNickname(text);
+                        useStore.getState().setNicknameKeyboard(false);
+                    }}
+                />
                 <PieMenu
                     options={[
                         {
@@ -308,32 +311,30 @@ export default function LobbyPage() {
                             <div
                                 className={`mt-3 controller-button-group ${hasController && 'hasController'}`}
                             >
-                                <Link href={{
-                                    pathname: `/play`
-                                }}>
-                                    <ArticlesButton
-                                        ref={el => elementsRef.current[2] = el}
-                                        // active={activeIndex === 1}
-                                        className={`w-50`}
-                                        small
-                                    >
-                                        <i className="fas fa-palette"></i>
-                                        Customize
-                                    </ArticlesButton>
-                                </Link>
-                                <Link href={{
-                                    pathname: `/play`
-                                }}>
-                                    <ArticlesButton
-                                        ref={el => elementsRef.current[3] = el}
-                                        // active={activeIndex === 2}
-                                        className={`w-50`}
-                                        small
-                                    >
-                                        <i className="fas fa-coins"></i>
-                                        Rewards
-                                    </ArticlesButton>
-                                </Link>
+                                <ArticlesButton
+                                    ref={el => elementsRef.current[2] = el}
+                                    // active={activeIndex === 1}
+                                    className={`w-50`}
+                                    small
+                                    onClick={() => {
+                                        setCustomizeModal(true)
+                                    }}
+                                >
+                                    <i className="fas fa-palette"></i>
+                                    Customize
+                                </ArticlesButton>
+                                <ArticlesButton
+                                    ref={el => elementsRef.current[3] = el}
+                                    // active={activeIndex === 2}
+                                    className={`w-50`}
+                                    small
+                                    onClick={() => {
+                                        setRewardsModal(true)
+                                    }}
+                                >
+                                    <i className="fas fa-coins"></i>
+                                    Rewards
+                                </ArticlesButton>
                             </div>
 
                             {/* <div className="fw-bold mb-1 small text-center">
@@ -502,11 +503,13 @@ export default function LobbyPage() {
 
             </div>
 
+            {/* <div className='mt-4 mt-lg-0'> */}
             <GameScoreboard
                 game={game_name}
                 style="Default"
                 darkMode={darkMode ? true : false}
             />
+            {/* </div> */}
 
             <Ad
                 style="Default"

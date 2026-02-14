@@ -2,13 +2,16 @@ import { useMemo } from "react"
 import MovingObstacle from "./MovingObstacle"
 import { useGameStore } from "@/hooks/useGameStore"
 import { useEffect } from "react"
+import { useStore } from "@/hooks/useStore"
 
-const BUILDING_COUNT = 5
+const BUILDING_COUNT = 10
 
 export default function ObstacleManager() {
+    
     const distance = useGameStore((state) => state.distance)
-    const maxDistance = useGameStore((state) => state.maxDistance)
-    const setMaxDistance = useGameStore((state) => state.setMaxDistance)
+
+    const maxDistance = useStore((state) => state.maxDistance)
+    const setMaxDistance = useStore((state) => state.setMaxDistance)
 
     useEffect(() => {
         if (distance > maxDistance) {

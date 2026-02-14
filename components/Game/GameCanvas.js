@@ -22,6 +22,7 @@ import { useStore } from "@/hooks/useStore";
 // import { ModelBuildingOne } from "../Models/Building 1";
 import ObstacleManager from "./ObstacleManager";
 import { useGameStore } from "@/hooks/useGameStore";
+import SkyBox from "./SkyBox";
 // import Npcs from "./Players";
 
 const game_name = 'Eager Eagle'
@@ -75,16 +76,18 @@ function GameCanvas(props) {
             // autoRotate={gameState?.status == 'In Lobby'}
             />
 
-            <Sky
+            {/* <Sky
                 sunPosition={
                     darkMode ?
                         [0, -100, 0]
                         :
                         [0, 100, 0]
                 }
-            />
+            /> */}
 
-            <ambientLight intensity={2.5} />
+            <SkyBox />
+
+            <ambientLight intensity={darkMode ? 0.5 : 2.5} />
             {/* <spotLight intensity={30000} position={[-50, 100, 50]} angle={5} penumbra={1} /> */}
 
             {/* <TilePlane
