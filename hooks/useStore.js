@@ -67,7 +67,7 @@ export const useStore = create()(
         groundObjects: [
           { name: "Building" },
           { name: "Mountain" },
-          { name: "Trees" }
+          { name: "Tree" }
         ],
         groundObject: "Building",
 
@@ -146,6 +146,11 @@ export const useStore = create()(
           lifetimeDistance: newValue
         }))
       },
+      incrementLifetimeDistance: () => {
+        set((prev) => ({
+          lifetimeDistance: prev.lifetimeDistance + 1
+        }))
+      },
 
       maxDistance: 0,
       setMaxDistance: (newValue) => {
@@ -157,7 +162,7 @@ export const useStore = create()(
     }),
     {
       name: 'eager-eagle-game-store', // name of the item in the storage (must be unique)
-      version: 1,
+      version: 2,
       // storage: createJSONStorage(() => sessionStorage), // (optional) by default, 'localStorage' is used
       partialize: (state) =>
         Object.fromEntries(

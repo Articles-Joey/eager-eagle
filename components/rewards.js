@@ -6,8 +6,8 @@ const rewards = [
         lifetimeDistance: 100,
     },
     {
-        name: "Neon Trail",
-        description: "Unlock the ability to leave a glowing trail behind you, enhancing your visibility and style as you navigate through the game.",
+        name: "Basic Trail",
+        description: "Unlock the ability to leave a basic trail behind you.",
         distance: 50,
         lifetimeDistance: 200,
     },
@@ -22,6 +22,24 @@ const rewards = [
         description: "Unlock the ability to temporarily increase your speed, allowing you to cover more distance in less time.",
         distance: 100,
         lifetimeDistance: 400,
+    },
+    {
+        name: "Neon Trail",
+        description: "Unlock the ability to leave a glowing trail behind you, enhancing your visibility and style as you navigate through the game.",
+        distance: 125,
+        lifetimeDistance: 500,
+    },
+    {
+        name: "Fire Trail",
+        description: "Unlock the ability to leave a fiery trail behind you.",
+        distance: 150,
+        lifetimeDistance: 600,
+    },
+    {
+        name: "",
+        description: "...",
+        distance: 175,
+        lifetimeDistance: 700,
     },
     {
         name: "Armor Plating",

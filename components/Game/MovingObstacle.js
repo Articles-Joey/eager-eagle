@@ -21,6 +21,7 @@ export default function MovingObstacle({ index }) {
     const { nodes, materials } = useGLTF('models/Building 1-transformed.glb')
 
     const darkMode = useStore((state) => state.darkMode)
+    const incrementLifetimeDistance = useStore((state) => state.incrementLifetimeDistance)
 
     const addDistance = useGameStore((state) => state.addDistance)
     const gameOver = useGameStore((state) => state.gameOver)
@@ -152,6 +153,8 @@ export default function MovingObstacle({ index }) {
         if (!passed.current && position.current[2] > 0) {
             passed.current = true
             addDistance(1)
+
+            incrementLifetimeDistance()
         }
 
         // Loop logic

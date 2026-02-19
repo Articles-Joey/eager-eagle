@@ -16,6 +16,8 @@ import PlayerTrail from "./PlayerTrail";
 import { ModelAirplane } from "../Models/Airplane"
 import { degToRad } from "three/src/math/MathUtils"
 import { useStore } from "@/hooks/useStore"
+import ModelFlappyBird from "../Models/ModelFlappyBird"
+import PlayerTrailFire from "./PlayerTrailFire"
 
 // import ClownfishModel from "./PlayerModels/Clownfish"
 // import BoneFishModel from "./PlayerModels/BoneFish"
@@ -368,7 +370,8 @@ function Player(props) {
     return (
         <group>
 
-            <PlayerTrail positionRef={pos} />
+            {character.trail !== "Fire" && <PlayerTrail positionRef={pos} />}
+            {character.trail === "Fire" && <PlayerTrailFire positionRef={pos} />}
 
             <group
                 ref={playerModelRef}
@@ -385,6 +388,13 @@ function Player(props) {
                         scale={1}
                         rotation={[0, degToRad(90), 0]}
                         position={[0, 0, 0]}
+                    />
+                }
+                {character.model === "Flappy Bird" &&
+                    <ModelFlappyBird
+                        scale={0.1}
+                        rotation={[0, degToRad(90), 0]}
+                        position={[0, -0.5, 0]}
                     />
                 }
 

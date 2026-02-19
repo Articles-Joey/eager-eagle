@@ -23,6 +23,7 @@ import Link from "next/link";
 import B from "@articles-media/articles-gamepad-helper/dist/img/Xbox UI/B.svg";
 import { useModalNavigation } from "@/hooks/useModalNavigation";
 import { useStore } from "@/hooks/useStore";
+import ScenePreview from "../Game/ScenePreview";
 
 export default function CustomizeModal({
     show,
@@ -79,25 +80,15 @@ export default function CustomizeModal({
 
                 <Modal.Body
                     className="d-flex flex-column flex-lg-row p-3"
-                    style={{
-                        minHeight: '400px'
-                    }}
                 >
 
                     <div
-                        className="flex-shrink-0"
-                        style={{
-                            width: "200px"
-                        }}
+                        className="scene-preview mb-3 mb-lg-0"
                     >
-                        <div
-                            className="scene-preview"
-                        >
-
-                        </div>
+                        <ScenePreview />
                     </div>
 
-                    <div className="d-flex flex-column w-100 ms-3">
+                    <div className="d-flex flex-column w-100 ms-lg-3">
                         {/* Eagle / Flappy Bird / Plane */}
                         {/* <div>Player:</div> */}
                         <DropdownButton

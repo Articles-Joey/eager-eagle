@@ -1,8 +1,16 @@
+@use "@/styles/components/global.scss" as *;
+
 .customize-modal {
 
     .scene-preview {
         background-color: black;
         aspect-ratio: 1 / 1;
+        width: 100%;
+
+        @include media-breakpoint-up(lg) {
+            width: 200px;
+            height: 200px;
+        }
     }
 
 }

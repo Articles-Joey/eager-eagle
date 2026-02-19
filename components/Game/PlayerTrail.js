@@ -1,6 +1,6 @@
 import { useFrame } from "@react-three/fiber"
 import { Line } from "@react-three/drei"
-import { useRef, useMemo } from "react"
+import { useRef, useMemo, useState, useEffect } from "react"
 import * as THREE from "three"
 import { useStore } from "@/hooks/useStore"
 import { useGameStore } from "@/hooks/useGameStore"
@@ -21,7 +21,7 @@ export default function PlayerTrail({ positionRef }) {
 
     useFrame((state, delta) => {
 
-        if (!character?.trail?.enabled || gameOver) return
+        // if (character?.trail === "None" || gameOver) return
 
         if (!positionRef.current || !lineRef.current) return
 
@@ -41,13 +41,36 @@ export default function PlayerTrail({ positionRef }) {
         }
     })
 
-    if (!character?.trail?.enabled || gameOver) return null
+    // Neon color cycling logic with state
+    const neonColors = ["#00ffff", "#ff00ff", "#ffff00"];
+    const [neonIndex, setNeonIndex] = useState(0);
+
+    useEffect(() => {
+
+        // if (character?.trail === "None" || gameOver) return null
+
+        if (character?.trail !== "Neon") return;
+
+        const interval = setInterval(() => {
+            setNeonIndex((prev) => (prev + 1) % neonColors.length);
+        }, 300);
+
+        return () => clearInterval(interval);
+
+    }, [character?.trail]);
+
+    let color = "white";
+    if (character?.trail === "Neon") {
+        color = neonColors[neonIndex];
+    }
+
+    if (character?.trail === "None" || gameOver) return null
 
     return (
         <Line
             ref={lineRef}
             points={points}
-            color="white"
+            color={color}
             lineWidth={2}
             transparent
             opacity={0.5}

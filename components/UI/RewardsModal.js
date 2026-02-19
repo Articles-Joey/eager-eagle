@@ -33,6 +33,7 @@ export default function RewardsModal({
 }) {
 
     const maxDistance = useStore((state) => state.maxDistance)
+    const lifetimeDistance = useStore((state) => state.lifetimeDistance)
 
     const [showModal, setShowModal] = useState(true)
 
@@ -80,25 +81,35 @@ export default function RewardsModal({
 
                 <Modal.Body className="flex-column p-3">
 
-                    {rewards.map((reward, index) => (
-                        <div
-                            key={index}
-                            className={classNames(
-                                `reward-item mb-3 p-3 border rounded`,
-                                { 
-                                    'unlocked': maxDistance >= reward.distance 
-                                }
-                            )}
-                        >
-                            
-                            <h5>{reward.name}</h5>
-                            <p>{reward.description}</p>
-                            
-                            <p className="mb-0"><strong>Distance Required:</strong> {reward.distance} meters</p>
-                            <p><strong>Lifetime Distance Required:</strong> {reward.lifetimeDistance} meters</p>
+                    <div>
+                        {maxDistance} max distance
+                    </div>
 
-                        </div>
-                    ))}
+                    <div>
+                        {lifetimeDistance} lifetime distance
+                    </div>
+
+                    <div>
+                        {rewards.map((reward, index) => (
+                            <div
+                                key={index}
+                                className={classNames(
+                                    `reward-item mb-3 p-3 border rounded`,
+                                    { 
+                                        'unlocked': maxDistance >= reward.distance 
+                                    }
+                                )}
+                            >
+                                
+                                <h5>{reward.name}</h5>
+                                <p>{reward.description}</p>
+                                
+                                <p className="mb-0"><strong>Distance Required:</strong> {reward.distance} meters</p>
+                                <p><strong>Lifetime Distance Required:</strong> {reward.lifetimeDistance} meters</p>
+    
+                            </div>
+                        ))}
+                    </div>
 
                 </Modal.Body>
 
