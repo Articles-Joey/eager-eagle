@@ -1,5 +1,6 @@
-import { create } from 'zustand'
-import { persist, createJSONStorage } from 'zustand/middleware'
+// import { create } from 'zustand'
+import { createWithEqualityFn as create } from 'zustand/traditional'
+import { persist } from 'zustand/middleware'
 
 export const useStore = create()(
   persist(
@@ -40,13 +41,55 @@ export const useStore = create()(
       character: {
 
         // Eagle, Airplane
+        models: [
+          { name: "Eagle" },
+          { name: "Airplane" },
+          { name: "Flappy Bird" }
+        ],
         model: 'Eagle',
 
-        trail: {
-          enabled: true,
-          type: 'Standard',
-          color: 'red'
-        }
+        trails: [
+          {
+            name: "None",
+          },
+          {
+            name: "Basic",
+          },
+          {
+            name: "Neon",
+          },
+          {
+            name: "Fire",
+          }
+        ],
+        trail: "Basic",
+
+        groundObjects: [
+          { name: "Building" },
+          { name: "Mountain" },
+          { name: "Trees" }
+        ],
+        groundObject: "Building",
+
+        skyObjects: [
+          { name: "Helicopter" },
+          { name: "Bird" },
+          { name: "Drone" }
+        ],
+        skyObject: "Helicopter",
+
+        backgrounds: [
+          { name: "City" },
+          { name: "Mountains" },
+          { name: "Forest" }
+        ],
+        background: "City",
+
+        // trail: {
+        //   enabled: true,
+        //   type: 'Standard',
+        //   color: 'red'
+        // }
 
       },
       setCharacter: (value) => set({ character: value }),
@@ -114,7 +157,7 @@ export const useStore = create()(
     }),
     {
       name: 'eager-eagle-game-store', // name of the item in the storage (must be unique)
-      version: 2,
+      version: 1,
       // storage: createJSONStorage(() => sessionStorage), // (optional) by default, 'localStorage' is used
       partialize: (state) =>
         Object.fromEntries(

@@ -74,7 +74,8 @@ export default function CreditsModal({
                         }}
                         className="d-flex align-items-center"
                     >
-                        <img src={B.src} className="me-1" alt="Close" />
+                        <i className="no-controller-only fad fa-times me-1"></i>
+                        <img src={B.src} className="controller-only me-1" alt="Close" />
                         Close
                     </ArticlesButton>
 

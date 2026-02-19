@@ -23,6 +23,12 @@ const rewards = [
         distance: 100,
         lifetimeDistance: 400,
     },
+    {
+        name: "Armor Plating",
+        description: "No longer lose when you hit the top or bottom of obstacles. Instead, you will bounce off!",
+        distance: 200,
+        lifetimeDistance: 800,
+    },
 
 ]
 

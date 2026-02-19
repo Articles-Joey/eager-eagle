@@ -5,6 +5,8 @@ import { useEffect, useMemo, useRef } from "react"
 import * as THREE from "three"
 import { useGameStore } from "@/hooks/useGameStore"
 import { ModelHelicopter } from "../Models/Helicopter"
+import { useStore } from "@/hooks/useStore"
+import { degToRad } from "three/src/math/MathUtils"
 // import { useStore } from "@/hooks/useStore"
 
 const SPAWN_DISTANCE = -20
@@ -15,7 +17,11 @@ const GAP = 20
 const Y_OFFSET = 5
 
 export default function MovingObstacle({ index }) {
+
     const { nodes, materials } = useGLTF('models/Building 1-transformed.glb')
+
+    const darkMode = useStore((state) => state.darkMode)
+
     const addDistance = useGameStore((state) => state.addDistance)
     const gameOver = useGameStore((state) => state.gameOver)
     const distance = useGameStore((state) => state.distance)
@@ -88,15 +94,39 @@ export default function MovingObstacle({ index }) {
 
     // Background hills (spheres with grass)
     const bgHillsRef = useRef()
+    // Store refs for each hill mesh
+    const hillMeshRefs = useRef([])
     const bgHills = useMemo(() => {
-        return Array.from({ length: 8 }).map(() => ({
-            x: (Math.random() - 0.5) * 60, // Wide spread
-            z: -(Math.random() * 80 + -30), // Behind the player
-            scale: 5 + Math.random() * 10,  // 3x to 9x scale
-            colorTop: `hsl(${100 + Math.random() * 40}, 60%, ${40 + Math.random() * 20}%)`,
-            colorBottom: `hsl(${80 + Math.random() * 30}, 50%, ${20 + Math.random() * 15}%)`
-        }))
-    }, [])
+        const darken = darkMode ? 0.5 : 1;
+        const hills = [];
+        for (let i = 0; i < 8; i++) {
+            const rand = Math.random() + (darkMode ? 1 : 0);
+            const topL = (40 + rand * 20) * darken;
+            const bottomL = (20 + rand * 15) * darken;
+            hills.push({
+                x: (Math.random() - 0.5) * 60,
+                z: -(Math.random() * 80 + -30),
+                scale: 5 + Math.random() * 10,
+                colorTop: `hsl(${100 + rand * 40}, 60%, ${topL}%)`,
+                colorBottom: `hsl(${80 + rand * 30}, 50%, ${bottomL}%)`
+            });
+        }
+        return hills;
+    }, []); // Only generate once
+
+    // Update hill colors on darkMode change
+    useEffect(() => {
+        const darken = darkMode ? 0.5 : 1;
+        hillMeshRefs.current.forEach((mesh, i) => {
+            if (mesh && mesh.material && mesh.material.uniforms) {
+                const rand = (mesh.userData.rand || (mesh.userData.rand = Math.random() + (darkMode ? 1 : 0)));
+                const topL = (40 + rand * 20) * darken;
+                const bottomL = (20 + rand * 15) * darken;
+                mesh.material.uniforms.colorTop.value = new THREE.Color(`hsl(${100 + rand * 40}, 60%, ${topL}%)`);
+                mesh.material.uniforms.colorBottom.value = new THREE.Color(`hsl(${80 + rand * 30}, 50%, ${bottomL}%)`);
+            }
+        });
+    }, [darkMode]);
 
     // Reset logic when game restarts
     useEffect(() => {
@@ -196,67 +226,14 @@ export default function MovingObstacle({ index }) {
                     {bgHills.map((hill, i) => {
                         const yPos = -Y_OFFSET - hill.scale * 0.3 // Partially buried
                         return (
-                            <group
-                                key={i}
-                                position={[hill.x, yPos, hill.z]}
-                            >
-                                {/* Main sphere */}
-                                <mesh scale={[hill.scale, hill.scale, hill.scale]}>
-                                    <sphereGeometry args={[1, 16, 16]} />
-                                    <shaderMaterial
-                                        vertexShader={`
-                                            varying vec3 vPosition;
-                                            varying vec3 vNormal;
-                                            void main() {
-                                                vPosition = position;
-                                                vNormal = normalize(normalMatrix * normal);
-                                                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-                                            }
-                                        `}
-                                        fragmentShader={`
-                                            uniform vec3 colorTop;
-                                            uniform vec3 colorBottom;
-                                            varying vec3 vPosition;
-                                            varying vec3 vNormal;
-                                            void main() {
-                                                float mixValue = (vPosition.y + 1.0) * 0.5;
-                                                vec3 color = mix(colorBottom, colorTop, mixValue);
-                                                gl_FragColor = vec4(color, 1.0);
-                                            }
-                                        `}
-                                        uniforms={{
-                                            colorTop: { value: new THREE.Color(hill.colorTop) },
-                                            colorBottom: { value: new THREE.Color(hill.colorBottom) }
-                                        }}
-                                    />
-                                </mesh>
-                                {/* Grass blades */}
-                                {/* {Array.from({ length: 40 }).map((_, j) => {
-                                    const angle = (j / 40) * Math.PI * 2
-                                    const radius = 0.7 + Math.random() * 0.3
-                                    const height = 0.3 + Math.random() * 0.2
-                                    const px = Math.cos(angle) * radius * hill.scale
-                                    const pz = Math.sin(angle) * radius * hill.scale
-                                    const py = Math.sqrt(Math.max(0, hill.scale * hill.scale - px * px - pz * pz))
-                                    return (
-                                        <mesh
-                                            key={j}
-                                            position={[px, py, pz]}
-                                            rotation={[
-                                                (Math.random() - 0.5) * 0.3,
-                                                Math.atan2(pz, px),
-                                                (Math.random() - 0.5) * 0.2
-                                            ]}
-                                        >
-                                            <planeGeometry args={[0.1, height]} />
-                                            <meshStandardMaterial
-                                                color={`hsl(${110 + Math.random() * 20}, 70%, 35%)`}
-                                                side={THREE.DoubleSide}
-                                            />
-                                        </mesh>
-                                    )
-                                })} */}
-                            </group>
+                            <Hill
+                                hill={hill}
+                                key={`hill-${i}-${darkMode}`}
+                                yPos={yPos}
+                                hillMeshRefs={hillMeshRefs}
+                                index={i}
+
+                            />
                         )
                     })}
                 </group>
@@ -272,8 +249,14 @@ export default function MovingObstacle({ index }) {
             <group ref={ref} dispose={null}>
                 <mesh>
                     <boxGeometry args={[args[0], buildingHeight, args[2]]} />
-                    <meshStandardMaterial color="red" />
+                    <meshStandardMaterial color="red" />                    
                 </mesh>
+                {/* <group rotation={[degToRad(180), degToRad(180), degToRad(180)]}>
+                    <mesh>
+                        <coneGeometry args={[1, 5, 4]} />
+                        <meshStandardMaterial color="yellow" />
+                    </mesh>
+                </group> */}
             </group>
 
             {/* <mesh ref={baseRef}>
@@ -285,13 +268,58 @@ export default function MovingObstacle({ index }) {
                 ref={helicopterRef}
                 dispose={null}
                 scale={0.005}
-                // position={[0, 0, 0]}
+            // position={[0, 0, 0]}
             >
-                <ModelHelicopter 
+                <ModelHelicopter
                     position={[900, -100, 100]}
                 />
             </group>
 
         </group>
     )
+}
+
+function Hill({
+    hill,
+    yPos,
+    hillMeshRefs,
+    index: i
+}) {
+    return (
+        <group position={[hill.x, yPos, hill.z]}>
+            <mesh
+                ref={el => hillMeshRefs.current[i] = el}
+                scale={[hill.scale, hill.scale, hill.scale]}
+                userData={{ rand: undefined }}
+            >
+                <sphereGeometry args={[1, 16, 16]} />
+                <shaderMaterial
+                    vertexShader={`
+                        varying vec3 vPosition;
+                        varying vec3 vNormal;
+                        void main() {
+                            vPosition = position;
+                            vNormal = normalize(normalMatrix * normal);
+                            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                        }
+                    `}
+                    fragmentShader={`
+                        uniform vec3 colorTop;
+                        uniform vec3 colorBottom;
+                        varying vec3 vPosition;
+                        varying vec3 vNormal;
+                        void main() {
+                            float mixValue = (vPosition.y + 1.0) * 0.5;
+                            vec3 color = mix(colorBottom, colorTop, mixValue);
+                            gl_FragColor = vec4(color, 1.0);
+                        }
+                    `}
+                    uniforms={{
+                        colorTop: { value: new THREE.Color(hill.colorTop) },
+                        colorBottom: { value: new THREE.Color(hill.colorBottom) }
+                    }}
+                />
+            </mesh>
+        </group>
+    );
 }

@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 
 // import { useSelector } from 'react-redux'
 
-import { Modal } from "react-bootstrap"
+import { Dropdown, DropdownButton, Modal } from "react-bootstrap"
 
 import ViewUserModal from "@/components/UI/ViewUserModal"
 
@@ -22,6 +22,7 @@ import Link from "next/link";
 
 import B from "@articles-media/articles-gamepad-helper/dist/img/Xbox UI/B.svg";
 import { useModalNavigation } from "@/hooks/useModalNavigation";
+import { useStore } from "@/hooks/useStore";
 
 export default function CustomizeModal({
     show,
@@ -40,6 +41,9 @@ export default function CustomizeModal({
 
     const elementsRef = useRef([]);
     useModalNavigation(elementsRef, () => setShowModal(false));
+
+    const character = useStore((state) => state.character)
+    const setCharacter = useStore((state) => state.setCharacter)
 
     return (
         <>
@@ -73,20 +77,225 @@ export default function CustomizeModal({
                     <Modal.Title>Customize Game</Modal.Title>
                 </Modal.Header>
 
-                <Modal.Body className="flex-column p-3">
+                <Modal.Body
+                    className="d-flex flex-column flex-lg-row p-3"
+                    style={{
+                        minHeight: '400px'
+                    }}
+                >
 
-                    {/* Eagle / Flappy Bird / Plane */}
-                    <div>Player: Eagle</div>
-                    <div>Accent Color: Blue</div>
+                    <div
+                        className="flex-shrink-0"
+                        style={{
+                            width: "200px"
+                        }}
+                    >
+                        <div
+                            className="scene-preview"
+                        >
 
-                    {/* Basic / Neon / Fire */}
-                    <div>Trail: Basic</div>
+                        </div>
+                    </div>
 
-                    {/* Buildings / Rocks / Light Post / Tubes */}
-                    <div>Ground Obstacles: Rocks</div>
+                    <div className="d-flex flex-column w-100 ms-3">
+                        {/* Eagle / Flappy Bird / Plane */}
+                        {/* <div>Player:</div> */}
+                        <DropdownButton
+                            variant="articles w-100 text-start"
+                            size='sm'
+                            id="dropdown-basic-button"
+                            className="dropdown-articles mb-3"
+                            title={
+                                <span>
+                                    <i className="fad fa-user me-2"></i>
+                                    <span>Player: {character.model}</span>
+                                </span>
+                            }
+                        >
 
-                    {/* Helicopters / Birds / Drones */}
-                    <div>Sky Obstacles: Helicopters</div>
+                            <div style={{ maxHeight: '600px', overflowY: 'auto', width: '200px' }}>
+
+                                {character?.models?.map(location =>
+                                    <Dropdown.Item
+                                        key={location.name}
+                                        // active={cameraMode == location.name}
+                                        onClick={() => {
+                                            setCharacter({ ...character, model: location.name })
+                                            // setCameraMode(location.name)
+                                            // setShowMenu(false)
+                                        }}
+                                        className="d-flex justify-content-between"
+                                    >
+                                        <i className="fad fa-check"></i>
+                                        {location.name}
+                                    </Dropdown.Item>
+                                )}
+
+                            </div>
+
+                        </DropdownButton>
+
+                        <DropdownButton
+                            variant="articles w-100 text-start"
+                            size='sm'
+                            id="dropdown-basic-button"
+                            className="dropdown-articles mb-3"
+                            title={
+                                <span>
+                                    <i className="fad fa-user me-2"></i>
+                                    <span>Trail: {character.trail}</span>
+                                </span>
+                            }
+                        >
+
+                            <div style={{ maxHeight: '600px', overflowY: 'auto', width: '200px' }}>
+
+                                {character?.trails?.map(location =>
+                                    <Dropdown.Item
+                                        key={location.name}
+                                        // active={cameraMode == location.name}
+                                        onClick={() => {
+                                            setCharacter({ ...character, trail: location.name })
+                                            // setCameraMode(location.name)
+                                            // setShowMenu(false)
+                                        }}
+                                        className="d-flex justify-content-between"
+                                    >
+                                        <i className="fad fa-check"></i>
+                                        {location.name}
+                                    </Dropdown.Item>
+                                )}
+
+                            </div>
+
+                        </DropdownButton>
+
+                        <DropdownButton
+                            variant="articles w-100 text-start"
+                            size='sm'
+                            id="dropdown-basic-button"
+                            className="dropdown-articles mb-3"
+                            title={
+                                <span>
+                                    <i className="fad fa-user me-2"></i>
+                                    <span>Ground Object: {character.groundObject}</span>
+                                </span>
+                            }
+                        >
+
+                            <div style={{ maxHeight: '600px', overflowY: 'auto', width: '200px' }}>
+
+                                {character?.groundObjects?.map(location =>
+                                    <Dropdown.Item
+                                        key={location.name}
+                                        // active={cameraMode == location.name}
+                                        onClick={() => {
+                                            setCharacter({
+                                                ...character,
+                                                groundObject: location.name
+                                            })
+                                            // setCameraMode(location.name)
+                                            // setShowMenu(false)
+                                        }}
+                                        className="d-flex justify-content-between"
+                                    >
+                                        <i className="fad fa-check"></i>
+                                        {location.name}
+                                    </Dropdown.Item>
+                                )}
+
+                            </div>
+
+                        </DropdownButton>
+
+                        <DropdownButton
+                            variant="articles w-100 text-start"
+                            size='sm'
+                            id="dropdown-basic-button"
+                            className="dropdown-articles mb-3"
+                            title={
+                                <span>
+                                    <i className="fad fa-user me-2"></i>
+                                    <span>Sky Object: {character.skyObject}</span>
+                                </span>
+                            }
+                        >
+
+                            <div style={{ maxHeight: '600px', overflowY: 'auto', width: '200px' }}>
+
+                                {character?.skyObjects?.map(location =>
+                                    <Dropdown.Item
+                                        key={location.name}
+                                        // active={cameraMode == location.name}
+                                        onClick={() => {
+                                            setCharacter({
+                                                ...character,
+                                                skyObject: location.name
+                                            })
+                                            // setCameraMode(location.name)
+                                            // setShowMenu(false)
+                                        }}
+                                        className="d-flex justify-content-between"
+                                    >
+                                        <i className="fad fa-check"></i>
+                                        {location.name}
+                                    </Dropdown.Item>
+                                )}
+
+                            </div>
+
+                        </DropdownButton>
+
+                        <DropdownButton
+                            variant="articles w-100 text-start"
+                            size='sm'
+                            id="dropdown-basic-button"
+                            className="dropdown-articles mb-3"
+                            title={
+                                <span>
+                                    <i className="fad fa-user me-2"></i>
+                                    <span>Background: {character.background}</span>
+                                </span>
+                            }
+                        >
+
+                            <div style={{ maxHeight: '600px', overflowY: 'auto', width: '200px' }}>
+
+                                {character?.backgrounds?.map(location =>
+                                    <Dropdown.Item
+                                        key={location.name}
+                                        // active={cameraMode == location.name}
+                                        onClick={() => {
+                                            setCharacter({
+                                                ...character,
+                                                background: location.name
+                                            })
+                                            // setCameraMode(location.name)
+                                            // setShowMenu(false)
+                                        }}
+                                        className="d-flex justify-content-between"
+                                    >
+                                        <i className="fad fa-check"></i>
+                                        {location.name}
+                                    </Dropdown.Item>
+                                )}
+
+                            </div>
+
+                        </DropdownButton>
+
+                        {/* <div>Accent Color: Blue</div> */}
+
+                        {/* Basic / Neon / Fire */}
+                        {/* <div>Trail: Basic</div> */}
+
+                        {/* Buildings / Rocks / Light Post / Tubes */}
+                        {/* <div>Ground Obstacles: Rocks</div> */}
+
+                        {/* Helicopters / Birds / Drones */}
+                        {/* <div>Sky Obstacles: Helicopters</div> */}
+
+                    </div>
 
                 </Modal.Body>
 
@@ -97,7 +306,8 @@ export default function CustomizeModal({
                     <ArticlesButton variant="outline-dark" onClick={() => {
                         setShow(false)
                     }}>
-                        <img src={B.src} className="me-1" alt="Close" />
+                        <i className="no-controller-only fad fa-times me-1"></i>
+                        <img src={B.src} className="controller-only me-1" alt="Close" />
                         Close
                     </ArticlesButton>
 

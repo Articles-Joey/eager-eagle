@@ -120,8 +120,8 @@ export default function FourFrogsSettingsModal({
                             setShow(false)
                         }}
                     >
-                        <i className="fad fa-eraser"></i>
-                        <img src={Y.src} className="me-1" alt="Close" />
+                        <i className="no-controller-only fad fa-eraser"></i>
+                        <img src={Y.src} className="controller-only me-1" alt="Close" />
                         Reset
                     </ArticlesButton>
 
@@ -131,8 +131,8 @@ export default function FourFrogsSettingsModal({
                             setShow(false)
                         }}
                     >
-                        <i className="fad fa-times"></i>
-                        <img src={B.src} className="me-1" alt="Close" />
+                        <i className="no-controller-only fad fa-times me-1"></i>
+                        <img src={B.src} className="controller-only me-1" alt="Close" />
                         Close
                     </ArticlesButton>
 

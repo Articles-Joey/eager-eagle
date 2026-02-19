@@ -8,6 +8,10 @@ import "@/styles/components/GameOverModal.scss"
 import { useStore } from "@/hooks/useStore";
 import classNames from "classnames";
 import Link from "next/link";
+import rewards from "../rewards";
+
+import A from "@articles-media/articles-gamepad-helper/dist/img/Xbox UI/A.svg";
+import B from "@articles-media/articles-gamepad-helper/dist/img/Xbox UI/B.svg";
 
 export default function GameOverModal({
     show,
@@ -76,9 +80,54 @@ export default function GameOverModal({
                 </div>
                 <div className="my-4">
                     <div className="h5">Upcoming Unlocks</div>
-                    <div className="h5 text-muted">1,000 Distance: Faster Speed</div>
-                    <div className="h5 text-muted">5,000 Distance: New Character</div>
-                    <div className="h5 text-muted">10,000 Distance: Special Ability</div>
+                    <div
+                        className="border p-2"
+                        style={{
+                            maxHeight: '400px',
+                            overflow: 'auto'
+                        }}
+                    >
+                        {rewards.map((reward, index) => {
+                            if (reward.distance > maxDistance) {
+                                return (
+                                    <div
+                                        key={index}
+                                        className={
+                                            classNames(
+                                                "reward-item mb-1 p-3 border rounded",
+                                                {
+                                                    'unlocked': maxDistance >= reward.distance
+                                                }
+                                            )
+                                        }
+    
+                                    >
+                                        <h6>{reward.name}</h6>
+                                        <div className="text-muted">Unlocks at {reward.distance}m</div>
+    
+                                        <div className="reward-progress-bar">
+    
+                                            <i className="fad fa-home"></i>
+    
+                                            <div className="bar"></div>
+                                            <div 
+                                                className="current"
+                                                style={{
+                                                    left: `${Math.min((maxDistance / reward.distance) * 100, 100)}%`
+                                                }}
+                                            >
+                                                <i className="fas fa-plane"></i>
+                                            </div>
+    
+                                            <i className="fad fa-map-pin"></i>
+    
+                                        </div>
+    
+                                    </div>
+                                )
+                            }
+                        })}
+                    </div>
                 </div>
             </Modal.Body>
 
@@ -93,17 +142,18 @@ export default function GameOverModal({
                     }}
                 >
                     <ArticlesButton
-                        // className="w-100"
-                        // small
+                    // className="w-100"
+                    // small
                     >
-                        {/* <i className="fad fa-arrow-alt-square-left"></i> */}
-                        <img className='me-2' height={20} width={20} src="img/Xbox UI/B.svg" alt="Control Keys"></img>
+                        <i className="no-controller-only fad fa-times me-1"></i>
+                        <img className='controller-only me-2' height={20} width={20} src={B.src} alt="Control Keys"></img>
                         <span>Exit</span>
                     </ArticlesButton>
                 </Link>
 
                 <ArticlesButton onClick={handleRestart}>
-                    <img className='me-2' height={20} width={20} src="img/Xbox UI/A.svg" alt="Control Keys"></img>
+                    <i className="no-controller-only fad fa-redo me-1"></i>
+                    <img className='controller-only me-2' height={20} width={20} src={A.src} alt="Control Keys"></img>
                     Play Again (Space)
                 </ArticlesButton>
 

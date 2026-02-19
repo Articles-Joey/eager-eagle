@@ -75,7 +75,7 @@ export default function LeftPanelContent(props) {
     return (
         <div className='w-100'>
 
-            <div className="card card-articles card-sm">
+            <div className="card card-articles card-sm rounded-0">
 
                 <div className="card-body">
 
@@ -205,7 +205,7 @@ export default function LeftPanelContent(props) {
             </div>
 
             <div
-                className="card card-articles card-sm"
+                className="card card-articles card-sm rounded-0"
             >
                 <div className="card-body d-flex justify-content-between align-items-center">
 
@@ -238,7 +238,7 @@ export default function LeftPanelContent(props) {
 
             {/* Touch Controls */}
             <div
-                className="card card-articles card-sm"
+                className="card card-articles card-sm rounded-0"
             >
                 <div className="card-body">
 
@@ -279,7 +279,7 @@ export default function LeftPanelContent(props) {
 
             {/* Debug Controls */}
             <div
-                className="card card-articles card-sm"
+                className="card card-articles card-sm rounded-0"
             >
                 <div className="card-body">
 
