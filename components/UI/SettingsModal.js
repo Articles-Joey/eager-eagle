@@ -8,7 +8,8 @@ import { useStore } from "@/hooks/useStore";
 import B from "@articles-media/articles-gamepad-helper/dist/img/Xbox UI/B.svg";
 import Y from "@articles-media/articles-gamepad-helper/dist/img/Xbox UI/Y.svg";
 import { useModalNavigation } from "@/hooks/useModalNavigation";
-import { set } from "date-fns";
+// import { set } from "date-fns";
+import { useAudioStore } from "@/hooks/useAudioStore";
 
 export default function SettingsModal({
     show,
@@ -164,7 +165,6 @@ function GraphicsSettings() {
                         className="border "
                         active={darkMode}
                         onClick={() => {
-                            // setGraphicsQuality(level)
                             setDarkMode(true)
                         }}
                     >
@@ -175,7 +175,6 @@ function GraphicsSettings() {
                         className="border me-2"
                         active={!darkMode}
                         onClick={() => {
-                            // setGraphicsQuality(level)
                             setDarkMode(false)
                         }}
                     >
@@ -233,8 +232,8 @@ function GraphicsSettings() {
 
 function AudioSettings() {
 
-    const setAudioSettings = useStore(state => state.setAudioSettings)
-    const audioSettings = useStore(state => state.audioSettings)
+    const setAudioSettings = useAudioStore(state => state.setAudioSettings)
+    const audioSettings = useAudioStore(state => state.audioSettings)
 
     return (
         <>

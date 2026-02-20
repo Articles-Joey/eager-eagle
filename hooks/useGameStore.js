@@ -18,7 +18,8 @@ export const useGameStore = create((set) => ({
         }))
     },
 
-    cameraMode: 'Player',
+    cameraModes: ['Side', 'Player', 'Free'],
+    cameraMode: 'Free',
     setCameraMode: (newValue) => {
         set((prev) => ({
             cameraMode: newValue

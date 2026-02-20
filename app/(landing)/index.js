@@ -74,6 +74,8 @@ export default function LobbyPage() {
     const setNickname = useStore(state => state.setNickname)
     const nicknameKeyboard = useStore((state) => state.nicknameKeyboard)
 
+    // const character = useStore((state) => state.character)
+
     const hydrated = useStore((state) => state._hasHydrated)
 
     const infoModal = useStore((state) => state.infoModal)
@@ -88,8 +90,11 @@ export default function LobbyPage() {
     const setCustomizeModal = useStore((state) => state.setCustomizeModal)
     const setRewardsModal = useStore((state) => state.setRewardsModal)
 
+    // const distance = useGameStore((state) => state.distance)
+    const setDistance = useGameStore((state) => state.setDistance)
+
     const setGameOver = useGameStore((state) => state.setGameOver)
-    
+
     const maxDistance = useScoreStore((state) => state.maxDistance)
 
     const controllerState = useControllerStore((state) => state.controllerState)
@@ -102,6 +107,7 @@ export default function LobbyPage() {
     useEffect(() => {
 
         setGameOver(false)
+        setDistance(0)
 
     }, [])
 
@@ -275,17 +281,19 @@ export default function LobbyPage() {
                                         noMargin
                                     /> */}
                                     <div className='d-flex'>
-                                        <input
-                                            ref={el => elementsRef.current[0] = el}
-                                            type="text"
-                                            className="form-control"
-                                            id="nickname"
-                                            value={nickname}
-                                            placeholder="Enter your nickname"
-                                            onChange={(e) => {
-                                                setNickname(e.target.value)
-                                            }}
-                                        />
+                                        {nickname !== null &&
+                                            <input
+                                                ref={el => elementsRef.current[0] = el}
+                                                type="text"
+                                                className="form-control"
+                                                id="nickname"
+                                                value={nickname}
+                                                placeholder="Enter your nickname"
+                                                onChange={(e) => {
+                                                    setNickname(e.target.value)
+                                                }}
+                                            />
+                                        }
                                         <ArticlesButton
                                             className="ms-2"
                                             small
@@ -346,7 +354,7 @@ export default function LobbyPage() {
                                         setRewardsModal(true)
                                     }}
                                 >
-                                    <i className="fas fa-coins"></i>
+                                    <i className="fas fa-gift"></i>
                                     Rewards
                                 </ArticlesButton>
                             </div>

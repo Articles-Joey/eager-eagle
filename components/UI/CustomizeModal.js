@@ -150,6 +150,7 @@ export default function CustomizeModal({
                                             key={location.name}
                                             reward={location}
                                             isUnlocked={isUnlocked}
+                                            keyName={'model'}
                                         />
                                     )
 
@@ -195,6 +196,7 @@ export default function CustomizeModal({
                                             key={location.name}
                                             reward={location}
                                             isUnlocked={isUnlocked}
+                                            keyName={'trail'}
                                         />
                                     )
                                 })}
@@ -239,6 +241,7 @@ export default function CustomizeModal({
                                             key={location.name}
                                             reward={location}
                                             isUnlocked={isUnlocked}
+                                            keyName={'groundObject'}
                                         />
                                     )
 
@@ -284,6 +287,7 @@ export default function CustomizeModal({
                                             key={location.name}
                                             reward={location}
                                             isUnlocked={isUnlocked}
+                                            keyName={'skyObject'}
                                         />
                                     )
 
@@ -329,6 +333,7 @@ export default function CustomizeModal({
                                             key={location.name}
                                             reward={location}
                                             isUnlocked={isUnlocked}
+                                            keyName={'background'}
                                         />
                                     )
                                 })}
@@ -380,7 +385,8 @@ export default function CustomizeModal({
 
 function RewardDropdownItem({
     reward,
-    isUnlocked
+    isUnlocked,
+    keyName
 }) {
 
     const setCharacter = useStore((state) => state.setCharacter)
@@ -392,7 +398,7 @@ function RewardDropdownItem({
             onClick={() => {
                 setCharacter({
                     ...character,
-                    background: reward.name
+                    [keyName]: reward.name
                 })
             }}
             className={

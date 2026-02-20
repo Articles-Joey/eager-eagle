@@ -7,21 +7,24 @@ import { useStore } from "@/hooks/useStore";
 import { useTouchControlsStore } from "@/hooks/useTouchControlsStore";
 import DebugPanel from "./DebugPanel";
 import { useScoreStore } from "@/hooks/useScoreStore";
+import useFullscreen from "@/hooks/useFullScreen";
 
 export default function LeftPanelContent(props) {
 
     const {
-        server,
-        players,
+        // server,
+        // players,
         // touchControlsEnabled,
         // setTouchControlsEnabled,
         reloadScene,
-        controllerState,
-        isFullscreen,
-        requestFullscreen,
-        exitFullscreen,
+        // controllerState,
+        // isFullscreen,
+        // requestFullscreen,
+        // exitFullscreen,
         // setShowMenu
     } = props;
+
+    const { isFullscreen, requestFullscreen, exitFullscreen } = useFullscreen();
 
     // const {
     //     touchControls: touchControlsEnabled,
@@ -41,30 +44,20 @@ export default function LeftPanelContent(props) {
     const setShowMenu = useStore((state) => state.setShowMenu)
 
     const debug = useStore((state) => state.debug)
-    const toggleDebug = useStore((state) => state.toggleDebug)
+    // const toggleDebug = useStore((state) => state.toggleDebug)
 
-    const theme = useStore((state) => state.theme)
-    const setTheme = useStore((state) => state.setTheme)
+    // const theme = useStore((state) => state.theme)
+    // const setTheme = useStore((state) => state.setTheme)
 
     const darkMode = useStore((state) => state.darkMode)
     const toggleDarkMode = useStore((state) => state.toggleDarkMode)
     // const setDarkMode = useStore((state) => state.setDarkMode)
 
-    const toggleDisableDeath = useStore((state) => state.toggleDisableDeath)
-    const disableDeath = useStore((state) => state.disableDeath)
+    // const toggleDisableDeath = useStore((state) => state.toggleDisableDeath)
+    // const disableDeath = useStore((state) => state.disableDeath)
 
     const sidebar = useStore((state) => state.sidebar)
     const toggleSidebar = useStore((state) => state.toggleSidebar)
-
-    // const cameraMode = useGameStore((state) => state.cameraMode)
-    // const setCameraMode = useGameStore((state) => state.setCameraMode)
-    // const setTeleport = useGameStore((state) => state.setTeleport)
-
-    const maxDistance = useScoreStore((state) => state.maxDistance)
-    
-    const distance = useGameStore((state) => state.distance)
-
-    const isDiving = useStore((state) => state.isDiving)
 
     // const settingsModal = useStore((state) => state.showSettingsModal)
     const setSettingsModal = useStore((state) => state.setSettingsModal)
@@ -201,37 +194,7 @@ export default function LeftPanelContent(props) {
                 </div>
             </div>
 
-            <div
-                className="card card-articles card-sm rounded-0"
-            >
-                <div className="card-body d-flex justify-content-between align-items-center">
-
-                    <div>
-                        <div className="small text-muted">
-                            Distance: {distance}
-                        </div>
-                        <div>
-                            D: {isDiving ? 'True' : 'False'}
-                        </div>
-                    </div>
-
-                    <div className="d-flex align-items-center">
-                        {/* <div className="small text-muted">Distance: {distance}</div> */}
-                        <div className="small text-muted me-2">Max Distance: {maxDistance}</div>
-                        {/* <div>Y: {maxDistance}</div> */}
-                        <ArticlesButton
-                            small
-                            onClick={() => {
-                                // setMaxHeight(playerLocation?.y)
-                            }}
-                        >
-                            <i className="fad fa-redo"></i>
-                            {/* Reset */}
-                        </ArticlesButton>
-                    </div>
-
-                </div>
-            </div>
+            <DistanceCard />
 
             {/* Touch Controls */}
             <div
@@ -276,7 +239,7 @@ export default function LeftPanelContent(props) {
 
             {/* Debug Controls */}
             {debug &&
-                <DebugPanel 
+                <DebugPanel
                     reloadScene={reloadScene}
                 />
             }
@@ -318,6 +281,38 @@ export default function LeftPanelContent(props) {
                 </div>
             } */}
 
+        </div>
+    )
+
+}
+
+function DistanceCard() {
+
+    const distance = useGameStore((state) => state.distance)
+    const maxDistance = useScoreStore((state) => state.maxDistance)
+    const lifetimeDistance = useScoreStore((state) => state.lifetimeDistance)
+
+    return (
+        <div
+            className="card card-articles card-sm rounded-0"
+        >
+            <div className="card-body d-flex justify-content-between align-items-center">
+
+                <div>
+                    <div className="small text-muted">
+                        Distance: {distance}
+                    </div>
+                    {/* <div className="small text-muted">
+                            Diving: {isDiving ? 'True' : 'False'}
+                        </div> */}
+                </div>
+
+                <div className="d-flex flex-column align-items-end">
+                    <div className="small text-muted me-2">Max Distance: {maxDistance}</div>
+                    <div className="small text-muted me-2">Lifetime Distance: {lifetimeDistance}</div>
+                </div>
+
+            </div>
         </div>
     )
 

@@ -8,6 +8,8 @@ export const metadata = {
 
 export default function Page() {
     return (
-        <Suspense><GamePage /></Suspense>
+        <Suspense>
+            <GamePage />
+        </Suspense>
     )
 }

@@ -22,11 +22,59 @@ import Link from "next/link";
 
 import B from "@articles-media/articles-gamepad-helper/dist/img/Xbox UI/B.svg";
 import { useModalNavigation } from "@/hooks/useModalNavigation";
-import rewards from "../rewards";
+// import rewards from "../rewards";
 import { useGameStore } from "@/hooks/useGameStore";
 import { defaultCharacter, useStore } from "@/hooks/useStore";
 import classNames from "classnames";
 import { useScoreStore } from "@/hooks/useScoreStore";
+
+export function rewards() {
+
+    return [
+        {
+            name: "Diving",
+            description: "Unlock the ability to dive swiftly and navigate through tight spaces with precision.",
+            distance: 20,
+            lifetimeDistance: 20 * 5,
+        },
+        {
+            name: "Armor Plating",
+            description: "No longer die from collisions on the top and bottom of ground and sky obstacles. Watch out because you will bounce off!",
+            distance: 200,
+            lifetimeDistance: 200 * 5,
+        },
+        ...defaultCharacter.models.map(reward => {
+            return {
+                ...reward,
+                name: reward.name + ' Player Model',
+            }
+        }),
+        ...defaultCharacter.trails.map(reward => {
+            return {
+                ...reward,
+                name: reward.name + ' Trail',
+            }
+        }),
+        ...defaultCharacter.backgrounds.map(reward => {
+            return {
+                ...reward,
+                name: reward.name + ' Background',
+            }
+        }),
+        ...defaultCharacter.skyObjects.map(reward => {
+            return {
+                ...reward,
+                name: reward.name + ' Sky Object',
+            }
+        }),
+        ...defaultCharacter.groundObjects.map(reward => {
+            return {
+                ...reward,
+                name: reward.name + ' Ground Object',
+            }
+        }),
+    ]
+}
 
 export default function RewardsModal({
     show,
@@ -99,44 +147,9 @@ export default function RewardsModal({
                     </div>
 
                     <div>
-                        {[
-                            {
-                                name: "Diving",
-                                description: "Unlock the ability to dive swiftly and navigate through tight spaces with precision.",
-                                distance: 20,
-                                lifetimeDistance: 20 * 5,
-                            },
-                            ...defaultCharacter.models.map(reward => {
-                                return {
-                                    ...reward,
-                                    name: reward.name + ' Player Model',
-                                }
-                            }),
-                            ...defaultCharacter.trails.map(reward => {
-                                return {
-                                    ...reward,
-                                    name: reward.name + ' Trail',
-                                }
-                            }),
-                            ...defaultCharacter.backgrounds.map(reward => {
-                                return {
-                                    ...reward,
-                                    name: reward.name + ' Background',
-                                }
-                            }),
-                            ...defaultCharacter.skyObjects.map(reward => {
-                                return {
-                                    ...reward,
-                                    name: reward.name + ' Sky Object',
-                                }
-                            }),
-                            ...defaultCharacter.groundObjects.map(reward => {
-                                return {
-                                    ...reward,
-                                    name: reward.name + ' Ground Object',
-                                }
-                            }),
-                        ]
+                        {/* {rewards().filter(reward => reward.distance).length > 0 ?
+
+                            rewards()
                             .filter(reward => reward.distance)
                             .sort((a, b) => a.distance - b.distance)
                             .map((reward, index) => (
@@ -157,7 +170,37 @@ export default function RewardsModal({
                                     <p><strong>Lifetime Distance Required:</strong> {reward?.lifetimeDistance} meters</p>
 
                                 </div>
-                            ))}
+                            ))
+
+                            :
+
+                            <p>All rewards unlocked! Congratulations!</p>
+
+                        } */}
+                        {
+                            rewards()
+                                .filter(reward => reward.distance)
+                                .sort((a, b) => a.distance - b.distance)
+                                .map((reward, index) => (
+                                    <div
+                                        key={index}
+                                        className={classNames(
+                                            `reward-item mb-3 p-3 border rounded`,
+                                            {
+                                                'unlocked': maxDistance >= reward.distance
+                                            }
+                                        )}
+                                    >
+
+                                        <h5>{reward?.name}</h5>
+                                        <p>{reward?.description}</p>
+
+                                        <p className="mb-0"><strong>Distance Required:</strong> {reward?.distance} meters</p>
+                                        <p><strong>Lifetime Distance Required:</strong> {reward?.lifetimeDistance} meters</p>
+
+                                    </div>
+                                ))
+                        }
                     </div>
 
                 </Modal.Body>

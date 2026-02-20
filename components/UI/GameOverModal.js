@@ -8,16 +8,22 @@ import "@/styles/components/GameOverModal.scss"
 import { useStore } from "@/hooks/useStore";
 import classNames from "classnames";
 import Link from "next/link";
-import rewards from "../rewards";
 
 import A from "@articles-media/articles-gamepad-helper/dist/img/Xbox UI/A.svg";
 import B from "@articles-media/articles-gamepad-helper/dist/img/Xbox UI/B.svg";
+
 import { useScoreStore } from "@/hooks/useScoreStore";
+
+// import RewardsModal, { rewards } from "./RewardsModal";
+import { useRouter } from "next/navigation";
+// import rewards from "../rewards";
 
 export default function GameOverModal({
     show,
     setShow
 }) {
+
+    const router = useRouter()
 
     const [showModal, setShowModal] = useState(true)
     const { distance, setDistance } = useGameStore()
@@ -28,6 +34,9 @@ export default function GameOverModal({
     const sidebar = useStore((state) => state.sidebar)
     const showMenu = useStore((state) => state.showMenu)
     const setShowMenu = useStore((state) => state.setShowMenu)
+
+    const setCustomizeModal = useStore((state) => state.setCustomizeModal)
+    const setRewardsModal = useStore((state) => state.setRewardsModal)
 
     const handleRestart = () => {
         setDistance(0)
@@ -81,58 +90,33 @@ export default function GameOverModal({
                     <div className="h5 text-muted">Best: {maxDistance}</div>
                 </div>
                 <div className="my-4">
-                    <div className="h5">Upcoming Unlocks</div>
-                    <div
-                        className="border p-2"
-                        style={{
-                            maxHeight: '400px',
-                            overflow: 'auto'
+
+                    {/* Possible TODO - Add upcoming unlocks */}
+                    {/* <div className="h5">Upcoming Unlocks</div> */}
+
+                    <ArticlesButton
+                        onClick={() => {
+                            router.push('/')
+                            // window.location.href = "/"
+                            setCustomizeModal(true)
                         }}
+                        className="mt-2"
                     >
-                        {[
-                            // ...character
-                            // ...defaultCharacter.trails
-                        ].map((reward, index) => {
-                            if (reward.distance > maxDistance) {
-                                return (
-                                    <div
-                                        key={index}
-                                        className={
-                                            classNames(
-                                                "reward-item mb-1 p-3 border rounded",
-                                                {
-                                                    'unlocked': maxDistance >= reward.distance
-                                                }
-                                            )
-                                        }
-    
-                                    >
-                                        <h6>{reward.name}</h6>
-                                        <div className="text-muted">Unlocks at {reward.distance}m</div>
-    
-                                        <div className="reward-progress-bar">
-    
-                                            <i className="fad fa-home"></i>
-    
-                                            <div className="bar"></div>
-                                            <div 
-                                                className="current"
-                                                style={{
-                                                    left: `${Math.min((maxDistance / reward.distance) * 100, 100)}%`
-                                                }}
-                                            >
-                                                <i className="fas fa-plane"></i>
-                                            </div>
-    
-                                            <i className="fad fa-map-pin"></i>
-    
-                                        </div>
-    
-                                    </div>
-                                )
-                            }
-                        })}
-                    </div>
+                        <i className="fas fa-palette"></i>
+                        Customize
+                    </ArticlesButton>
+                    <ArticlesButton
+                        onClick={() => {
+                            router.push('/')
+                            // window.location.href = "/"
+                            setRewardsModal(true)
+                        }}
+                        className="mt-2"
+                    >
+                        <i className="fas fa-gift"></i>
+                        View Rewards
+                    </ArticlesButton>
+
                 </div>
             </Modal.Body>
 

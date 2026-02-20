@@ -1,4 +1,4 @@
-import { useStore } from "@/hooks/useStore"
+import { defaultCharacter, useStore } from "@/hooks/useStore"
 import ArticlesButton from "./Button"
 // import { set } from "date-fns"
 // import { useGameStore } from "@/hooks/useGameStore"
@@ -7,6 +7,8 @@ import { useState } from "react"
 import { useScoreStore } from "@/hooks/useScoreStore"
 
 export default function ScoreCard({ score }) {
+
+    const setCharacter = useStore((state) => state.setCharacter)
 
     const maxDistance = useScoreStore((state) => state.maxDistance)
     const setMaxDistance = useScoreStore((state) => state.setMaxDistance)
@@ -47,7 +49,7 @@ export default function ScoreCard({ score }) {
                         onClick={() => {
                             setMaxDistance(0)
                             setLifetimeDistance(0)
-                            
+                            setCharacter(defaultCharacter)
                             setConfirmReset(false)
                         }}
                         variant="danger"

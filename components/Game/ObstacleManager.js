@@ -1,9 +1,5 @@
 import { useMemo } from "react"
 import MovingObstacle from "./MovingObstacle"
-import { useGameStore } from "@/hooks/useGameStore"
-import { useEffect } from "react"
-import { useStore } from "@/hooks/useStore"
-import { useScoreStore } from "@/hooks/useScoreStore"
 
 const BUILDING_COUNT = 10
 

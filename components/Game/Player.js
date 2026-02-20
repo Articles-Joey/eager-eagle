@@ -6,10 +6,10 @@ import { Vector3 } from "three"
 // import * as THREE from 'three';
 import { useKeyboard } from "@/hooks/useKeyboard"
 
-import { Model as SpacesuitModel } from "@/components/Models/Spacesuit";
+// import { Model as SpacesuitModel } from "@/components/Models/Spacesuit";
 
 // import { useControllerStore } from '@/hooks/useControllerStore';
-import { useControlsStore, useGameStore } from "@/hooks/useGameStore";
+import { useGameStore } from "@/hooks/useGameStore";
 import { ModelEagle } from "../Models/Eagle"
 import { MeshPhysicalMaterial } from "three"
 import PlayerTrail from "./PlayerTrail";
@@ -49,6 +49,8 @@ function Player(props) {
     const setGameOver = useGameStore((state) => state.setGameOver)
     const gameOver = useGameStore((state) => state.gameOver)
     const canvasClicked = useGameStore((state) => state.canvasClicked)
+
+    // const cameraMode = useGameStore((state) => state.cameraMode)
 
     // const toggleDisableDeath = useStore((state) => state.toggleDisableDeath)
     // const disableDeath = useStore((state) => state.disableDeath)

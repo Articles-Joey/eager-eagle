@@ -3,11 +3,12 @@
 import { useEffect, useRef } from "react";
 import { useStore } from "@/hooks/useStore";
 import { usePathname } from "next/navigation";
+import { useAudioStore } from "@/hooks/useAudioStore";
 
 export default function AudioHandler() {
 
     const pathname = usePathname();
-    const audioSettings = useStore((state) => state?.audioSettings);
+    const audioSettings = useAudioStore((state) => state?.audioSettings);
     const musicRef = useRef(null);
 
     // Initialize Audio instance once

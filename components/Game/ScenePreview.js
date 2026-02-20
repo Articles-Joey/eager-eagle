@@ -35,6 +35,9 @@ import { ModelMountainGroup } from "../Models/Mountain Group";
 
 import PlayerTrail from "./PlayerTrail";
 import PlayerTrailFire from "./PlayerTrailFire";
+import BackgroundObject from "./BackgroundObject";
+import { ModelBat } from "../Models/Bat";
+import { ModelUFO } from "../Models/UFO";
 
 const game_name = 'Eager Eagle'
 const game_key = 'eager-eagle'
@@ -138,12 +141,33 @@ function ScenePreview() {
                                 <ModelHelicopter />
                             </group>
                         }
-                        {character.skyObject === "Bird" &&
-                            <group></group>
+                        {character.skyObject === "Bat" &&
+                            <group
+                                position={[0, -2, -1]}
+                            >
+                                <ModelBat
+                                    scale={0.3}
+                                />
+                            </group>
                         }
-                        {character.skyObject === "Drone" &&
-                            <group></group>
+                        {character.skyObject === "UFO" &&
+                            <group
+                                position={[-5, -4, 0]}
+                            >
+                                <ModelUFO
+                                    scale={0.05}
+                                />
+                            </group>
                         }
+                    </group>
+
+                    <group
+                        position={[-15, -4, 5]}
+                    >
+                        <BackgroundObject position={[0, 0, 0]} />
+                        <BackgroundObject position={[0, 0, -2]} />
+                        <BackgroundObject position={[0, 0, -4]} />
+                        <BackgroundObject position={[0, 0, -6]} />
                     </group>
 
                 </Debug>

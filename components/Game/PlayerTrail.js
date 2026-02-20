@@ -6,15 +6,23 @@ import { useStore } from "@/hooks/useStore"
 import { useGameStore } from "@/hooks/useGameStore"
 
 const SPEED = 10
-const POINT_COUNT = 50
+// const POINT_COUNT = 150
 
 export default function PlayerTrail({ positionRef, demoMode }) {
+
+    const graphicsQuality = useStore((state) => state.graphicsQuality)
+    const pointCount = useMemo(() => {
+        if (graphicsQuality === "Low") return 50
+        if (graphicsQuality === "Medium") return 100
+        if (graphicsQuality === "High") return 150
+        return 50
+    }, [graphicsQuality])
 
     const lineRef = useRef()
 
     const points = useMemo(() => {
-        return new Array(POINT_COUNT).fill(0).map(() => new THREE.Vector3(0, 0, 0))
-    }, [])
+        return new Array(pointCount).fill(0).map(() => new THREE.Vector3(0, 0, 0))
+    }, [pointCount])
 
     const character = useStore((state) => state.character)
     const gameOver = useGameStore((state) => state.gameOver)
@@ -37,7 +45,7 @@ export default function PlayerTrail({ positionRef, demoMode }) {
         }
 
         // Shift points back
-        for (let i = POINT_COUNT - 1; i > 0; i--) {
+        for (let i = pointCount - 1; i > 0; i--) {
             points[i].copy(points[i - 1])
             points[i].z += SPEED * delta
         }
@@ -80,7 +88,7 @@ export default function PlayerTrail({ positionRef, demoMode }) {
             ref={lineRef}
             points={points}
             color={color}
-            lineWidth={2}
+            lineWidth={character?.trail === "Neon" ? 5 : 2}
             transparent
             opacity={0.5}
         />

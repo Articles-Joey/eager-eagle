@@ -72,12 +72,12 @@ export const defaultCharacter = {
       lifetimeDistance: 0
     },
     {
-      name: "Bird",
+      name: "Bat",
       distance: 40,
       lifetimeDistance: 40 * 4
     },
     {
-      name: "Drone",
+      name: "UFO",
       distance: 80,
       lifetimeDistance: 80 * 4
     }
@@ -159,15 +159,14 @@ export const useStore = create()(
       showMenu: false,
       setShowMenu: (value) => set({ showMenu: value }),
 
-      musicVolume: 0.5,
-      setMusicVolume: (value) => set({ musicVolume: value }),
-
-      audioSettings: {
-        enabled: true,
-        backgroundMusicVolume: 100,
-        soundEffectsVolume: 100,
-      },
-      setAudioSettings: (value) => set({ audioSettings: value }),
+      // musicVolume: 0.5,
+      // setMusicVolume: (value) => set({ musicVolume: value }),
+      // audioSettings: {
+      //   enabled: true,
+      //   backgroundMusicVolume: 100,
+      //   soundEffectsVolume: 100,
+      // },
+      // setAudioSettings: (value) => set({ audioSettings: value }),
 
       infoModal: false,
       setInfoModal: (value) => set({ infoModal: value }),
@@ -223,7 +222,7 @@ export const useStore = create()(
     }),
     {
       name: 'eager-eagle-game-store', // name of the item in the storage (must be unique)
-      version: 2,
+      version: 3,
       onRehydrateStorage: () => (state) => {
         state.setHasHydrated(true)
       },
@@ -236,6 +235,7 @@ export const useStore = create()(
             'creditsModal',
             'showMenu',
             'isDiving',
+            '_hasHydrated',
             // 'lifetimeDistance',
             // 'audioSettings',
             // 'maxDistance',

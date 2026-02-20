@@ -7,16 +7,18 @@ import { useEffect, useRef, useState } from "react";
 
 import { Modal } from "react-bootstrap"
 
-import ViewUserModal from "@/components/UI/ViewUserModal"
+import packageJson from "@/package.json"
+
+// import ViewUserModal from "@/components/UI/ViewUserModal"
 
 // import BasicLoading from "@/components/loading/BasicLoading";
 
 // import powerups from "app/(site)/community/games/four-frogs/components/powerups";
 
 // import games from "../constants/games";
-const games = []
+// const games = []
 
-import IsDev from "@/components/UI/IsDev";
+// import IsDev from "@/components/UI/IsDev";
 import ArticlesButton from "./Button";
 import Link from "next/link";
 
@@ -74,7 +76,17 @@ export default function GameInfoModal({
 
                 <Modal.Body className="flex-column p-3">
 
+                    <img
+                        className="ratio ratio-16x9 border border-2 mb-3"
+                        src={"img/preview.webp"}
+                        style={{
+                            objectFit: 'cover'
+                        }}
+                    ></img>
 
+                    <div className="mb-3">{packageJson.description}</div>
+
+                    <div className="small text-muted">Version: {packageJson.version}</div>
 
                 </Modal.Body>
 

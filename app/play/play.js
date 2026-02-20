@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useContext, useState, useRef, useMemo } from 'react';
+import { useEffect, useContext, useState, useRef, useMemo, Suspense } from 'react';
 
 import dynamic from "next/dynamic";
 
@@ -25,6 +25,7 @@ import { useStore } from '@/hooks/useStore';
 import { useTouchControlsStore } from '@/hooks/useTouchControlsStore';
 import AudioHandler from '@/components/Game/AudioHandler';
 import { useScoreStore } from '@/hooks/useScoreStore';
+import DiveButton from '@/components/UI/DiveButton';
 
 const GameCanvas = dynamic(() => import('@/components/Game/GameCanvas'), {
     ssr: false,
@@ -41,21 +42,21 @@ export default function GamePage() {
     //     socket: state.socket
     // }));
 
-    const router = useRouter()
-    const pathname = usePathname()
-    const searchParams = useSearchParams()
-    const params = Object.fromEntries(searchParams.entries());
-    const { server } = params
+    // const router = useRouter()
+    // const pathname = usePathname()
+    // const searchParams = useSearchParams()
+    // const params = Object.fromEntries(searchParams.entries());
+    // const { server } = params
 
-    const { controllerState, setControllerState } = useControllerStore()
-    const [showControllerState, setShowControllerState] = useState(false)
+    // const { controllerState, setControllerState } = useControllerStore()
+    // const [showControllerState, setShowControllerState] = useState(false)
 
     // const [ cameraMode, setCameraMode ] = useState('Player')
 
-    const [players, setPlayers] = useState([])
+    // const [players, setPlayers] = useState([])
 
-    const serverGameState = useGameStore((state) => state.serverGameState)
-    const setServerGameState = useGameStore((state) => state.setServerGameState)
+    // const serverGameState = useGameStore((state) => state.serverGameState)
+    // const setServerGameState = useGameStore((state) => state.setServerGameState)
 
     const distance = useGameStore((state) => state.distance)
 
@@ -72,7 +73,7 @@ export default function GamePage() {
 
     const [sceneKey, setSceneKey] = useState(0);
 
-    const [gameState, setGameState] = useState(false)
+    // const [gameState, setGameState] = useState(false)
 
     // Function to handle scene reload
     const reloadScene = () => {
@@ -82,15 +83,15 @@ export default function GamePage() {
     const { isFullscreen, requestFullscreen, exitFullscreen } = useFullscreen();
 
     let panelProps = {
-        server,
-        players,
+        // server,
+        // players,
         // touchControlsEnabled,
         // setTouchControlsEnabled,
         reloadScene,
         // controllerState,
-        isFullscreen,
-        requestFullscreen,
-        exitFullscreen,
+        // isFullscreen,
+        // requestFullscreen,
+        // exitFullscreen,
         // setShowMenu
     }
 
@@ -161,29 +162,7 @@ export default function GamePage() {
 
             <div className='canvas-wrap'>
 
-                {(
-                    enabled
-                    &&
-                    (
-                        useScoreStore.getState().lifetimeDistance > 40
-                        ||
-                        useScoreStore.getState().maxDistance > 10
-                    )
-                ) &&
-                    <button
-                        className="dive-button"
-                        onMouseDown={() => setIsDiving(true)}
-                        onMouseUp={() => setIsDiving(false)}
-                        onMouseLeave={() => setIsDiving(false)}
-                        onTouchStart={(e) => {
-                            // e.preventDefault();
-                            setIsDiving(true)
-                        }}
-                        onTouchEnd={() => setIsDiving(false)}
-                    >
-                        <i className="fas fa-arrow-down"></i>
-                    </button>
-                }
+                <Suspense><DiveButton /></Suspense>
 
                 {!sidebar && <div className='distance-badge badge bg-black text-white border'>
                     Distance: {distance}
@@ -198,3 +177,4 @@ export default function GamePage() {
         </div>
     );
 }
+

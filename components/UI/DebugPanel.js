@@ -1,7 +1,9 @@
 import { useStore } from "@/hooks/useStore"
 import ArticlesButton from "./Button"
-import { useGameStore } from "@/hooks/useGameStore"
+// import { useGameStore } from "@/hooks/useGameStore"
 import { Dropdown, DropdownButton } from "react-bootstrap"
+// import { set } from "date-fns"
+import { useScoreStore } from "@/hooks/useScoreStore"
 
 export default function DebugPanel({
     reloadScene
@@ -13,7 +15,7 @@ export default function DebugPanel({
     // const enabled = useTouchControlsStore(state => state.enabled)
     // const setEnabled = useTouchControlsStore(state => state.setEnabled)
 
-    const setShowMenu = useStore((state) => state.setShowMenu)
+    // const setShowMenu = useStore((state) => state.setShowMenu)
 
     const debug = useStore((state) => state.debug)
     const toggleDebug = useStore((state) => state.toggleDebug)
@@ -21,8 +23,12 @@ export default function DebugPanel({
     const toggleDisableDeath = useStore((state) => state.toggleDisableDeath)
     const disableDeath = useStore((state) => state.disableDeath)
 
-    const cameraMode = useGameStore((state) => state.cameraMode)
-    const setCameraMode = useGameStore((state) => state.setCameraMode)
+    // const cameraMode = useGameStore((state) => state.cameraMode)
+    // const setCameraMode = useGameStore((state) => state.setCameraMode)
+    // const cameraModes = useGameStore((state) => state.cameraModes)
+
+    const setMaxDistance = useScoreStore((state) => state.setMaxDistance)
+    const setLifetimeDistance = useScoreStore((state) => state.setLifetimeDistance)
 
     return (
         <div
@@ -84,45 +90,58 @@ export default function DebugPanel({
 
                                 <div style={{ maxHeight: '600px', overflowY: 'auto', width: '200px' }}>
 
-                                    {[
-                                        {
-                                            name: 'Free',
-                                        },
-                                        {
-                                            name: 'Player',
-                                        }
-                                    ]
-                                        .map(location =>
-                                            <Dropdown.Item
-                                                key={location.name}
-                                                active={cameraMode == location.name}
-                                                onClick={() => {
-                                                    setCameraMode(location.name)
-                                                    setShowMenu(false)
-                                                }}
-                                                className="d-flex justify-content-between"
-                                            >
-                                                <i className="fad fa-camera"></i>
-                                                {location.name}
-                                            </Dropdown.Item>
-                                        )}
+                                    {/* {cameraModes
+                                        .map(location => {
+
+                                            const newLocation = {
+                                                name: location,
+                                            }
+
+                                            return (
+                                                <Dropdown.Item
+                                                    key={newLocation.name}
+                                                    active={cameraMode == newLocation.name}
+                                                    onClick={() => {
+                                                        setCameraMode(newLocation.name)
+                                                        setShowMenu(false)
+                                                    }}
+                                                    className="d-flex justify-content-between"
+                                                >
+                                                    <i className="fad fa-camera"></i>
+                                                    {newLocation.name}
+                                                </Dropdown.Item>
+                                            )
+                                        })
+                                    } */}
 
                                 </div>
 
                             </DropdownButton>
                         </div>
 
-                        <div className='w-50'>
+                        <div className='w-100'>
 
                             <ArticlesButton
                                 small
-                                className="w-100"
+                                className="w-50"
                                 onClick={() => {
                                     toggleDebug()
                                 }}
                             >
                                 <i className="fad fa-bug"></i>
                                 <span>Debug: {debug ? 'True' : 'Disable'}</span>
+                            </ArticlesButton>
+
+                            <ArticlesButton
+                                size="sm"
+                                className="w-50"
+                                onClick={() => {
+                                    setMaxDistance(9999)
+                                    setLifetimeDistance(9999)
+                                }}
+                            >
+                                <i className="fad fa-debug"></i>
+                                Give Max
                             </ArticlesButton>
 
                             {/* <DropdownButton

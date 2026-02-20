@@ -14,7 +14,7 @@ export const useAudioStore = create()(
 
       audioSettings: {
         enabled: true,
-        backgroundMusicVolume: 100,
+        backgroundMusicVolume: 50,
         soundEffectsVolume: 100,
       },
       setAudioSettings: (value) => set({ audioSettings: value }),

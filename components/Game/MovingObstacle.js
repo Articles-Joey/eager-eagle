@@ -8,6 +8,14 @@ import { ModelHelicopter } from "../Models/Helicopter"
 import { useStore } from "@/hooks/useStore"
 import { degToRad } from "three/src/math/MathUtils"
 import { useScoreStore } from "@/hooks/useScoreStore"
+import { ModelTree } from "../Models/Tree"
+import { ModelBuildingOne } from "../Models/Building 1"
+import { ModelMountainGroup } from "../Models/Mountain Group"
+// import { useGLTF as useGLTF_DREI } from '@react-three/drei'
+
+import BackgroundObject from "./BackgroundObject"
+import { ModelBat } from "../Models/Bat"
+import { ModelUFO } from "../Models/UFO"
 // import { useStore } from "@/hooks/useStore"
 
 const SPAWN_DISTANCE = -20
@@ -22,6 +30,8 @@ export default function MovingObstacle({ index }) {
     const { nodes, materials } = useGLTF('models/Building 1-transformed.glb')
 
     const darkMode = useStore((state) => state.darkMode)
+
+    const character = useStore((state) => state.character)
 
     const incrementLifetimeDistance = useScoreStore((state) => state.incrementLifetimeDistance)
 
@@ -222,7 +232,25 @@ export default function MovingObstacle({ index }) {
                                 rotation={[0, bg.rotY, 0]}
                             >
                                 <group position={[-offset.x, -offset.y, -offset.z]}>
-                                    <mesh geometry={nodes.skyscraper.geometry} material={materials.None} />
+
+                                    {/* <mesh geometry={nodes.skyscraper.geometry} material={materials.None} /> */}
+
+                                    {character.groundObject === "Mountain" &&
+                                        <ModelMountainGroup
+                                            position={[0, -1.5, 0]}
+                                            scale={[1, Math.random() * 0.5 + 1, 1]}
+                                        />
+                                    }
+                                    {character.groundObject === "Tree" &&
+                                        <ModelTree
+                                            position={[0, -treeMinY * -2, 0]}
+                                            scale={[0.1, 0.1, 0.1]}
+                                        />
+                                    }
+                                    {character.groundObject === "Building" &&
+                                        <mesh geometry={nodes.skyscraper.geometry} material={materials.None} />
+                                    }
+
                                 </group>
                             </group>
                         )
@@ -246,7 +274,6 @@ export default function MovingObstacle({ index }) {
                                 yPos={yPos}
                                 hillMeshRefs={hillMeshRefs}
                                 index={i}
-
                             />
                         )
                     })}
@@ -261,10 +288,32 @@ export default function MovingObstacle({ index }) {
             </group> */}
 
             <group ref={ref} dispose={null}>
+
                 <mesh>
                     <boxGeometry args={[args[0], buildingHeight, args[2]]} />
-                    <meshStandardMaterial color="red" />
+                    <meshStandardMaterial color="red" transparent opacity={0.5} />
                 </mesh>
+
+                {character.groundObject === "Mountain" &&
+                    <ModelMountainGroup
+                        position={[0, (-buildingHeight / 2) - mountainMinY, 0]}
+                        scale={[1, (buildingHeight / 2) - 0.1, 1]}
+                    />
+                }
+                {character.groundObject === "Tree" &&
+                    <ModelTree
+                        position={[0, (-buildingHeight / 2) - treeMinY + 0.5, 0]}
+                        scale={[0.1, (buildingHeight / 23), 0.1]}
+                    />
+                }
+                {character.groundObject === "Building" &&
+                    <ModelBuildingOne
+                        position={[0, (-buildingHeight / 2), 0]}
+                        scale={[0.3, (buildingHeight / 2) + 0.5, 0.3]}
+                        noPhysics={true}
+                    />
+                }
+
                 {/* <group rotation={[degToRad(180), degToRad(180), degToRad(180)]}>
                     <mesh>
                         <coneGeometry args={[1, 5, 4]} />
@@ -284,9 +333,45 @@ export default function MovingObstacle({ index }) {
                 scale={0.005}
             // position={[0, 0, 0]}
             >
-                <ModelHelicopter
+
+                {/* <ModelHelicopter
                     position={[900, -100, 100]}
-                />
+                /> */}
+
+                <group>
+                    {character.skyObject === "Helicopter" &&
+                        // <group
+                        //     position={[2, -5, 2]}
+                        //     scale={0.01}
+                        // >
+                        //     <ModelHelicopter />
+                        // </group>
+                        <ModelHelicopter
+                            position={[900, -100, 100]}
+                        />
+                    }
+                    {character.skyObject === "Bat" &&
+                        <group
+                            position={[0, -2, -1]}
+                        >
+                            <ModelBat
+                                scale={70}
+                                position={[0, -150, 0]}
+                            />
+                        </group>
+                    }
+                    {character.skyObject === "UFO" &&
+                        <group
+                            position={[-5, -4, 0]}
+                        >
+                            <ModelUFO
+                                scale={4}
+                                position={[0, -100, 0]}
+                            />
+                        </group>
+                    }
+                </group>
+
             </group>
 
         </group>
@@ -299,6 +384,9 @@ function Hill({
     hillMeshRefs,
     index: i
 }) {
+
+    const character = useStore((state) => state.character)
+
     return (
         <group position={[hill.x, yPos, hill.z]}>
             <mesh
@@ -333,6 +421,9 @@ function Hill({
                         colorBottom: { value: new THREE.Color(hill.colorBottom) }
                     }}
                 />
+
+                <BackgroundObject />
+
             </mesh>
         </group>
     );
