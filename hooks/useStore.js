@@ -2,11 +2,121 @@
 import { createWithEqualityFn as create } from 'zustand/traditional'
 import { persist } from 'zustand/middleware'
 
+export const defaultCharacter = {
+
+  // Eagle, Airplane
+  models: [
+    {
+      name: "Eagle",
+      distance: 0,
+    },
+    {
+      name: "Airplane",
+      distance: 30,
+      lifetimeDistance: 30* 4,
+    },
+    {
+      name: "Flappy Bird",
+      distance: 60,
+      lifetimeDistance: 60 * 4,
+    }
+  ],
+  model: 'Eagle',
+
+  trails: [
+    {
+      name: "None",
+      distance: 0,
+    },
+    {
+      name: "Basic",
+      distance: 10,
+      lifetimeDistance: 10 * 4,
+    },
+    {
+      name: "Neon",
+      distance: 50,
+      lifetimeDistance: 50 * 4,
+    },
+    {
+      name: "Fire",
+      distance: 100,
+      lifetimeDistance: 100 * 4,
+    }
+  ],
+  trail: "None",
+
+  groundObjects: [
+    {
+      name: "Building",
+      distance: 0,
+      lifetimeDistance: 0,
+    },
+    {
+      name: "Mountain",
+      distance: 40,
+      lifetimeDistance: 40 * 4,
+    },
+    {
+      name: "Tree",
+      distance: 70,
+      lifetimeDistance: 70 * 4,
+    }
+  ],
+  groundObject: "Building",
+
+  skyObjects: [
+    {
+      name: "Helicopter",
+      distance: 0,
+      lifetimeDistance: 0
+    },
+    {
+      name: "Bird",
+      distance: 40,
+      lifetimeDistance: 40 * 4
+    },
+    {
+      name: "Drone",
+      distance: 80,
+      lifetimeDistance: 80 * 4
+    }
+  ],
+  skyObject: "Helicopter",
+
+  backgrounds: [
+    {
+      name: "City",
+      distance: 0,
+      lifetimeDistance: 0,
+    },
+    {
+      name: "Mountains",
+      distance: 42,
+      lifetimeDistance: 42 * 4,
+    },
+    {
+      name: "Forest",
+      distance: 66,
+      lifetimeDistance: 66 * 4,
+    }
+  ],
+  background: "City",
+
+}
+
 export const useStore = create()(
   persist(
     (set, get) => ({
 
-      nickname: "",
+      _hasHydrated: false,
+      setHasHydrated: (state) => {
+        set({
+          _hasHydrated: state
+        });
+      },
+
+      nickname: null,
       setNickname: (value) => set({ nickname: value }),
       randomNickname: (value) => {
         const adjectives = ["Swift", "Brave", "Clever", "Mighty", "Fierce", "Nimble", "Wise", "Bold"];
@@ -38,60 +148,8 @@ export const useStore = create()(
       toggleDebug: () => set({ debug: !get().debug }),
       setDebug: (value) => set({ debug: value }),
 
-      character: {
-
-        // Eagle, Airplane
-        models: [
-          { name: "Eagle" },
-          { name: "Airplane" },
-          { name: "Flappy Bird" }
-        ],
-        model: 'Eagle',
-
-        trails: [
-          {
-            name: "None",
-          },
-          {
-            name: "Basic",
-          },
-          {
-            name: "Neon",
-          },
-          {
-            name: "Fire",
-          }
-        ],
-        trail: "Basic",
-
-        groundObjects: [
-          { name: "Building" },
-          { name: "Mountain" },
-          { name: "Tree" }
-        ],
-        groundObject: "Building",
-
-        skyObjects: [
-          { name: "Helicopter" },
-          { name: "Bird" },
-          { name: "Drone" }
-        ],
-        skyObject: "Helicopter",
-
-        backgrounds: [
-          { name: "City" },
-          { name: "Mountains" },
-          { name: "Forest" }
-        ],
-        background: "City",
-
-        // trail: {
-        //   enabled: true,
-        //   type: 'Standard',
-        //   color: 'red'
-        // }
-
-      },
+      defaultCharacter: defaultCharacter,
+      character: defaultCharacter,
       setCharacter: (value) => set({ character: value }),
 
       sidebar: true,
@@ -140,29 +198,35 @@ export const useStore = create()(
         }))
       },
 
-      lifetimeDistance: 0,
-      setLifetimeDistance: (newValue) => {
-        set((prev) => ({
-          lifetimeDistance: newValue
-        }))
-      },
-      incrementLifetimeDistance: () => {
-        set((prev) => ({
-          lifetimeDistance: prev.lifetimeDistance + 1
-        }))
-      },
+      // lifetimeDistance: 0,
+      // setLifetimeDistance: (newValue) => {
+      //   set((prev) => ({
+      //     lifetimeDistance: newValue
+      //   }))
+      // },
+      // incrementLifetimeDistance: () => {
+      //   set((prev) => ({
+      //     lifetimeDistance: prev.lifetimeDistance + 1
+      //   }))
+      // },
 
-      maxDistance: 0,
-      setMaxDistance: (newValue) => {
-        set((prev) => ({
-          maxDistance: newValue
-        }))
-      },
+      // maxDistance: 0,
+      // setMaxDistance: (newValue) => {
+      //   set((prev) => ({
+      //     maxDistance: newValue
+      //   }))
+      // },
+
+      debug: false,
+      setDebug: (value) => set({ debug: value }),
 
     }),
     {
       name: 'eager-eagle-game-store', // name of the item in the storage (must be unique)
       version: 2,
+      onRehydrateStorage: () => (state) => {
+        state.setHasHydrated(true)
+      },
       // storage: createJSONStorage(() => sessionStorage), // (optional) by default, 'localStorage' is used
       partialize: (state) =>
         Object.fromEntries(

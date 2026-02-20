@@ -33,6 +33,9 @@ import ModelFlappyBird from "../Models/ModelFlappyBird";
 import { ModelTree } from "../Models/Tree";
 import { ModelMountainGroup } from "../Models/Mountain Group";
 
+import PlayerTrail from "./PlayerTrail";
+import PlayerTrailFire from "./PlayerTrailFire";
+
 const game_name = 'Eager Eagle'
 const game_key = 'eager-eagle'
 
@@ -96,6 +99,8 @@ function ScenePreview() {
                 />
             }
 
+            {character.trail !== "Fire" && <PlayerTrail demoMode positionRef={[0, 0, 0]} />}
+            {character.trail === "Fire" && <PlayerTrailFire demoMode positionRef={[0, 0, 0]} />}
 
             <Physics>
 

@@ -9,7 +9,7 @@ const SPEED = 10;
 const POINT_COUNT = 50;
 const PARTICLE_COUNT = 100;
 
-export default function PlayerTrailFire({ positionRef }) {
+export default function PlayerTrailFire({ positionRef, demoMode }) {
     const lineRef = useRef();
     const particlesRef = useRef();
     
@@ -45,8 +45,19 @@ export default function PlayerTrailFire({ positionRef }) {
     const gameOver = useGameStore((state) => state.gameOver);
 
     useFrame((state, delta) => {
-        if (!positionRef.current || !lineRef.current) return;
-        const [x, y, z] = positionRef.current;
+        if (!lineRef.current) return;
+        if (!demoMode && !positionRef?.current) return;
+
+        let x = 0, y = 0, z = 0;
+        if (positionRef?.current) {
+            [x, y, z] = positionRef.current;
+        }
+
+        if (demoMode) {
+            x += Math.sin(state.clock.elapsedTime * 4) * 0.3;
+            y += Math.cos(state.clock.elapsedTime * 5) * 0.3;
+        }
+
         // Shift points back
         for (let i = POINT_COUNT - 1; i > 0; i--) {
             points[i].copy(points[i - 1]);
@@ -81,7 +92,7 @@ export default function PlayerTrailFire({ positionRef }) {
         }
     });
 
-    if (character?.trail === "None" || gameOver) return null;
+    if (character?.trail === "None" || (!demoMode && gameOver)) return null;
 
     return (
         <group>

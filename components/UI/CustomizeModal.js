@@ -21,9 +21,13 @@ import ArticlesButton from "./Button";
 import Link from "next/link";
 
 import B from "@articles-media/articles-gamepad-helper/dist/img/Xbox UI/B.svg";
+import Y from "@articles-media/articles-gamepad-helper/dist/img/Xbox UI/Y.svg";
+
 import { useModalNavigation } from "@/hooks/useModalNavigation";
-import { useStore } from "@/hooks/useStore";
+import { defaultCharacter, useStore } from "@/hooks/useStore";
 import ScenePreview from "../Game/ScenePreview";
+import { useScoreStore } from "@/hooks/useScoreStore";
+import classNames from "classnames";
 
 export default function CustomizeModal({
     show,
@@ -43,8 +47,12 @@ export default function CustomizeModal({
     const elementsRef = useRef([]);
     useModalNavigation(elementsRef, () => setShowModal(false));
 
+    // const defaultCharacter = useStore((state) => state.defaultCharacter)
     const character = useStore((state) => state.character)
     const setCharacter = useStore((state) => state.setCharacter)
+
+    const maxDistance = useScoreStore((state) => state.maxDistance)
+    const lifetimeDistance = useScoreStore((state) => state.lifetimeDistance)
 
     return (
         <>
@@ -62,7 +70,7 @@ export default function CustomizeModal({
 
             <Modal
                 className="articles-modal customize-modal"
-                size='md'
+                size='lg'
                 show={showModal}
                 centered
                 scrollable
@@ -89,6 +97,21 @@ export default function CustomizeModal({
                     </div>
 
                     <div className="d-flex flex-column w-100 ms-lg-3">
+
+                        <div className="d-flex justify-content-center text-center mb-3">
+
+                            <div className="px-3">
+                                <h3>{maxDistance}</h3>
+                                <div>max distance</div>
+                            </div>
+
+                            <div className="px-3">
+                                <h3>{lifetimeDistance}</h3>
+                                <div>lifetime distance</div>
+                            </div>
+
+                        </div>
+
                         {/* Eagle / Flappy Bird / Plane */}
                         {/* <div>Player:</div> */}
                         <DropdownButton
@@ -106,21 +129,31 @@ export default function CustomizeModal({
 
                             <div style={{ maxHeight: '600px', overflowY: 'auto', width: '200px' }}>
 
-                                {character?.models?.map(location =>
-                                    <Dropdown.Item
-                                        key={location.name}
-                                        // active={cameraMode == location.name}
-                                        onClick={() => {
-                                            setCharacter({ ...character, model: location.name })
-                                            // setCameraMode(location.name)
-                                            // setShowMenu(false)
-                                        }}
-                                        className="d-flex justify-content-between"
-                                    >
-                                        <i className="fad fa-check"></i>
-                                        {location.name}
-                                    </Dropdown.Item>
-                                )}
+                                {defaultCharacter?.models?.map(location => {
+
+                                    const isUnlocked = defaultCharacter.models.find(bg => {
+                                        return (
+                                            bg.name === location.name
+                                            &&
+                                            (
+                                                maxDistance >= bg.distance
+                                                ||
+                                                lifetimeDistance >= bg.lifetimeDistance
+                                                ||
+                                                bg.distance === 0
+                                            )
+                                        )
+                                    })
+
+                                    return (
+                                        <RewardDropdownItem
+                                            key={location.name}
+                                            reward={location}
+                                            isUnlocked={isUnlocked}
+                                        />
+                                    )
+
+                                })}
 
                             </div>
 
@@ -141,21 +174,30 @@ export default function CustomizeModal({
 
                             <div style={{ maxHeight: '600px', overflowY: 'auto', width: '200px' }}>
 
-                                {character?.trails?.map(location =>
-                                    <Dropdown.Item
-                                        key={location.name}
-                                        // active={cameraMode == location.name}
-                                        onClick={() => {
-                                            setCharacter({ ...character, trail: location.name })
-                                            // setCameraMode(location.name)
-                                            // setShowMenu(false)
-                                        }}
-                                        className="d-flex justify-content-between"
-                                    >
-                                        <i className="fad fa-check"></i>
-                                        {location.name}
-                                    </Dropdown.Item>
-                                )}
+                                {defaultCharacter?.trails?.map(location => {
+
+                                    const isUnlocked = defaultCharacter.trails.find(bg => {
+                                        return (
+                                            bg.name === location.name
+                                            &&
+                                            (
+                                                maxDistance >= bg.distance
+                                                ||
+                                                lifetimeDistance >= bg.lifetimeDistance
+                                                ||
+                                                bg.distance === 0
+                                            )
+                                        )
+                                    })
+
+                                    return (
+                                        <RewardDropdownItem
+                                            key={location.name}
+                                            reward={location}
+                                            isUnlocked={isUnlocked}
+                                        />
+                                    )
+                                })}
 
                             </div>
 
@@ -176,24 +218,31 @@ export default function CustomizeModal({
 
                             <div style={{ maxHeight: '600px', overflowY: 'auto', width: '200px' }}>
 
-                                {character?.groundObjects?.map(location =>
-                                    <Dropdown.Item
-                                        key={location.name}
-                                        // active={cameraMode == location.name}
-                                        onClick={() => {
-                                            setCharacter({
-                                                ...character,
-                                                groundObject: location.name
-                                            })
-                                            // setCameraMode(location.name)
-                                            // setShowMenu(false)
-                                        }}
-                                        className="d-flex justify-content-between"
-                                    >
-                                        <i className="fad fa-check"></i>
-                                        {location.name}
-                                    </Dropdown.Item>
-                                )}
+                                {defaultCharacter?.groundObjects?.map(location => {
+
+                                    const isUnlocked = defaultCharacter.groundObjects.find(bg => {
+                                        return (
+                                            bg.name === location.name
+                                            &&
+                                            (
+                                                maxDistance >= bg.distance
+                                                ||
+                                                lifetimeDistance >= bg.lifetimeDistance
+                                                ||
+                                                bg.distance === 0
+                                            )
+                                        )
+                                    })
+
+                                    return (
+                                        <RewardDropdownItem
+                                            key={location.name}
+                                            reward={location}
+                                            isUnlocked={isUnlocked}
+                                        />
+                                    )
+
+                                })}
 
                             </div>
 
@@ -214,24 +263,31 @@ export default function CustomizeModal({
 
                             <div style={{ maxHeight: '600px', overflowY: 'auto', width: '200px' }}>
 
-                                {character?.skyObjects?.map(location =>
-                                    <Dropdown.Item
-                                        key={location.name}
-                                        // active={cameraMode == location.name}
-                                        onClick={() => {
-                                            setCharacter({
-                                                ...character,
-                                                skyObject: location.name
-                                            })
-                                            // setCameraMode(location.name)
-                                            // setShowMenu(false)
-                                        }}
-                                        className="d-flex justify-content-between"
-                                    >
-                                        <i className="fad fa-check"></i>
-                                        {location.name}
-                                    </Dropdown.Item>
-                                )}
+                                {defaultCharacter?.skyObjects?.map(location => {
+
+                                    const isUnlocked = defaultCharacter.skyObjects.find(bg => {
+                                        return (
+                                            bg.name === location.name
+                                            &&
+                                            (
+                                                maxDistance >= bg.distance
+                                                ||
+                                                lifetimeDistance >= bg.lifetimeDistance
+                                                ||
+                                                bg.distance === 0
+                                            )
+                                        )
+                                    })
+
+                                    return (
+                                        <RewardDropdownItem
+                                            key={location.name}
+                                            reward={location}
+                                            isUnlocked={isUnlocked}
+                                        />
+                                    )
+
+                                })}
 
                             </div>
 
@@ -252,24 +308,30 @@ export default function CustomizeModal({
 
                             <div style={{ maxHeight: '600px', overflowY: 'auto', width: '200px' }}>
 
-                                {character?.backgrounds?.map(location =>
-                                    <Dropdown.Item
-                                        key={location.name}
-                                        // active={cameraMode == location.name}
-                                        onClick={() => {
-                                            setCharacter({
-                                                ...character,
-                                                background: location.name
-                                            })
-                                            // setCameraMode(location.name)
-                                            // setShowMenu(false)
-                                        }}
-                                        className="d-flex justify-content-between"
-                                    >
-                                        <i className="fad fa-check"></i>
-                                        {location.name}
-                                    </Dropdown.Item>
-                                )}
+                                {defaultCharacter?.backgrounds?.map(location => {
+
+                                    const isUnlocked = defaultCharacter.backgrounds.find(bg => {
+                                        return (
+                                            bg.name === location.name
+                                            &&
+                                            (
+                                                maxDistance >= bg.distance
+                                                ||
+                                                lifetimeDistance >= bg.lifetimeDistance
+                                                ||
+                                                bg.distance === 0
+                                            )
+                                        )
+                                    })
+
+                                    return (
+                                        <RewardDropdownItem
+                                            key={location.name}
+                                            reward={location}
+                                            isUnlocked={isUnlocked}
+                                        />
+                                    )
+                                })}
 
                             </div>
 
@@ -292,7 +354,13 @@ export default function CustomizeModal({
 
                 <Modal.Footer className="justify-content-between">
 
-                    <div></div>
+                    <ArticlesButton variant="danger" onClick={() => {
+                        setCharacter(defaultCharacter)
+                    }}>
+                        <i className="no-controller-only fad fa-redo me-1"></i>
+                        <img src={Y.src} className="controller-only me-1" alt="Reset" />
+                        Reset
+                    </ArticlesButton>
 
                     <ArticlesButton variant="outline-dark" onClick={() => {
                         setShow(false)
@@ -308,4 +376,55 @@ export default function CustomizeModal({
         </>
     )
 
+}
+
+function RewardDropdownItem({
+    reward,
+    isUnlocked
+}) {
+
+    const setCharacter = useStore((state) => state.setCharacter)
+    const character = useStore((state) => state.character)
+
+    return (
+        <Dropdown.Item
+            // key={reward.name}
+            onClick={() => {
+                setCharacter({
+                    ...character,
+                    background: reward.name
+                })
+            }}
+            className={
+                classNames(
+                    `d-flex justify-content-between`,
+                    {
+                        'unlocked': isUnlocked
+                    }
+                )
+            }
+            disabled={!isUnlocked}
+        >
+
+            <div className="d-flex justify-content-between w-100">
+
+                {isUnlocked ? <i className="fad fa-check"></i> : <i className="fad fa-lock"></i>}
+
+                <div className="text-end">
+
+                    <div>{reward.name}</div>
+
+                    <div>
+                        <div className="text-muted small">
+                            {reward.distance > 0 && <div>{reward.distance} Distance</div>}
+                            {reward.lifetimeDistance > 0 && <div>{reward.lifetimeDistance} Lifetime</div>}
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </Dropdown.Item>
+    )
 }

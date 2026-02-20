@@ -8,8 +8,9 @@ import { useStore } from "@/hooks/useStore";
 import B from "@articles-media/articles-gamepad-helper/dist/img/Xbox UI/B.svg";
 import Y from "@articles-media/articles-gamepad-helper/dist/img/Xbox UI/Y.svg";
 import { useModalNavigation } from "@/hooks/useModalNavigation";
+import { set } from "date-fns";
 
-export default function FourFrogsSettingsModal({
+export default function SettingsModal({
     show,
     setShow,
 }) {
@@ -19,8 +20,6 @@ export default function FourFrogsSettingsModal({
     const [lightboxData, setLightboxData] = useState(null)
 
     const [tab, setTab] = useState('Graphics')
-
-
 
     const elementsRef = useRef([]);
     useModalNavigation(elementsRef, () => setShowModal(false));
@@ -145,38 +144,70 @@ export default function FourFrogsSettingsModal({
 }
 
 function GraphicsSettings() {
-
+    
     const darkMode = useStore(state => state.darkMode)
     const setDarkMode = useStore(state => state.setDarkMode)
+
+    const debug = useStore(state => state.debug)
+    const setDebug = useStore(state => state.setDebug)
 
     const graphicsQuality = useStore(state => state.graphicsQuality)
     const setGraphicsQuality = useStore(state => state.setGraphicsQuality)
 
     return (
         <>
-            <div className="my-3">
-                <ArticlesButton
-                    variant="articles"
-                    className="border "
-                    active={darkMode}
-                    onClick={() => {
-                        // setGraphicsQuality(level)
-                        setDarkMode(true)
-                    }}
-                >
-                    Dark Mode
-                </ArticlesButton>
-                <ArticlesButton
-                    variant="articles"
-                    className="border me-2"
-                    active={!darkMode}
-                    onClick={() => {
-                        // setGraphicsQuality(level)
-                        setDarkMode(false)
-                    }}
-                >
-                    Light Mode
-                </ArticlesButton>
+            <div>
+                <div className="mb-0">Color Mode</div>
+                <div className="mb-3">
+                    <ArticlesButton
+                        variant="articles"
+                        className="border "
+                        active={darkMode}
+                        onClick={() => {
+                            // setGraphicsQuality(level)
+                            setDarkMode(true)
+                        }}
+                    >
+                        Dark Mode
+                    </ArticlesButton>
+                    <ArticlesButton
+                        variant="articles"
+                        className="border me-2"
+                        active={!darkMode}
+                        onClick={() => {
+                            // setGraphicsQuality(level)
+                            setDarkMode(false)
+                        }}
+                    >
+                        Light Mode
+                    </ArticlesButton>
+                </div>
+            </div>
+
+            <div>
+                <div className="mb-0">Debug Mode</div>
+                <div className="mb-3">
+                    <ArticlesButton
+                        variant="articles"
+                        className="border "
+                        active={!debug}
+                        onClick={() => {
+                            setDebug(false)
+                        }}
+                    >
+                        Disabled
+                    </ArticlesButton>
+                    <ArticlesButton
+                        variant="articles"
+                        className="border me-2"
+                        active={debug}
+                        onClick={() => {
+                            setDebug(true)
+                        }}
+                    >
+                        Enabled
+                    </ArticlesButton>
+                </div>
             </div>
 
             <div className="mb-3">
@@ -208,7 +239,9 @@ function AudioSettings() {
     return (
         <>
 
-            <div className="my-3">
+            <div>Game Audio</div>
+
+            <div className="mb-3">
                 <ArticlesButton
                     variant="articles"
                     className=""
@@ -260,6 +293,10 @@ function ControlsSettings() {
                 {
                     action: 'Jump',
                     defaultKeyboardKey: 'Space'
+                },
+                {
+                    action: 'Dive',
+                    defaultKeyboardKey: 'Shift'
                 },
                 {
                     action: 'Use Item',

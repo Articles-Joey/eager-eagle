@@ -7,6 +7,7 @@ import { useGameStore } from "@/hooks/useGameStore"
 import { ModelHelicopter } from "../Models/Helicopter"
 import { useStore } from "@/hooks/useStore"
 import { degToRad } from "three/src/math/MathUtils"
+import { useScoreStore } from "@/hooks/useScoreStore"
 // import { useStore } from "@/hooks/useStore"
 
 const SPAWN_DISTANCE = -20
@@ -21,7 +22,8 @@ export default function MovingObstacle({ index }) {
     const { nodes, materials } = useGLTF('models/Building 1-transformed.glb')
 
     const darkMode = useStore((state) => state.darkMode)
-    const incrementLifetimeDistance = useStore((state) => state.incrementLifetimeDistance)
+
+    const incrementLifetimeDistance = useScoreStore((state) => state.incrementLifetimeDistance)
 
     const addDistance = useGameStore((state) => state.addDistance)
     const gameOver = useGameStore((state) => state.gameOver)
@@ -143,6 +145,16 @@ export default function MovingObstacle({ index }) {
         // baseApi
     ])
 
+    // const distance = useGameStore((state) => state.distance)
+    const maxDistance = useScoreStore((state) => state.maxDistance)
+    const setMaxDistance = useScoreStore((state) => state.setMaxDistance)
+
+    useEffect(() => {
+        if (distance > maxDistance) {
+            setMaxDistance(distance)
+        }
+    }, [distance, maxDistance, setMaxDistance])
+
     useFrame((state, delta) => {
         if (gameOver) return
 
@@ -153,7 +165,6 @@ export default function MovingObstacle({ index }) {
         if (!passed.current && position.current[2] > 0) {
             passed.current = true
             addDistance(1)
-
             incrementLifetimeDistance()
         }
 
@@ -252,7 +263,7 @@ export default function MovingObstacle({ index }) {
             <group ref={ref} dispose={null}>
                 <mesh>
                     <boxGeometry args={[args[0], buildingHeight, args[2]]} />
-                    <meshStandardMaterial color="red" />                    
+                    <meshStandardMaterial color="red" />
                 </mesh>
                 {/* <group rotation={[degToRad(180), degToRad(180), degToRad(180)]}>
                     <mesh>

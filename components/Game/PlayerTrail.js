@@ -8,7 +8,7 @@ import { useGameStore } from "@/hooks/useGameStore"
 const SPEED = 10
 const POINT_COUNT = 50
 
-export default function PlayerTrail({ positionRef }) {
+export default function PlayerTrail({ positionRef, demoMode }) {
 
     const lineRef = useRef()
 
@@ -23,9 +23,18 @@ export default function PlayerTrail({ positionRef }) {
 
         // if (character?.trail === "None" || gameOver) return
 
-        if (!positionRef.current || !lineRef.current) return
+        if (!lineRef.current) return
+        if (!demoMode && !positionRef?.current) return
 
-        const [x, y, z] = positionRef.current
+        let x = 0, y = 0, z = 0;
+        if (positionRef?.current) {
+            [x, y, z] = positionRef.current;
+        }
+
+        if (demoMode) {
+            x += Math.sin(state.clock.elapsedTime * 4) * 0.3;
+            y += Math.cos(state.clock.elapsedTime * 5) * 0.3;
+        }
 
         // Shift points back
         for (let i = POINT_COUNT - 1; i > 0; i--) {
@@ -64,7 +73,7 @@ export default function PlayerTrail({ positionRef }) {
         color = neonColors[neonIndex];
     }
 
-    if (character?.trail === "None" || gameOver) return null
+    if (character?.trail === "None" || (!demoMode && gameOver)) return null
 
     return (
         <Line

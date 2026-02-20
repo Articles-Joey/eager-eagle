@@ -24,6 +24,7 @@ import { useGameStore } from '@/hooks/useGameStore';
 import { useStore } from '@/hooks/useStore';
 import { useTouchControlsStore } from '@/hooks/useTouchControlsStore';
 import AudioHandler from '@/components/Game/AudioHandler';
+import { useScoreStore } from '@/hooks/useScoreStore';
 
 const GameCanvas = dynamic(() => import('@/components/Game/GameCanvas'), {
     ssr: false,
@@ -160,7 +161,15 @@ export default function GamePage() {
 
             <div className='canvas-wrap'>
 
-                {enabled &&
+                {(
+                    enabled
+                    &&
+                    (
+                        useScoreStore.getState().lifetimeDistance > 40
+                        ||
+                        useScoreStore.getState().maxDistance > 10
+                    )
+                ) &&
                     <button
                         className="dive-button"
                         onMouseDown={() => setIsDiving(true)}

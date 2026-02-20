@@ -12,6 +12,7 @@ import rewards from "../rewards";
 
 import A from "@articles-media/articles-gamepad-helper/dist/img/Xbox UI/A.svg";
 import B from "@articles-media/articles-gamepad-helper/dist/img/Xbox UI/B.svg";
+import { useScoreStore } from "@/hooks/useScoreStore";
 
 export default function GameOverModal({
     show,
@@ -21,7 +22,8 @@ export default function GameOverModal({
     const [showModal, setShowModal] = useState(true)
     const { distance, setDistance } = useGameStore()
 
-    const maxDistance = useStore((state) => state.maxDistance)
+    const maxDistance = useScoreStore((state) => state.maxDistance)
+    const defaultCharacter = useStore((state) => state.defaultCharacter)
 
     const sidebar = useStore((state) => state.sidebar)
     const showMenu = useStore((state) => state.showMenu)
@@ -87,7 +89,10 @@ export default function GameOverModal({
                             overflow: 'auto'
                         }}
                     >
-                        {rewards.map((reward, index) => {
+                        {[
+                            // ...character
+                            // ...defaultCharacter.trails
+                        ].map((reward, index) => {
                             if (reward.distance > maxDistance) {
                                 return (
                                     <div

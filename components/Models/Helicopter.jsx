@@ -6,15 +6,57 @@ Files: Helicopter.glb [69.22KB] > F:\My Documents\Sites\games\eager-eagle\public
 
 import React from 'react'
 import { useGLTF } from '@react-three/drei'
+import { MeshStandardMaterial } from 'three'
+import { useStore } from '@/hooks/useStore'
 
 export function ModelHelicopter(props) {
+
   const { nodes, materials } = useGLTF('models/Helicopter-transformed.glb')
+  const darkMode = useStore((state) => state.darkMode)
+  
   return (
     <group {...props} dispose={null}>
       <mesh geometry={nodes.Box20180.geometry} material={materials['02___Default']} />
       <mesh geometry={nodes.Box20181.geometry} material={materials._crayfishdiffuse} />
       <mesh geometry={nodes.Object013_1.geometry} material={materials['03___Default']} />
       <mesh geometry={nodes.Object013_1_1.geometry} material={materials['07___Default']} />
+
+      {darkMode && <group>
+        {/* PointLight for helicopter */}
+        <pointLight
+          position={[0, -1.5, 0]}
+          color="white"
+          intensity={10}
+          distance={10}
+          decay={1}
+          castShadow={false}
+        />
+
+        {/* Fake Spotlight */}
+        {/* <mesh position={[0, -2.5, 0]} scale={50}>
+          <cylinderGeometry args={[1, 1, 50, 32]} />
+          <meshStandardMaterial
+            color="white"
+            emissive="white"
+            emissiveIntensity={2}
+            transparent={true}
+            opacity={1}
+          />
+        </mesh> */}
+
+        {/* Visible glowing sphere at light position */}
+        <mesh position={[0, -1.5, 0]} scale={[0.5, 0.5, 0.5]}>
+          <sphereGeometry args={[0.3, 16, 16]} />
+          <meshStandardMaterial
+            color="white"
+            emissive="white"
+            emissiveIntensity={10}
+            transparent={true}
+            opacity={0.8}
+          />
+        </mesh>
+      </group>}
+
     </group>
   )
 }

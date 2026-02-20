@@ -24,20 +24,23 @@ import B from "@articles-media/articles-gamepad-helper/dist/img/Xbox UI/B.svg";
 import { useModalNavigation } from "@/hooks/useModalNavigation";
 import rewards from "../rewards";
 import { useGameStore } from "@/hooks/useGameStore";
-import { useStore } from "@/hooks/useStore";
+import { defaultCharacter, useStore } from "@/hooks/useStore";
 import classNames from "classnames";
+import { useScoreStore } from "@/hooks/useScoreStore";
 
 export default function RewardsModal({
     show,
     setShow,
 }) {
 
-    const maxDistance = useStore((state) => state.maxDistance)
-    const lifetimeDistance = useStore((state) => state.lifetimeDistance)
+    const maxDistance = useScoreStore((state) => state.maxDistance)
+    const lifetimeDistance = useScoreStore((state) => state.lifetimeDistance)
 
     const [showModal, setShowModal] = useState(true)
 
     const [lightboxData, setLightboxData] = useState(null)
+
+    // const defaultCharacter = useStore((state) => state.defaultCharacter)
 
     // const userReduxState = useSelector((state) => state.auth.user_details);
     const userReduxState = false
@@ -81,34 +84,80 @@ export default function RewardsModal({
 
                 <Modal.Body className="flex-column p-3">
 
-                    <div>
-                        {maxDistance} max distance
+                    <div className="d-flex justify-content-center text-center mb-3">
+
+                        <div className="px-3">
+                            <h3>{maxDistance}</h3>
+                            <div>max distance</div>
+                        </div>
+
+                        <div className="px-3">
+                            <h3>{lifetimeDistance}</h3>
+                            <div>lifetime distance</div>
+                        </div>
+
                     </div>
 
                     <div>
-                        {lifetimeDistance} lifetime distance
-                    </div>
+                        {[
+                            {
+                                name: "Diving",
+                                description: "Unlock the ability to dive swiftly and navigate through tight spaces with precision.",
+                                distance: 20,
+                                lifetimeDistance: 20 * 5,
+                            },
+                            ...defaultCharacter.models.map(reward => {
+                                return {
+                                    ...reward,
+                                    name: reward.name + ' Player Model',
+                                }
+                            }),
+                            ...defaultCharacter.trails.map(reward => {
+                                return {
+                                    ...reward,
+                                    name: reward.name + ' Trail',
+                                }
+                            }),
+                            ...defaultCharacter.backgrounds.map(reward => {
+                                return {
+                                    ...reward,
+                                    name: reward.name + ' Background',
+                                }
+                            }),
+                            ...defaultCharacter.skyObjects.map(reward => {
+                                return {
+                                    ...reward,
+                                    name: reward.name + ' Sky Object',
+                                }
+                            }),
+                            ...defaultCharacter.groundObjects.map(reward => {
+                                return {
+                                    ...reward,
+                                    name: reward.name + ' Ground Object',
+                                }
+                            }),
+                        ]
+                            .filter(reward => reward.distance)
+                            .sort((a, b) => a.distance - b.distance)
+                            .map((reward, index) => (
+                                <div
+                                    key={index}
+                                    className={classNames(
+                                        `reward-item mb-3 p-3 border rounded`,
+                                        {
+                                            'unlocked': maxDistance >= reward.distance
+                                        }
+                                    )}
+                                >
 
-                    <div>
-                        {rewards.map((reward, index) => (
-                            <div
-                                key={index}
-                                className={classNames(
-                                    `reward-item mb-3 p-3 border rounded`,
-                                    { 
-                                        'unlocked': maxDistance >= reward.distance 
-                                    }
-                                )}
-                            >
-                                
-                                <h5>{reward.name}</h5>
-                                <p>{reward.description}</p>
-                                
-                                <p className="mb-0"><strong>Distance Required:</strong> {reward.distance} meters</p>
-                                <p><strong>Lifetime Distance Required:</strong> {reward.lifetimeDistance} meters</p>
-    
-                            </div>
-                        ))}
+                                    <h5>{reward?.name}</h5>
+                                    <p>{reward?.description}</p>
+
+                                    <p className="mb-0"><strong>Distance Required:</strong> {reward?.distance} meters</p>
+                                    <p><strong>Lifetime Distance Required:</strong> {reward?.lifetimeDistance} meters</p>
+
+                                </div>
+                            ))}
                     </div>
 
                 </Modal.Body>

@@ -37,6 +37,7 @@ import GameScoreboard from '@articles-media/articles-dev-box/GameScoreboard';
 import { useUserDetails, useUserToken } from '@articles-media/articles-dev-box';
 import { GamepadKeyboard, PieMenu } from '@articles-media/articles-gamepad-helper';
 import ScoreCard from '@/components/UI/ScoreCard';
+import { useScoreStore } from '@/hooks/useScoreStore';
 
 const ReturnToLauncherButton = dynamic(() =>
     import('@articles-media/articles-dev-box').then((mod) => mod.ReturnToLauncherButton),
@@ -73,6 +74,8 @@ export default function LobbyPage() {
     const setNickname = useStore(state => state.setNickname)
     const nicknameKeyboard = useStore((state) => state.nicknameKeyboard)
 
+    const hydrated = useStore((state) => state._hasHydrated)
+
     const infoModal = useStore((state) => state.infoModal)
     const setInfoModal = useStore((state) => state.setInfoModal)
 
@@ -87,7 +90,7 @@ export default function LobbyPage() {
 
     const setGameOver = useGameStore((state) => state.setGameOver)
     
-    const maxDistance = useStore((state) => state.maxDistance)
+    const maxDistance = useScoreStore((state) => state.maxDistance)
 
     const controllerState = useControllerStore((state) => state.controllerState)
 
@@ -97,8 +100,19 @@ export default function LobbyPage() {
     useLandingNavigation(elementsRef);
 
     useEffect(() => {
+
         setGameOver(false)
+
     }, [])
+
+    // First load generate random nickname if not set
+    useEffect(() => {
+
+        if (hydrated && nickname == null) {
+            useStore.getState().randomNickname()
+        }
+
+    }, [hydrated, nickname])
 
     const {
         data: userToken,

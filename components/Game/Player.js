@@ -339,6 +339,15 @@ function Player(props) {
         }
 
         if (dive || isDiving) {
+
+            if (
+                useStore.getState().lifetimeDistance < 40
+                &&
+                useGameStore.getState().maxDistance < 10
+            ) {
+                return
+            }
+
             vy -= 0.5; // Accelerate downward
             if (playerModelRef.current) {
                 // Determine target rotation
@@ -364,6 +373,9 @@ function Player(props) {
 
         api.velocity.set(0, vy, 0)
         api.position.set(0, pos.current[1], 0)
+
+        if (posY > 13) posY = 13
+        api.position.set(0, posY, 0)
 
     })
 

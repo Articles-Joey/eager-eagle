@@ -47,7 +47,7 @@ export default function ControllerInputHandler() {
     useEffect(() => {
 
         if (pathname == '/') {
-            
+
             // const isJumpPressed = controllerState?.buttons?.[0]?.pressed
 
             // if (!gameOver) {
@@ -88,7 +88,7 @@ export default function ControllerInputHandler() {
             // if (!controllerState?.buttons) return
 
             const isJumpPressed = controllerState?.buttons?.[0]?.pressed
-            
+
             const diveButton = controllerState?.buttons?.[7]
             const xButton = controllerState?.buttons?.[2]
             const isDivePressed = diveButton?.pressed || (diveButton?.value > 0.1) || xButton?.pressed
@@ -104,6 +104,15 @@ export default function ControllerInputHandler() {
                 prevJumpPressed.current = isJumpPressed
 
                 if (isDivePressed !== prevDivePressed.current) {
+
+                    if (
+                        useStore.getState().lifetimeDistance > 40
+                        ||
+                        useGameStore.getState().maxDistance > 10
+                    ) {
+                        return
+                    }
+
                     setIsDiving(!!isDivePressed)
                     prevDivePressed.current = !!isDivePressed
                 }

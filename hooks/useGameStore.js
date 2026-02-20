@@ -44,29 +44,29 @@ export const useGameStore = create((set) => ({
         }))
     },
 
-    bullets: 3,
-    resetBullets: (newValue) => {
-        set((prev) => ({
-            bullets: 3
-        }))
-    },
-    removeBullet: (newValue) => {
-        set((prev) => ({
-            bullets: (+prev.bullets - 1)
-        }))
-    },
-    setBullets: (newValue) => {
-        set((prev) => ({
-            bullets: newValue
-        }))
-    },
+    // bullets: 3,
+    // resetBullets: (newValue) => {
+    //     set((prev) => ({
+    //         bullets: 3
+    //     }))
+    // },
+    // removeBullet: (newValue) => {
+    //     set((prev) => ({
+    //         bullets: (+prev.bullets - 1)
+    //     }))
+    // },
+    // setBullets: (newValue) => {
+    //     set((prev) => ({
+    //         bullets: newValue
+    //     }))
+    // },
 
-    serverGameState: {},
-    setServerGameState: (newValue) => {
-        set((prev) => ({
-            serverGameState: newValue
-        }))
-    },
+    // serverGameState: {},
+    // setServerGameState: (newValue) => {
+    //     set((prev) => ({
+    //         serverGameState: newValue
+    //     }))
+    // },
 
     // maxDistance: 0,
     // setMaxDistance: (newValue) => {
