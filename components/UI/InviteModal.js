@@ -176,33 +176,33 @@ function InviteModal({
                                                         disabled={sentMessages.find(sent_obj => sent_obj._id == user_obj._id)}
                                                         onClick={() => {
 
-                                                            setSentMessages(prev => [
-                                                                ...prev,
-                                                                {
-                                                                    _id: user_obj._id,
-                                                                    populated_user: user_obj.populated_user
-                                                                }
-                                                            ])
+                                                            // setSentMessages(prev => [
+                                                            //     ...prev,
+                                                            //     {
+                                                            //         _id: user_obj._id,
+                                                            //         populated_user: user_obj.populated_user
+                                                            //     }
+                                                            // ])
                                                             return
 
-                                                            axios.post('/api/user/messages/send', {
-                                                                // conversation_id: conversation._id,
-                                                                // message: message,
-                                                                // socket_id: articlesSocket.id
-                                                            })
-                                                                .then(function (response) {
-                                                                    console.log(response.data);
+                                                            // axios.post('/api/user/messages/send', {
+                                                            //     // conversation_id: conversation._id,
+                                                            //     // message: message,
+                                                            //     // socket_id: articlesSocket.id
+                                                            // })
+                                                            //     .then(function (response) {
+                                                            //         console.log(response.data);
 
-                                                                    // setSentMessages(prev => [
-                                                                    //     ...prev,
-                                                                    //     conversation._id
-                                                                    // ])
+                                                            //         // setSentMessages(prev => [
+                                                            //         //     ...prev,
+                                                            //         //     conversation._id
+                                                            //         // ])
 
-                                                                })
-                                                                .catch(function (error) {
-                                                                    alert(error.response.data)
-                                                                    console.log(error);
-                                                                });
+                                                            //     })
+                                                            //     .catch(function (error) {
+                                                            //         alert(error.response.data)
+                                                            //         console.log(error);
+                                                            //     });
                                                         }}
                                                     >
                                                         {sentMessages.find(sent_obj => sent_obj._id == user_obj._id) ? "Sent" : "Invite"}
