@@ -6,6 +6,9 @@ import { useGameStore } from '@/hooks/useGameStore'
 import dynamic from 'next/dynamic'
 import CustomizeModal from './CustomizeModal'
 import RewardsModal from './RewardsModal'
+import { useAudioStore } from '@/hooks/useAudioStore'
+import { useTouchControlsStore } from '@/hooks/useTouchControlsStore'
+import ArticlesButton from './Button'
 // import { useStore } from '../hooks/useStore'
 // import CreditsModal from './CreditsModal'
 
@@ -15,17 +18,17 @@ import RewardsModal from './RewardsModal'
 // )
 
 const SettingsModal = dynamic(
-    () => import('@/components/UI/SettingsModal'),
+    () => import('@articles-media/articles-dev-box/SettingsModal'),
+    { ssr: false }
+)
+
+const CreditsModal = dynamic(
+    () => import('@articles-media/articles-dev-box/CreditsModal'),
     { ssr: false }
 )
 
 const InfoModal = dynamic(
     () => import('@/components/UI/InfoModal'),
-    { ssr: false }
-)
-
-const CreditsModal = dynamic(
-    () => import('@/components/UI/CreditsModal'),
     { ssr: false }
 )
 
@@ -36,14 +39,14 @@ const GameOverModal = dynamic(
 
 export default function GlobalClientModals() {
 
-    const infoModal = useStore((state) => state.infoModal)
-    const setInfoModal = useStore((state) => state.setInfoModal)
+    const showInfoModal = useStore((state) => state.showInfoModal)
+    const setShowInfoModal = useStore((state) => state.setShowInfoModal)
 
-    const settingsModal = useStore((state) => state.settingsModal)
-    const setSettingsModal = useStore((state) => state.setSettingsModal)
+    const showSettingsModal = useStore((state) => state.showSettingsModal)
+    const setShowSettingsModal = useStore((state) => state.setShowSettingsModal)
 
-    const creditsModal = useStore((state) => state.creditsModal)
-    const setCreditsModal = useStore((state) => state.setCreditsModal)
+    const showCreditsModal = useStore((state) => state.showCreditsModal)
+    const setShowCreditsModal = useStore((state) => state.setShowCreditsModal)
 
     const gameOver = useGameStore((state) => state.gameOver)
     const setGameOver = useGameStore((state) => state.setGameOver)
@@ -53,6 +56,9 @@ export default function GlobalClientModals() {
 
     const rewardsModal = useStore((state) => state.rewardsModal)
     const setRewardsModal = useStore((state) => state.setRewardsModal)
+
+    const disableDeath = useStore((state) => state.disableDeath)
+    const setDisableDeath = useStore((state) => state.setDisableDeath)
 
     return (
         <>
@@ -71,36 +77,104 @@ export default function GlobalClientModals() {
                 />
             }
 
-            {creditsModal &&
+            {showCreditsModal &&
                 <CreditsModal
-                    show={creditsModal}
-                    setShow={setCreditsModal}
+                    show={showCreditsModal}
+                    setShow={setShowCreditsModal}
+                    owner="Articles-Joey"
+                    repo="eager-eagle"
                 />
             }
 
-            {infoModal &&
+            {showInfoModal &&
                 <InfoModal
-                    show={infoModal}
-                    setShow={setInfoModal}
+                    show={showInfoModal}
+                    setShow={setShowInfoModal}
                 />
             }
 
-            {settingsModal &&
+            {showSettingsModal &&
                 <SettingsModal
-                    show={settingsModal}
-                    setShow={setSettingsModal}
+                    show={showSettingsModal}
+                    setShow={setShowSettingsModal}
+                    store={useStore}
+                    useAudioStore={useAudioStore}
+                    useTouchControlsStore={useTouchControlsStore}
+                    // useSocketStore={useSocketStore}
+                    config={{
+                        tabs: {
+                            'Graphics': {
+                                darkMode: true,
+                                landingAnimation: true,
+                                children: <></>,
+                            },
+                            'Audio': {
+                                sliders: [
+                                    {
+                                        key: "gameVolume",
+                                        label: "Game Volume"
+                                    },
+                                    {
+                                        key: "musicVolume",
+                                        label: "Music Volume"
+                                    }
+                                ]
+                            },
+                            'Controls': {
+                                // defaultKeyBindings: {
+                                //     // moveUp: "W",
+                                //     // moveDown: "S",
+                                //     // moveLeft: "A",
+                                //     // moveRight: "D",
+                                // }
+                            },
+                            'Multiplayer': {
+                                // serverUrl: true,
+                                // children: <>Test</>
+                            },
+                            'Other': {
+                                toontownMode: false,
+                                children: <>
+
+                                </>,
+                            },
+                            'Debug': {
+                                children: <>
+                                    <div>Disable Death</div>
+                                    <div className="mb-3">
+                                        <ArticlesButton
+                                            active={disableDeath === false}
+                                            onClick={() => {
+                                                setDisableDeath(false);
+                                            }}
+                                        >
+                                            Disabled
+                                        </ArticlesButton>
+                                        <ArticlesButton
+                                            active={disableDeath === true}
+                                            onClick={() => {
+                                                setDisableDeath(true);
+                                            }}
+                                        >
+                                            Enabled
+                                        </ArticlesButton>
+                                    </div>
+                                </>
+                            }
+                        }
+                    }}
                 />
             }
 
             {customizeModal &&
-                <CustomizeModal 
+                <CustomizeModal
                     show={customizeModal}
                     setShow={setCustomizeModal}
                 />
             }
 
             {rewardsModal &&
-                <RewardsModal 
+                <RewardsModal
                     show={rewardsModal}
                     setShow={setRewardsModal}
                 />

@@ -39,6 +39,11 @@ import { GamepadKeyboard, PieMenu } from '@articles-media/articles-gamepad-helpe
 import ScoreCard from '@/components/UI/ScoreCard';
 import { useScoreStore } from '@/hooks/useScoreStore';
 
+const SessionButton = dynamic(() =>
+    import('@articles-media/articles-dev-box/SessionButton'),
+    { ssr: false }
+);
+
 const ReturnToLauncherButton = dynamic(() =>
     import('@articles-media/articles-dev-box').then((mod) => mod.ReturnToLauncherButton),
     { loading: () => <p>Loading...</p> }
@@ -55,17 +60,9 @@ const ReturnToLauncherButton = dynamic(() =>
 
 const game_key = 'eager-eagle'
 const game_name = 'Eager Eagle'
+const game_port = 3049
 
 export default function LobbyPage() {
-
-    // const {
-    //     socket,
-    // } = useSocketStore(state => ({
-    //     socket: state.socket,
-    // }));
-
-    // const userReduxState = useSelector((state) => state.auth.user_details)
-    // const userReduxState = false
 
     const darkMode = useStore((state) => state.darkMode)
     const toggleDarkMode = useStore((state) => state.toggleDarkMode)
@@ -76,16 +73,11 @@ export default function LobbyPage() {
 
     // const character = useStore((state) => state.character)
 
-    const hydrated = useStore((state) => state._hasHydrated)
+    const _hasHydrated = useStore((state) => state._hasHydrated)
 
-    const infoModal = useStore((state) => state.infoModal)
-    const setInfoModal = useStore((state) => state.setInfoModal)
-
-    const settingsModal = useStore((state) => state.showSettingsModal)
-    const setSettingsModal = useStore((state) => state.setSettingsModal)
-
-    const creditsModal = useStore((state) => state.creditsModal)
-    const setCreditsModal = useStore((state) => state.setCreditsModal)
+    const setShowInfoModal = useStore((state) => state.setShowInfoModal)
+    const setShowSettingsModal = useStore((state) => state.setShowSettingsModal)
+    const setShowCreditsModal = useStore((state) => state.setShowCreditsModal)
 
     const setCustomizeModal = useStore((state) => state.setCustomizeModal)
     const setRewardsModal = useStore((state) => state.setRewardsModal)
@@ -111,22 +103,13 @@ export default function LobbyPage() {
 
     }, [])
 
-    // First load generate random nickname if not set
-    useEffect(() => {
-
-        if (hydrated && nickname == null) {
-            useStore.getState().randomNickname()
-        }
-
-    }, [hydrated, nickname])
-
     const {
         data: userToken,
         error: userTokenError,
         isLoading: userTokenLoading,
         mutate: userTokenMutate
     } = useUserToken(
-        "3049"
+        game_port
     );
 
     const {
@@ -163,7 +146,7 @@ export default function LobbyPage() {
                             label: 'Settings',
                             icon: 'fad fa-cog',
                             callback: () => {
-                                setSettingsModal(prev => !prev)
+                                setShowSettingsModal(prev => !prev)
                             }
                         },
                         {
@@ -177,7 +160,7 @@ export default function LobbyPage() {
                             label: 'Credits',
                             icon: 'fad fa-info-circle',
                             callback: () => {
-                                setCreditsModal(true)
+                                setShowCreditsModal(true)
                             }
                         },
                         {
@@ -233,7 +216,7 @@ export default function LobbyPage() {
                         "width": "20rem",
                         display: 'flex',
                         flexDirection: 'column',
-                        alignItems: 'center'
+                        // alignItems: 'center'
                     }}
                 >
 
@@ -243,7 +226,7 @@ export default function LobbyPage() {
                         alt="Logo"
                     />
 
-                    <h1 className='metal-mania-regular mb-4'>{game_name}</h1>
+                    <h1 className='metal-mania-regular mb-4 text-center'>{game_name}</h1>
 
                     {maxDistance ?
                         <div
@@ -257,17 +240,7 @@ export default function LobbyPage() {
 
                     <div
                         className="card card-articles card-sm mb-3"
-
                     >
-
-                        {/* <div style={{ position: 'relative', height: '200px' }}>
-                            <Image
-                                src={Logo}
-                                alt=""
-                                fill
-                                style={{ objectFit: 'cover' }}
-                            />
-                        </div> */}
 
                         <div className='card-header d-flex align-items-center'>
 
@@ -275,25 +248,19 @@ export default function LobbyPage() {
 
                                 <div className="form-group articles mb-0">
                                     <label htmlFor="nickname">Nickname</label>
-                                    {/* <SingleInput
-                                        value={nickname}
-                                        setValue={setNickname}
-                                        noMargin
-                                    /> */}
                                     <div className='d-flex'>
-                                        {nickname !== null &&
-                                            <input
-                                                ref={el => elementsRef.current[0] = el}
-                                                type="text"
-                                                className="form-control"
-                                                id="nickname"
-                                                value={nickname}
-                                                placeholder="Enter your nickname"
-                                                onChange={(e) => {
-                                                    setNickname(e.target.value)
-                                                }}
-                                            />
-                                        }
+                                        <input
+                                            ref={el => elementsRef.current[0] = el}
+                                            type="text"
+                                            className="form-control"
+                                            id="nickname"
+                                            disabled={!_hasHydrated}
+                                            value={_hasHydrated ? nickname : ''}
+                                            placeholder="Enter your nickname"
+                                            onChange={(e) => {
+                                                setNickname(e.target.value)
+                                            }}
+                                        />
                                         <ArticlesButton
                                             className="ms-2"
                                             small
@@ -437,7 +404,7 @@ export default function LobbyPage() {
                                     className={`w-100 flex-grow-1`}
                                     small
                                     onClick={() => {
-                                        setSettingsModal(true)
+                                        setShowSettingsModal(true)
                                     }}
                                 >
                                     <i className="fad fa-cog"></i>
@@ -462,11 +429,11 @@ export default function LobbyPage() {
                                 className={`w-50`}
                                 small
                                 onClick={() => {
-                                    setInfoModal(true)
+                                    setShowInfoModal(true)
                                 }}
                             >
                                 <i className="fad fa-info-square"></i>
-                                Rules & Controls
+                                Info
                             </ArticlesButton>
 
                             <Link
@@ -506,7 +473,7 @@ export default function LobbyPage() {
                                 className={`w-50`}
                                 small
                                 onClick={() => {
-                                    setCreditsModal(true)
+                                    setShowCreditsModal(true)
                                 }}
                             >
                                 <i className="fad fa-users"></i>
@@ -517,9 +484,11 @@ export default function LobbyPage() {
 
                     </div>
 
-                    <Suspense>
-                        <ReturnToLauncherButton />
-                    </Suspense>
+                    <SessionButton
+                        port={game_port}
+                        friendsButton={true}
+                    />
+                    <ReturnToLauncherButton />
 
                 </div>
 

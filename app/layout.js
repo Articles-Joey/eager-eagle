@@ -72,8 +72,7 @@ export default function RootLayout({ children }) {
 
           <GlobalClientModals />
 
-          {/* <AudioHandler /> */}
-          <DarkModeHandler />
+          {/* <AudioHandler /> */}          
 
           <ControllerInputHandler />
 

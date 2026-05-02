@@ -7,22 +7,9 @@ import { useStore } from "@/hooks/useStore";
 import { useTouchControlsStore } from "@/hooks/useTouchControlsStore";
 import DebugPanel from "./DebugPanel";
 import { useScoreStore } from "@/hooks/useScoreStore";
-import useFullscreen from "@/hooks/useFullScreen";
+import useFullscreen from '@articles-media/articles-dev-box/useFullscreen';
 
 export default function LeftPanelContent(props) {
-
-    const {
-        // server,
-        // players,
-        // touchControlsEnabled,
-        // setTouchControlsEnabled,
-        reloadScene,
-        // controllerState,
-        // isFullscreen,
-        // requestFullscreen,
-        // exitFullscreen,
-        // setShowMenu
-    } = props;
 
     const { isFullscreen, requestFullscreen, exitFullscreen } = useFullscreen();
 
@@ -42,6 +29,7 @@ export default function LeftPanelContent(props) {
 
     // const showMenu = useStore((state) => state.showMenu)
     const setShowMenu = useStore((state) => state.setShowMenu)
+    const reloadScene = useStore((state) => state.reloadScene)
 
     const debug = useStore((state) => state.debug)
     // const toggleDebug = useStore((state) => state.toggleDebug)
@@ -106,19 +94,6 @@ export default function LeftPanelContent(props) {
                             <span>Fullscreen</span>
                         </ArticlesButton>
 
-                        <ArticlesButton
-                            className="w-50"
-                            small
-                            active={sidebar}
-                            onClick={() => {
-                                toggleSidebar()
-                                setShowMenu(false)
-                            }}
-                        >
-                            <i className="fad fa-arrow-alt-square-left"></i>
-                            <span>Sidebar</span>
-                        </ArticlesButton>
-
                         <div className="w-50 d-flex">
                             <ArticlesButton
                                 className="flex-grow-1"
@@ -143,53 +118,20 @@ export default function LeftPanelContent(props) {
                             </ArticlesButton>
                         </div>
 
-                        {/* <ArticlesButton
-                            small
+                        <ArticlesButton
                             className="w-50"
+                            small
+                            active={sidebar}
                             onClick={() => {
-                                toggleDarkMode()
+                                toggleSidebar()
+                                setShowMenu(false)
                             }}
                         >
-                            <i className="fad fa-eye-dropper"></i>
-                            <span>{darkMode ? ' Dark Mode' : 'Light Mode'}</span>
-                        </ArticlesButton> */}
+                            <i className="fad fa-arrow-alt-square-left"></i>
+                            <span>Sidebar</span>
+                        </ArticlesButton>
 
                     </div>
-
-                    {/* <div className="card-footer border">
-
-                        <div className='flex-header'>
-                            <div>Server: {server}</div>
-                            <div>Players: {players.length || 0}/50</div>
-                        </div>
-
-                        {!socket?.connected &&
-                            <div
-                                className=""
-                            >
-
-                                <div className="">
-
-                                    <div className="h6 mb-1">Not connected</div>
-
-                                    <ArticlesButton
-                                        className="w-100 "
-                                        small
-                                        onClick={() => {
-                                            console.log("Reconnect")
-                                            socket.connect()
-                                        }}
-                                    >
-                                        <i className="fad fa-arrow-alt-square-left"></i>
-                                        Reconnect!
-                                    </ArticlesButton>
-
-                                </div>
-
-                            </div>
-                        }
-
-                    </div> */}
 
                 </div>
             </div>
@@ -243,43 +185,6 @@ export default function LeftPanelContent(props) {
                     reloadScene={reloadScene}
                 />
             }
-
-            {/* Make component */}
-            {/* {controllerState?.connected &&
-                <div className="panel-content-group p-0 text-dark">
-
-                    <div className="p-1 border-bottom border-dark">
-                        <div className="fw-bold" style={{ fontSize: '0.7rem' }}>
-                            {controllerState?.id}
-                        </div>
-                    </div>
-
-                    <div className='p-1'>
-                        <ArticlesButton
-                            small
-                            className="w-100"
-                            active={showControllerState}
-                            onClick={() => {
-                                setShowControllerState(prev => !prev)
-                            }}
-                        >
-                            {showControllerState ? 'Hide' : 'Show'} Controller Preview
-                        </ArticlesButton>
-                    </div>
-
-                    {showControllerState && <div className='p-3'>
-
-                        <ControllerPreview
-                            controllerState={controllerState}
-                            showJSON={true}
-                            showVibrationControls={true}
-                            maxHeight={300}
-                            showPreview={true}
-                        />
-                    </div>}
-
-                </div>
-            } */}
 
         </div>
     )

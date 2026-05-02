@@ -1,4 +1,6 @@
 "use client"
+import { useStore } from '@/hooks/useStore';
+import DarkModeHandler from '@articles-media/articles-dev-box/DarkModeHandler';
 // import { useEffect } from "react";
 // import { useStore } from "@/hooks/useStore";
 // import { useStore } from "@/hooks/useStore";
@@ -9,31 +11,15 @@ import { Suspense } from 'react';
 
 export default function LayoutClient({ children }) {
 
-    // const theme = useStore(state => state.theme);
-    // // const darkMode = useStore(state => state.darkMode)
-    // // const setDarkMode = useStore(state => state.setDarkMode)
-
-    // useEffect(() => {
-
-    //     if (theme == null) {
-    //         const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    //         useStore.getState().setTheme(prefersDark ? "Dark" : "Light");
-    //     }
-
-    //     if (theme == "Dark") {
-    //         document.body.setAttribute("data-bs-theme", 'dark');
-    //     } else {
-    //         document.body.setAttribute("data-bs-theme", 'light');
-    //     }
-
-    // }, [theme]);
-
     return (
         <>
             <GlobalBody />
             <Suspense>
                 <ControllerConnectionWatcher />
             </Suspense>
+            <DarkModeHandler 
+                useStore={useStore}
+            />
         </>
     );
 }
