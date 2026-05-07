@@ -36,6 +36,9 @@ import Ad from '@articles-media/articles-dev-box/Ad';
 import GameScoreboard from '@articles-media/articles-dev-box/GameScoreboard';
 import { useUserDetails, useUserToken } from '@articles-media/articles-dev-box';
 import { GamepadKeyboard, PieMenu } from '@articles-media/articles-gamepad-helper';
+import NicknameInput from '@articles-media/articles-dev-box/NicknameInput';
+import GameMenuPrimaryButtonGroup from '@articles-media/articles-dev-box/GameMenuPrimaryButtonGroup';
+
 import ScoreCard from '@/components/UI/ScoreCard';
 import { useScoreStore } from '@/hooks/useScoreStore';
 
@@ -244,38 +247,10 @@ export default function LobbyPage() {
 
                         <div className='card-header d-flex align-items-center'>
 
-                            <div className="flex-grow-1">
+                            <NicknameInput 
+                                useStore={useStore}
+                            />
 
-                                <div className="form-group articles mb-0">
-                                    <label htmlFor="nickname">Nickname</label>
-                                    <div className='d-flex'>
-                                        <input
-                                            ref={el => elementsRef.current[0] = el}
-                                            type="text"
-                                            className="form-control"
-                                            id="nickname"
-                                            disabled={!_hasHydrated}
-                                            value={_hasHydrated ? nickname : ''}
-                                            placeholder="Enter your nickname"
-                                            onChange={(e) => {
-                                                setNickname(e.target.value)
-                                            }}
-                                        />
-                                        <ArticlesButton
-                                            className="ms-2"
-                                            small
-                                            onClick={() => {
-                                                useStore.getState().randomNickname()
-                                            }}
-                                        >
-                                            <i className="fas fa-random me-0"></i>
-                                        </ArticlesButton>
-                                    </div>
-                                </div>
-
-                                <div className='mt-1' style={{ fontSize: '0.8rem' }}>Visible to all players</div>
-
-                            </div>
                         </div>
 
                         <div className="card-body">
@@ -397,88 +372,10 @@ export default function LobbyPage() {
 
                         <div className={`card-footer landing-footer d-flex flex-wrap justify-content-center ${hasController && "hasController"}`}>
 
-                            <div className='w-50 d-flex'>
-                                <ArticlesButton
-                                    ref={el => elementsRef.current[4] = el}
-                                    // active={activeIndex === 3}
-                                    className={`w-100 flex-grow-1`}
-                                    small
-                                    onClick={() => {
-                                        setShowSettingsModal(true)
-                                    }}
-                                >
-                                    <i className="fad fa-cog"></i>
-                                    Settings
-                                </ArticlesButton>
-                                <ArticlesButton
-                                    // ref={el => elementsRef.current[4] = el}
-                                    // active={activeIndex === 3}
-                                    className={`flex-grow-0`}
-                                    small
-                                    onClick={() => {
-                                        toggleDarkMode()
-                                    }}
-                                >
-                                    <i className="fad fa-sun"></i>
-                                </ArticlesButton>
-                            </div>
-
-                            <ArticlesButton
-                                ref={el => elementsRef.current[5] = el}
-                                // active={activeIndex === 4}
-                                className={`w-50`}
-                                small
-                                onClick={() => {
-                                    setShowInfoModal(true)
-                                }}
-                            >
-                                <i className="fad fa-info-square"></i>
-                                Info
-                            </ArticlesButton>
-
-                            <Link
-                                href={`https://github.com/Articles-Joey/eager-eagle`}
-                                target="_blank"
-                                className="w-50"
-                            >
-                                <ArticlesButton
-                                    ref={el => elementsRef.current[6] = el}
-                                    // active={activeIndex === 5}
-                                    className={`w-100`}
-                                    onClick={() => {
-
-                                    }}
-                                >
-                                    <i className="fab fa-github"></i>
-                                    Github
-                                </ArticlesButton>
-                            </Link>
-
-                            {/* <Link href={'/'} className='w-50'>
-                                <ArticlesButton
-                                    className={`w-100`}
-                                    small
-                                    onClick={() => {
-    
-                                    }}
-                                >
-                                    <i className="fad fa-sign-out fa-rotate-180"></i>
-                                    Leave Game
-                                </ArticlesButton>
-                            </Link> */}
-
-                            <ArticlesButton
-                                ref={el => elementsRef.current[7] = el}
-                                // active={activeIndex === 6}
-                                className={`w-50`}
-                                small
-                                onClick={() => {
-                                    setShowCreditsModal(true)
-                                }}
-                            >
-                                <i className="fad fa-users"></i>
-                                Credits
-                            </ArticlesButton>
+                            <GameMenuPrimaryButtonGroup 
+                                useStore={useStore}
+                                type="Landing"
+                            />
 
                         </div>
 
@@ -496,7 +393,7 @@ export default function LobbyPage() {
 
             {/* <div className='mt-4 mt-lg-0'> */}
             <GameScoreboard
-                game={game_name}
+                game={process.env.NEXT_PUBLIC_GAME_NAME}
                 style="Default"
                 darkMode={darkMode ? true : false}
             />
@@ -505,7 +402,7 @@ export default function LobbyPage() {
             <Ad
                 style="Default"
                 section={"Games"}
-                section_id={game_name}
+                section_id={process.env.NEXT_PUBLIC_GAME_NAME}
                 darkMode={darkMode ? true : false}
                 user_ad_token={userToken}
                 userDetails={userDetails}
