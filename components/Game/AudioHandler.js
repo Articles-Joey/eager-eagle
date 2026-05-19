@@ -1,75 +1,64 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { useStore } from "@/hooks/useStore";
-import { usePathname } from "next/navigation";
 import { useAudioStore } from "@/hooks/useAudioStore";
+import { useStore } from "@/hooks/useStore";
+import { useEffect, useRef } from "react";
 
 export default function AudioHandler() {
 
-    const pathname = usePathname();
     const audioSettings = useAudioStore((state) => state?.audioSettings);
+    const setAudioSettings = useAudioStore((state) => state?.setAudioSettings);
+
     const musicRef = useRef(null);
+    const interactedRef = useRef(false);
 
-    // Initialize Audio instance once
     useEffect(() => {
-        if (typeof window !== 'undefined' && !musicRef.current) {
-            musicRef.current = new Audio("/audio/game-music-loop.mp3");
-            // Use built-in looping for seamless loop
-            musicRef.current.loop = true;
-            // Set initial volume if available
-            const initialSettings = useStore.getState().audioSettings;
-            if (initialSettings?.backgroundMusicVolume) {
-                musicRef.current.volume = initialSettings.backgroundMusicVolume / 100;
-            }
-        }
+        if (typeof window === 'undefined') return;
 
-        // Cleanup on unmount
-        return () => {
-            if (musicRef.current) {
-                musicRef.current.pause();
-                musicRef.current = null;
+        const music = new Audio(
+            `/audio/game-music-loop.mp3`
+        );
+        musicRef.current = music;
+
+        music.onended = function () {
+            music.currentTime = 0;
+            music.play();
+        };
+
+        const tryPlay = () => {
+            if (!interactedRef.current && audioSettings?.enabled) {
+                interactedRef.current = true;
+                music.play();
             }
+        };
+
+        const events = ['click', 'keydown', 'touchstart', 'pointerdown'];
+        events.forEach((e) => document.addEventListener(e, tryPlay, { once: true }));
+
+        return () => {
+            events.forEach((e) => document.removeEventListener(e, tryPlay));
+            music.pause();
+            musicRef.current = null;
         };
     }, []);
 
-    // Handle Volume Changes Independently
     useEffect(() => {
-        if (musicRef.current && audioSettings) {
-             const volume = audioSettings.backgroundMusicVolume !== undefined 
-                ? audioSettings.backgroundMusicVolume 
-                : 50;
-             musicRef.current.volume = volume / 100;
-        }
-    }, [audioSettings?.backgroundMusicVolume]);
+        if (!musicRef.current) return;
 
-    // Handle Play/Pause State
-    useEffect(() => {
         const music = musicRef.current;
-        if (!music) return;
-
-        // Don't play on home page
-        if (pathname === "/") {
-            music.pause();
-            return;
-        }
+        const volume = audioSettings?.enabled ? ((audioSettings?.music_volume / 100) * 0.5) : 0;
+        music.volume = volume;
 
         if (audioSettings?.enabled) {
-            // If supposed to be playing but isn't
-            if (music.paused) {
-                music.currentTime = 0; // Restart from beginning when enabling or entering game
-                const playPromise = music.play();
-                if (playPromise !== undefined) {
-                    playPromise.catch(() => {
-                        // Auto-play was prevented or interrupted
-                    });
-                }
+            if (interactedRef.current) {
+                music.play().catch(() => {
+                    // Handle autoplay restriction if necessary
+                });
             }
         } else {
-            // Disabled
             music.pause();
         }
-    }, [audioSettings?.enabled, pathname]);
+    }, [audioSettings]);
 
     return null;
 

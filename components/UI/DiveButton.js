@@ -1,6 +1,6 @@
-const { useScoreStore } = require("@/hooks/useScoreStore")
-const { useStore } = require("@/hooks/useStore")
-const { useTouchControlsStore } = require("@/hooks/useTouchControlsStore")
+import { useScoreStore } from "@/hooks/useScoreStore";
+import { useStore } from "@/hooks/useStore";
+import useTouchControlsStore from "@/hooks/useTouchControlsStore";
 
 export default function DiveButton() {
 

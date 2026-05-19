@@ -21,8 +21,8 @@ import "@articles-media/articles-gamepad-helper/dist/articles-gamepad-helper.css
 // import PeerHandler from '@/components/PeerHandler';
 import LayoutClient from './layout-client';
 import { Suspense } from 'react';
-import GlobalClientModals from '@/components/UI/GlobalClientModals';
-import DarkModeHandler from '@/components/UI/DarkModeHandler';
+// import GlobalClientModals from '@/components/UI/GlobalClientModals';
+// import DarkModeHandler from '@/components/UI/DarkModeHandler';
 import ControllerInputHandler from '@/components/ControllerInputHandler';
 
 // const geistSans = Geist({
@@ -59,20 +59,15 @@ export default function RootLayout({ children }) {
       </head>
 
       <body
-        // className={`${geistSans.variable} ${geistMono.variable}`}
         id={`eager-eagle-game-page`}
       >
+
+        <LayoutClient />
 
         <Suspense>
 
           {/* <SocketLogicHandler /> */}
-          {/* <PeerHandler /> */}
-
-          <LayoutClient />
-
-          <GlobalClientModals />
-
-          {/* <AudioHandler /> */}          
+          {/* <PeerHandler /> */}      
 
           <ControllerInputHandler />
 

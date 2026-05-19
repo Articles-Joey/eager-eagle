@@ -1,12 +1,11 @@
 @use "@/styles/components/global.scss" as *;
 
-.game-landing-page {
+.landing-page {
     flex-grow: 1;
     display: flex;
     justify-content: stretch;
     align-items: center;
     min-height: calc(100vh - 0px);
-    // width: 100vw;
     flex-direction: column;
 
     h1 {

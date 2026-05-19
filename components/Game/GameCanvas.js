@@ -1,4 +1,4 @@
-import { createContext, createRef, forwardRef, memo, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { createContext, createRef, forwardRef, memo, Suspense, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
 import { Canvas, useFrame, useThree } from "@react-three/fiber"
 import { Sky, useDetectGPU, useTexture, OrbitControls, Cylinder, QuadraticBezierLine, Text, Outlines, Billboard } from "@react-three/drei";
@@ -52,7 +52,9 @@ const game_key = 'eager-eagle'
 
 // TODO Create a collision item that fips the camera 90deg at a time
 
-function GameCanvas(props) {
+function GameCanvas({
+    landingAnimationMode
+}) {
 
     const darkMode = useStore((state) => state.darkMode)
     const debug = useStore((state) => state.debug)
@@ -118,16 +120,23 @@ function GameCanvas(props) {
 
                 <Debug scale={debug ? 1 : 0}>
 
-                    <Player />
+                    {/* <Player /> */}
+                    {!landingAnimationMode &&
+                        <Suspense>
+                            <Player />
+                        </Suspense>
+                    }
 
-                    <group>
-                        <ObstacleManager />
-                    </group>
+                    <Suspense>
+                        <group>
+                            <ObstacleManager />
+                        </group>
+                    </Suspense>
 
                     {/* <Npc /> */}
                     {/* <Npcs /> */}
 
-                    <Ground />
+                    <Suspense><Ground /></Suspense>
 
                 </Debug>
 

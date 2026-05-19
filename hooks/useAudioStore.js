@@ -1,5 +1,11 @@
-import { createWithEqualityFn as create } from 'zustand/traditional'
+import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+
+const initialAudioSettings = {
+  enabled: true,
+  game_volume: 50,
+  music_volume: 50,
+}
 
 export const useAudioStore = create()(
   persist(
@@ -12,27 +18,22 @@ export const useAudioStore = create()(
         });
       },
 
-      audioSettings: {
-        enabled: true,
-        backgroundMusicVolume: 50,
-        soundEffectsVolume: 100,
-      },
-      setAudioSettings: (value) => set({ audioSettings: value }),
+      audioSettings: initialAudioSettings,
+      setAudioSettings: (newValue) => set({ audioSettings: newValue }),
+      resetAudioSettings: () => set({
+        audioSettings: initialAudioSettings
+      }),
 
     }),
     {
-      name: 'eager-eagle-audio-store', // name of the item in the storage (must be unique)
-      version: 1,
+      name: 'audio-store', // name of the item in the storage (must be unique)
+      version: 2,
       onRehydrateStorage: () => (state) => {
         state.setHasHydrated(true)
       },
-      // storage: createJSONStorage(() => sessionStorage), // (optional) by default, 'localStorage' is used
-      partialize: (state) =>
-        Object.fromEntries(
-          Object.entries(state).filter(([key]) => ![
-            // Don't persist these keys
-          ].includes(key))
-        ),
+      partialize: (state) => ({
+        audioSettings: state.audioSettings,
+      }),
     },
   ),
 )

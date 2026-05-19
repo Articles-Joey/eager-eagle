@@ -4,8 +4,7 @@ import { useStore } from '@/hooks/useStore'
 import { useGameStore } from '@/hooks/useGameStore'
 // import { Suspense } from 'react';
 import dynamic from 'next/dynamic'
-import CustomizeModal from './CustomizeModal'
-import RewardsModal from './RewardsModal'
+
 import { useAudioStore } from '@/hooks/useAudioStore'
 import { useTouchControlsStore } from '@/hooks/useTouchControlsStore'
 import ArticlesButton from './Button'
@@ -33,7 +32,7 @@ const InfoModal = dynamic(
 )
 
 const GameOverModal = dynamic(
-    () => import('@/components/UI/GameOverModal'),
+    () => import('@/components/UI/GameOverOverlay'),
     { ssr: false }
 )
 
@@ -166,19 +165,7 @@ export default function GlobalClientModals() {
                 />
             }
 
-            {customizeModal &&
-                <CustomizeModal
-                    show={customizeModal}
-                    setShow={setCustomizeModal}
-                />
-            }
-
-            {rewardsModal &&
-                <RewardsModal
-                    show={rewardsModal}
-                    setShow={setRewardsModal}
-                />
-            }
+            
 
             {/* <GameControllerKeyboard onFinish={(text) => console.log("Keyboard finished:", text)} /> */}
 

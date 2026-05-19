@@ -16,6 +16,7 @@ import { ModelMountainGroup } from "../Models/Mountain Group"
 import BackgroundObject from "./BackgroundObject"
 import { ModelBat } from "../Models/Bat"
 import { ModelUFO } from "../Models/UFO"
+import { usePathname } from "next/navigation"
 // import { useStore } from "@/hooks/useStore"
 
 const SPAWN_DISTANCE = -20
@@ -24,8 +25,12 @@ const SPEED = 10
 const BUILDING_COUNT = 10
 const GAP = 20
 const Y_OFFSET = 5
+const mountainMinY = 0.5
+const treeMinY = 0.3
 
 export default function MovingObstacle({ index }) {
+
+    const pathname = usePathname()
 
     const { nodes, materials } = useGLTF('models/Building 1-transformed.glb')
 
@@ -173,7 +178,11 @@ export default function MovingObstacle({ index }) {
 
         // Check if passed player
         if (!passed.current && position.current[2] > 0) {
+
             passed.current = true
+
+            if (pathname === '/') return
+
             addDistance(1)
             incrementLifetimeDistance()
         }

@@ -122,69 +122,9 @@ export const useStore = create()(
 
       ...typicalZustandStoreStateSlice(set, get, generateRandomNickname),
 
-      // _hasHydrated: false,
-      // setHasHydrated: (state) => {
-      //   set({
-      //     _hasHydrated: state
-      //   });
-      // },
-
-      // nickname: generateRandomNickname(),
-      // setNickname: (value) => set({ nickname: value }),
-      // randomNickname: () => {
-      //   set({ nickname: generateRandomNickname() })
-      // },
-
-      // nicknameKeyboard: false,
-      // setNicknameKeyboard: (newValue) => {
-      //   set((prev) => ({
-      //     nicknameKeyboard: newValue
-      //   }))
-      // },
-
-      // darkMode: true,
-      // toggleDarkMode: () => set({ darkMode: !get().darkMode }),
-      // setDarkMode: (value) => set({ darkMode: value }),
-
-      // graphicsQuality: "Medium",
-      // setGraphicsQuality: (value) => set({ graphicsQuality: value }),
-
-      // theme: null,
-      // // toggleTheme: () => set({ theme: !get().theme }),
-      // setTheme: (value) => set({ theme: value }),
-
-      // debug: false,
-      // toggleDebug: () => set({ debug: !get().debug }),
-      // setDebug: (value) => set({ debug: value }),
-
       defaultCharacter: defaultCharacter,
       character: defaultCharacter,
       setCharacter: (value) => set({ character: value }),
-
-      // sidebar: true,
-      // toggleSidebar: () => set({ sidebar: !get().sidebar }),
-      // setSidebar: (value) => set({ sidebar: value }),
-
-      // showMenu: false,
-      // setShowMenu: (value) => set({ showMenu: value }),
-
-      // musicVolume: 0.5,
-      // setMusicVolume: (value) => set({ musicVolume: value }),
-      // audioSettings: {
-      //   enabled: true,
-      //   backgroundMusicVolume: 100,
-      //   soundEffectsVolume: 100,
-      // },
-      // setAudioSettings: (value) => set({ audioSettings: value }),
-
-      // infoModal: false,
-      // setInfoModal: (value) => set({ infoModal: value }),
-
-      // settingsModal: false,
-      // setSettingsModal: (value) => set({ settingsModal: value }),
-
-      // creditsModal: false,
-      // setCreditsModal: (value) => set({ creditsModal: value }),
 
       customizeModal: false,
       setCustomizeModal: (value) => set({ customizeModal: value }),

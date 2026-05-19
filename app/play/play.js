@@ -32,6 +32,11 @@ const GameCanvas = dynamic(() => import('@/components/Game/GameCanvas'), {
     ssr: false,
 });
 
+const GameOverModal = dynamic(
+    () => import('@/components/UI/GameOverOverlay'),
+    { ssr: false }
+)
+
 const game_name = 'Eager Eagle'
 const game_key = 'eager-eagle'
 
@@ -42,6 +47,9 @@ export default function GamePage() {
     const sidebar = useStore((state) => state.sidebar)
 
     const sceneKey = useStore((state) => state.sceneKey)
+
+    const gameOver = useGameStore((state) => state.gameOver)
+    const setGameOver = useGameStore((state) => state.setGameOver)
 
     const { isFullscreen, requestFullscreen, exitFullscreen } = useFullscreen();
 
@@ -68,7 +76,16 @@ export default function GamePage() {
 
             <div className='canvas-wrap'>
 
-                <Suspense><DiveButton /></Suspense>
+                {gameOver &&
+                    <GameOverModal
+                        // show={gameOver}
+                        // setShow={setGameOver}
+                    />
+                }
+
+                <Suspense>
+                    <DiveButton />
+                </Suspense>
 
                 {!sidebar && <div className='distance-badge badge bg-black text-white border'>
                     Distance: {distance}

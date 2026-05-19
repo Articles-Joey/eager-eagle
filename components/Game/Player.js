@@ -130,6 +130,7 @@ function Player(props) {
             } else {
                 console.log("Death")
                 setGameOver(true)
+                api.position.set(0, 2, 0)
             }
         }
     }))
@@ -213,6 +214,9 @@ function Player(props) {
             api.position.set(0, 0, 0)
             api.velocity.set(0, 0, 0)
             pos.current = [0, 0, 0]
+            api.mass.set(1)
+        } else {
+            api.mass.set(0)
         }
     }, [gameOver, api])
 
