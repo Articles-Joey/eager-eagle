@@ -10,6 +10,7 @@ import useFullscreen from '@articles-media/articles-dev-box/useFullscreen';
 import useTouchControlsStore from "@/hooks/useTouchControlsStore";
 
 import GameMenuPrimaryButtonGroup from '@articles-media/articles-dev-box/GameMenuPrimaryButtonGroup';
+import { useRouter } from "next/navigation";
 
 export default function LeftPanelContent(props) {
 
@@ -47,9 +48,10 @@ export default function LeftPanelContent(props) {
                     >
 
                         <GameMenuPrimaryButtonGroup
-                        useStore={useStore}
-                        type="GameMenu"
-                    />
+                            useStore={useStore}
+                            type="GameMenu"
+                            useRouter={useRouter}
+                        />
 
                     </div>
 
