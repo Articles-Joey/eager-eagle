@@ -39,12 +39,16 @@ In the scripts folder is reset_public and sync_to_s3. This is only for Articles 
 
 No multiplayer in this game but there is a scoreboard component so users can share scores with friends and others!
 
+## Scripts
+
+In the scripts folder is reset_public and sync_to_s3. This is only for Articles Media usage. Allows for putting public folder to CloudFront to lower Vercel charges for the public facing site.
+
 ## Inspiration
 
 [Flappy Bird](https://en.wikipedia.org/wiki/Flappy_Bird)  
 [Jetpack Joyride](https://en.wikipedia.org/wiki/Jetpack_Joyride)
 
-## Attribution
+## Attributions
 
 [Eagle Icon](https://www.flaticon.com/authors/maxicons)  
 [Eagle Model - Google](https://poly.pizza/m/1Z5L1v0bfu7)  
