@@ -6,9 +6,6 @@ import { Vector3 } from "three"
 // import * as THREE from 'three';
 import { useKeyboard } from "@/hooks/useKeyboard"
 
-// import { Model as SpacesuitModel } from "@/components/Models/Spacesuit";
-
-// import { useControllerStore } from '@/hooks/useControllerStore';
 import { useGameStore } from "@/hooks/useGameStore";
 import { ModelEagle } from "../Models/Eagle"
 import { MeshPhysicalMaterial } from "three"
@@ -18,10 +15,8 @@ import { degToRad } from "three/src/math/MathUtils"
 import { useStore } from "@/hooks/useStore"
 import ModelFlappyBird from "../Models/ModelFlappyBird"
 import PlayerTrailFire from "./PlayerTrailFire"
-
-// import ClownfishModel from "./PlayerModels/Clownfish"
-// import BoneFishModel from "./PlayerModels/BoneFish"
-// import { useLocalStorageNew } from "@/hooks/useLocalStorageNew"
+import { rewards } from '@/components/UI/RewardsModal'
+import { useScoreStore } from "@/hooks/useScoreStore"
 
 // const JUMP_FORCE = 5;
 const JUMP_FORCE = 7.5;
@@ -32,15 +27,14 @@ let lastLocation
 
 function myToFixed(i, digits) {
     var pow = Math.pow(10, digits);
-
     return Math.floor(i * pow) / pow;
 }
 
 function Player(props) {
 
-    const debug = useStore((state) => state.debug)
+    // let rewards = rewards()
 
-    // const { setPlayerData, teleportPlayer, setTeleportPlayer } = props;
+    const debug = useStore((state) => state.debug)
 
     const character = useStore((state) => state.character)
     const isDiving = useStore((state) => state.isDiving)
@@ -49,63 +43,6 @@ function Player(props) {
     const setGameOver = useGameStore((state) => state.setGameOver)
     const gameOver = useGameStore((state) => state.gameOver)
     const canvasClicked = useGameStore((state) => state.canvasClicked)
-
-    // const cameraMode = useGameStore((state) => state.cameraMode)
-
-    // const toggleDisableDeath = useStore((state) => state.toggleDisableDeath)
-    // const disableDeath = useStore((state) => state.disableDeath)
-
-    // const {
-    //     touchControls, setTouchControls
-    // } = useControlsStore()
-
-    // const [attackCoolDown, setAttackCoolDown] = useState(false);
-
-    // useEffect(() => {
-
-    //     if (!attackCoolDown) return
-
-    //     setTimeout(() => {
-
-    //         setAttackCoolDown(false)
-
-    //     }, 100)
-
-    // }, [attackCoolDown])
-
-    // const { controllerState, setControllerState } = useControllerStore()
-
-    // const [character, setCharacter] = useLocalStorageNew("game:ocean-rings:character", {
-    //     model: 'Clownfish',
-    //     color: '#000000'
-    // })
-
-    // // Attach event listeners when the component mounts
-    // useEffect(() => {
-
-    //     if (controllerState.axes && Math.abs(controllerState?.axes[0]) > 0.3) {
-
-    //         if (controllerState?.axes[0] > 0) {
-    //             api.position.set([-1, 5, 0]);
-    //         } else {
-    //             api.position.set([1, 5, 0]);
-    //         }
-
-    //     }
-
-    // }, [controllerState]);
-
-    // useEffect(() => {
-
-    //     if (teleport) {
-
-    //         console.log("Teleport has been called!", teleport)
-    //         api.position.set(teleport[0], teleport[1], teleport[2]);
-    //         setTeleport(false)
-
-    //     }
-
-    // }, [teleport]);
 
     const { jump, dive } = useKeyboard()
 
@@ -120,18 +57,55 @@ function Player(props) {
         collisionFilterMask: 2, // Player can collide with group 2 (rocks)
         onCollide: (e) => {
             const disableDeath = useStore.getState().disableDeath
-            console.log("Player Collided", e?.body.userData?.type)
+            const collisionType = e?.body?.userData?.type
+
+            console.log("Player Collided", collisionType)
+
+            if (
+                collisionType === 'helicopter-top'
+                ||
+                collisionType === 'helicopter-bottom'
+            ) {
+                
+                let maxDistance = useScoreStore.getState().maxDistance
+
+                const armorPlating = rewards.find(reward => reward.name === 'Armor Plating')
+
+                console.log("maxDistance", maxDistance)
+                console.log("armorPlating.distance", armorPlating.distance)                
+
+                if (
+                    maxDistance < armorPlating.distance
+                ) {
+                    console.log("Armor Plating not yet unlocked")
+                    // return
+                } else {
+                    console.log("Helicopter top/bottom hit, ignoring")
+                    return
+                }
+
+            }
+
             if (hitAudioRef.current) {
                 hitAudioRef.current.currentTime = 0;
                 hitAudioRef.current.play().catch(() => { });
             }
+
             if (disableDeath) {
                 console.log("Death disabled, ignoring collision")
+                return
+            }
+
+            if (
+                collisionType === 'helicopter-side'
+            ) {
+                console.log("Helicopter side hit, game over")
             } else {
                 console.log("Death")
-                setGameOver(true)
-                api.position.set(0, 2, 0)
             }
+
+            setGameOver(true)
+            api.position.set(0, 2, 0)
         }
     }))
 
@@ -295,36 +269,6 @@ function Player(props) {
             setPlayerLocation(newLocation)
             lastLocation = newLocation
         }
-        // else {
-        //     console.log("location unchanged")
-        // }
-
-        // if (pos.current[1] > maxHeight) {
-        //     setMaxHeight(pos.current[1].toFixed(2))
-        // }
-
-        const direction = new Vector3()
-
-        // const frontVector = new Vector3(
-        //     0,
-        //     0,
-        //     (moveForward || touchControls.up ? -1 : 0) - (moveBackward || touchControls.down ? -1 : 0),
-        // )
-
-        // const sideVector = new Vector3(
-        //     (moveLeft || touchControls.left ? 1 : 0) - (moveRight || touchControls.right ? 1 : 0),
-        //     0,
-        //     0,
-        // )
-
-        // direction
-        //     .subVectors(frontVector, sideVector)
-        //     .normalize()
-        //     .multiplyScalar(
-        //         // SPEED * (shift ? 2 : 1)
-        //         SPEED * (1)
-        //     )
-        // .applyEuler(camera.rotation)
 
         let vy = vel.current[1]
 
@@ -358,15 +302,6 @@ function Player(props) {
             if (playerModelRef.current) {
                 // Determine target rotation
                 const targetRotation = degToRad(-45);
-
-                // You might need to handle the specific rotation for each model separately or wrap them differently 
-                // but since we're rotating the container, let's try rotating the container's X axis.
-                // However, current container `playerModelRef` is also where position is set. `api.velocity` sets velocity.
-
-                // Let's modify the rotation of the inner models or the group itself.
-                // But the group position is updated every frame from api.position subscription.
-                // If I set rotation on playerModelRef.current here, it should stick for this frame.
-
                 playerModelRef.current.rotation.x = targetRotation
             }
         } else {

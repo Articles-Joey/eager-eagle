@@ -93,10 +93,28 @@ export default function MovingObstacle({ index }) {
     const [helicopterRef, helicopterApi] = useBox(() => ({
         mass: 0,
         type: 'Kinematic',
-        args: [1, 1, 1],
+        args: [0.3, 1.2, 1.6],
         position: [0, (baseHeight / 2) - Y_OFFSET, initialZ],
         collisionFilterGroup: 2,
-        userData: { type: 'helicopter' }
+        userData: { type: 'helicopter-side' }
+    }))
+
+    const [helicopterTopRef, helicopterTopApi] = useBox(() => ({
+        mass: 0,
+        type: 'Kinematic',
+        args: [1, 0.2, 1],
+        position: [0, (baseHeight / 2) - Y_OFFSET, initialZ],
+        collisionFilterGroup: 2,
+        userData: { type: 'helicopter-top' }
+    }))
+
+    const [helicopterBottomRef, helicopterBottomApi] = useBox(() => ({
+        mass: 0,
+        type: 'Kinematic',
+        args: [1, 0.2, 1],
+        position: [0, (baseHeight / 2) - Y_OFFSET, initialZ],
+        collisionFilterGroup: 2,
+        userData: { type: 'helicopter-bottom' }
     }))
 
     // Background buildings (scenery)
@@ -154,6 +172,9 @@ export default function MovingObstacle({ index }) {
 
             // Reset physics positions
             api.position.set(0, (buildingHeight / 2) - Y_OFFSET, initialZ)
+            helicopterApi.position.set(0, (baseHeight / 2) - Y_OFFSET, initialZ)
+            helicopterTopApi.position.set(0, (baseHeight / 2) + 1.5 - Y_OFFSET, initialZ)
+            helicopterBottomApi.position.set(0, (baseHeight / 2) - Y_OFFSET, initialZ)
             // baseApi.position.set(0, (baseHeight / 2) - Y_OFFSET, initialZ)
         }
     }, [gameOver, distance, initialZ, buildingHeight, args, api,
@@ -210,8 +231,18 @@ export default function MovingObstacle({ index }) {
         // Base box is centered relative to its height and building
         // baseApi.position.set(x, (baseHeight / 2) - Y_OFFSET, z)
 
-        // Helicopter position (above building)
-        helicopterApi.position.set(x, baseHeight + args[1] + 2 - Y_OFFSET, z)
+        // Helicopter positions (side body and top body)
+        helicopterApi.position.set(
+            x,
+            baseHeight + args[1] + 2.75 - Y_OFFSET,
+            z
+        )
+        helicopterTopApi.position.set(x, baseHeight + args[1] + 3.5 - Y_OFFSET, z)
+        helicopterBottomApi.position.set(
+            x,
+            baseHeight + args[1] + 2 - Y_OFFSET,
+            z
+        )
 
         if (bgGroupRef.current) {
             bgGroupRef.current.position.set(x, 0, z)
@@ -382,6 +413,10 @@ export default function MovingObstacle({ index }) {
                 </group>
 
             </group>
+
+            <group ref={helicopterTopRef} dispose={null} />
+
+            <group ref={helicopterBottomRef} dispose={null} />
 
         </group>
     )

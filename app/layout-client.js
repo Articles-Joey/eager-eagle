@@ -3,6 +3,8 @@ import { Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import packageInfo from '@/package.json';
 
+import { useHotkeys } from 'react-hotkeys-hook';
+
 import { useStore } from '@/hooks/useStore';
 import { useAudioStore } from '@/hooks/useAudioStore';
 import useTouchControlsStore from '@/hooks/useTouchControlsStore';
@@ -12,6 +14,7 @@ import DarkModeHandler from "@articles-media/articles-dev-box/DarkModeHandler";
 import GlobalBody from '@articles-media/articles-dev-box/GlobalBody';
 import ToontownModeHandler from '@articles-media/articles-dev-box/ToontownModeHandler';
 import GlobalClientModals from '@articles-media/articles-dev-box/GlobalClientModals';
+import HotkeyHandler from '@articles-media/articles-dev-box/HotkeyHandler';
 
 const CustomizeModal = dynamic(
     () => import('@/components/UI/CustomizeModal'),
@@ -42,6 +45,7 @@ export default function LayoutClient({
                 useStore={useStore}
             />
             <Suspense>
+
                 {customizeModal &&
                     <CustomizeModal
                         show={customizeModal}
@@ -55,6 +59,12 @@ export default function LayoutClient({
                         setShow={setRewardsModal}
                     />
                 }
+
+                <HotkeyHandler 
+                    useStore={useStore}
+                    useHotkeys={useHotkeys}
+                />
+
                 <GlobalClientModals
                     useStore={useStore}
                     useAudioStore={useAudioStore}
@@ -108,6 +118,7 @@ export default function LayoutClient({
                         previewImage: darkMode ? "img/dark-preview.webp" : "img/preview.webp",
                     }}
                 />
+
             </Suspense>
         </>
     );

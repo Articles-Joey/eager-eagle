@@ -28,9 +28,7 @@ import { defaultCharacter, useStore } from "@/hooks/useStore";
 import classNames from "classnames";
 import { useScoreStore } from "@/hooks/useScoreStore";
 
-export function rewards() {
-
-    return [
+const rewards = [
         {
             name: "Diving",
             description: "Unlock the ability to dive swiftly and navigate through tight spaces with precision.",
@@ -41,7 +39,7 @@ export function rewards() {
             name: "Armor Plating",
             description: "No longer die from collisions on the top and bottom of ground and sky obstacles. Watch out because you will bounce off!",
             distance: 200,
-            lifetimeDistance: 200 * 5,
+            // lifetimeDistance: 200 * 5,
         },
         ...defaultCharacter.models.map(reward => {
             return {
@@ -73,8 +71,7 @@ export function rewards() {
                 name: reward.name + ' Ground Object',
             }
         }),
-    ]
-}
+]
 
 export default function RewardsModal({
     show,
@@ -178,7 +175,7 @@ export default function RewardsModal({
 
                         } */}
                         {
-                            rewards()
+                            rewards
                                 .filter(reward => reward.distance)
                                 .sort((a, b) => a.distance - b.distance)
                                 .map((reward, index) => (
@@ -196,7 +193,8 @@ export default function RewardsModal({
                                         <p>{reward?.description}</p>
 
                                         <p className="mb-0"><strong>Distance Required:</strong> {reward?.distance} meters</p>
-                                        <p><strong>Lifetime Distance Required:</strong> {reward?.lifetimeDistance} meters</p>
+
+                                        {reward?.lifetimeDistance && <p><strong>Lifetime Distance Required:</strong> {reward?.lifetimeDistance} meters</p>}
 
                                     </div>
                                 ))
@@ -223,4 +221,8 @@ export default function RewardsModal({
         </>
     )
 
+}
+
+export {
+    rewards
 }
