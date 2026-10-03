@@ -1,436 +1,119 @@
-import { useEffect, useRef, useState } from "react";
+"use client";
 
-// import Image from "next/image";
-// import dynamic from 'next/dynamic'
-
-// import { useSelector } from 'react-redux'
-
-import { Dropdown, DropdownButton, Modal } from "react-bootstrap"
-
-import ViewUserModal from "@/components/UI/ViewUserModal"
-
-// import BasicLoading from "@/components/loading/BasicLoading";
-
-// import powerups from "app/(site)/community/games/four-frogs/components/powerups";
-
-// import games from "../constants/games";
-const games = []
-
-import IsDev from "@/components/UI/IsDev";
-import ArticlesButton from "./Button";
-import Link from "next/link";
-
+import { useRef, useState } from "react";
+import Box from "@mui/material/Box";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import Typography from "@mui/material/Typography";
+import CheckIcon from "@mui/icons-material/Check";
+import LockIcon from "@mui/icons-material/Lock";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
+import CloseIcon from "@mui/icons-material/Close";
 import B from "@articles-media/articles-gamepad-helper/dist/img/Xbox UI/B.svg";
 import Y from "@articles-media/articles-gamepad-helper/dist/img/Xbox UI/Y.svg";
-
+import ArticlesModal from "./ArticlesModal";
+import ArticlesButton from "./Button";
+import ScenePreview from "../Game/ScenePreview";
 import { useModalNavigation } from "@/hooks/useModalNavigation";
 import { defaultCharacter, useStore } from "@/hooks/useStore";
-import ScenePreview from "../Game/ScenePreview";
 import { useScoreStore } from "@/hooks/useScoreStore";
-import classNames from "classnames";
 
-export default function CustomizeModal({
-    show,
-    setShow,
-    credits
-}) {
+const customizationOptions = [
+    { label: "Player", keyName: "model", rewardsKey: "models" },
+    { label: "Trail", keyName: "trail", rewardsKey: "trails" },
+    { label: "Ground Object", keyName: "groundObject", rewardsKey: "groundObjects" },
+    { label: "Sky Object", keyName: "skyObject", rewardsKey: "skyObjects" },
+    { label: "Background", keyName: "background", rewardsKey: "backgrounds" },
+];
 
-    const [showModal, setShowModal] = useState(true)
-
-    const [lightboxData, setLightboxData] = useState(null)
-
-    // const userReduxState = useSelector((state) => state.auth.user_details);
-    const userReduxState = false
-
-    const [showVideo, setShowVideo] = useState()
-
+export default function CustomizeModal({ show, setShow }) {
+    const [showModal, setShowModal] = useState(true);
+    const [openSelect, setOpenSelect] = useState(null);
     const elementsRef = useRef([]);
-    useModalNavigation(elementsRef, () => setShowModal(false));
-
-    // const defaultCharacter = useStore((state) => state.defaultCharacter)
-    const character = useStore((state) => state.character)
-    const setCharacter = useStore((state) => state.setCharacter)
-
-    const maxDistance = useScoreStore((state) => state.maxDistance)
-    const lifetimeDistance = useScoreStore((state) => state.lifetimeDistance)
+    const menuElementsRef = useRef([]);
+    useModalNavigation(openSelect ? menuElementsRef : elementsRef, () => {
+        if (openSelect) setOpenSelect(null);
+        else setShowModal(false);
+    });
+    const character = useStore((state) => state.character);
+    const setCharacter = useStore((state) => state.setCharacter);
+    const maxDistance = useScoreStore((state) => state.maxDistance);
+    const lifetimeDistance = useScoreStore((state) => state.lifetimeDistance);
 
     return (
-        <>
-            {/* {lightboxData && (
-                <Lightbox
-                    mainSrc={lightboxData?.location}
-                    onCloseRequest={() => setLightboxData(null)}
-                    reactModalStyle={{
-                        overlay: {
-                            zIndex: '2000'
-                        }
-                    }}
-                />
-            )} */}
-
-            <Modal
-                className="articles-modal customize-modal"
-                size='lg'
-                show={showModal}
-                centered
-                scrollable
-                onExited={() => {
-                    setShow(false)
-                }}
-                onHide={() => {
-                    setShowModal(false)
-                }}
-            >
-
-                <Modal.Header closeButton>
-                    <Modal.Title>Customize Game</Modal.Title>
-                </Modal.Header>
-
-                <Modal.Body
-                    className="d-flex flex-column flex-lg-row p-3"
-                >
-
-                    <div
-                        className="scene-preview mb-3 mb-lg-0"
-                    >
-                        <ScenePreview />
-                    </div>
-
-                    <div className="d-flex flex-column w-100 ms-lg-3">
-
-                        <div className="d-flex justify-content-center text-center mb-3">
-
-                            <div className="px-3">
-                                <h3>{maxDistance}</h3>
-                                <div>max distance</div>
-                            </div>
-
-                            <div className="px-3">
-                                <h3>{lifetimeDistance}</h3>
-                                <div>lifetime distance</div>
-                            </div>
-
-                        </div>
-
-                        {/* Eagle / Flappy Bird / Plane */}
-                        {/* <div>Player:</div> */}
-                        <DropdownButton
-                            variant="articles w-100 text-start"
-                            size='sm'
-                            id="dropdown-basic-button"
-                            className="dropdown-articles mb-3"
-                            title={
-                                <span>
-                                    <i className="fad fa-user me-2"></i>
-                                    <span>Player: {character.model}</span>
-                                </span>
-                            }
-                        >
-
-                            <div style={{ maxHeight: '600px', overflowY: 'auto', width: '200px' }}>
-
-                                {defaultCharacter?.models?.map(location => {
-
-                                    const isUnlocked = defaultCharacter.models.find(bg => {
-                                        return (
-                                            bg.name === location.name
-                                            &&
-                                            (
-                                                maxDistance >= bg.distance
-                                                ||
-                                                lifetimeDistance >= bg.lifetimeDistance
-                                                ||
-                                                bg.distance === 0
-                                            )
-                                        )
-                                    })
-
-                                    return (
-                                        <RewardDropdownItem
-                                            key={location.name}
-                                            reward={location}
-                                            isUnlocked={isUnlocked}
-                                            keyName={'model'}
-                                        />
-                                    )
-
-                                })}
-
-                            </div>
-
-                        </DropdownButton>
-
-                        <DropdownButton
-                            variant="articles w-100 text-start"
-                            size='sm'
-                            id="dropdown-basic-button"
-                            className="dropdown-articles mb-3"
-                            title={
-                                <span>
-                                    <i className="fad fa-user me-2"></i>
-                                    <span>Trail: {character.trail}</span>
-                                </span>
-                            }
-                        >
-
-                            <div style={{ maxHeight: '600px', overflowY: 'auto', width: '200px' }}>
-
-                                {defaultCharacter?.trails?.map(location => {
-
-                                    const isUnlocked = defaultCharacter.trails.find(bg => {
-                                        return (
-                                            bg.name === location.name
-                                            &&
-                                            (
-                                                maxDistance >= bg.distance
-                                                ||
-                                                lifetimeDistance >= bg.lifetimeDistance
-                                                ||
-                                                bg.distance === 0
-                                            )
-                                        )
-                                    })
-
-                                    return (
-                                        <RewardDropdownItem
-                                            key={location.name}
-                                            reward={location}
-                                            isUnlocked={isUnlocked}
-                                            keyName={'trail'}
-                                        />
-                                    )
-                                })}
-
-                            </div>
-
-                        </DropdownButton>
-
-                        <DropdownButton
-                            variant="articles w-100 text-start"
-                            size='sm'
-                            id="dropdown-basic-button"
-                            className="dropdown-articles mb-3"
-                            title={
-                                <span>
-                                    <i className="fad fa-user me-2"></i>
-                                    <span>Ground Object: {character.groundObject}</span>
-                                </span>
-                            }
-                        >
-
-                            <div style={{ maxHeight: '600px', overflowY: 'auto', width: '200px' }}>
-
-                                {defaultCharacter?.groundObjects?.map(location => {
-
-                                    const isUnlocked = defaultCharacter.groundObjects.find(bg => {
-                                        return (
-                                            bg.name === location.name
-                                            &&
-                                            (
-                                                maxDistance >= bg.distance
-                                                ||
-                                                lifetimeDistance >= bg.lifetimeDistance
-                                                ||
-                                                bg.distance === 0
-                                            )
-                                        )
-                                    })
-
-                                    return (
-                                        <RewardDropdownItem
-                                            key={location.name}
-                                            reward={location}
-                                            isUnlocked={isUnlocked}
-                                            keyName={'groundObject'}
-                                        />
-                                    )
-
-                                })}
-
-                            </div>
-
-                        </DropdownButton>
-
-                        <DropdownButton
-                            variant="articles w-100 text-start"
-                            size='sm'
-                            id="dropdown-basic-button"
-                            className="dropdown-articles mb-3"
-                            title={
-                                <span>
-                                    <i className="fad fa-user me-2"></i>
-                                    <span>Sky Object: {character.skyObject}</span>
-                                </span>
-                            }
-                        >
-
-                            <div style={{ maxHeight: '600px', overflowY: 'auto', width: '200px' }}>
-
-                                {defaultCharacter?.skyObjects?.map(location => {
-
-                                    const isUnlocked = defaultCharacter.skyObjects.find(bg => {
-                                        return (
-                                            bg.name === location.name
-                                            &&
-                                            (
-                                                maxDistance >= bg.distance
-                                                ||
-                                                lifetimeDistance >= bg.lifetimeDistance
-                                                ||
-                                                bg.distance === 0
-                                            )
-                                        )
-                                    })
-
-                                    return (
-                                        <RewardDropdownItem
-                                            key={location.name}
-                                            reward={location}
-                                            isUnlocked={isUnlocked}
-                                            keyName={'skyObject'}
-                                        />
-                                    )
-
-                                })}
-
-                            </div>
-
-                        </DropdownButton>
-
-                        <DropdownButton
-                            variant="articles w-100 text-start"
-                            size='sm'
-                            id="dropdown-basic-button"
-                            className="dropdown-articles mb-3"
-                            title={
-                                <span>
-                                    <i className="fad fa-user me-2"></i>
-                                    <span>Background: {character.background}</span>
-                                </span>
-                            }
-                        >
-
-                            <div style={{ maxHeight: '600px', overflowY: 'auto', width: '200px' }}>
-
-                                {defaultCharacter?.backgrounds?.map(location => {
-
-                                    const isUnlocked = defaultCharacter.backgrounds.find(bg => {
-                                        return (
-                                            bg.name === location.name
-                                            &&
-                                            (
-                                                maxDistance >= bg.distance
-                                                ||
-                                                lifetimeDistance >= bg.lifetimeDistance
-                                                ||
-                                                bg.distance === 0
-                                            )
-                                        )
-                                    })
-
-                                    return (
-                                        <RewardDropdownItem
-                                            key={location.name}
-                                            reward={location}
-                                            isUnlocked={isUnlocked}
-                                            keyName={'background'}
-                                        />
-                                    )
-                                })}
-
-                            </div>
-
-                        </DropdownButton>
-
-                        {/* <div>Accent Color: Blue</div> */}
-
-                        {/* Basic / Neon / Fire */}
-                        {/* <div>Trail: Basic</div> */}
-
-                        {/* Buildings / Rocks / Light Post / Tubes */}
-                        {/* <div>Ground Obstacles: Rocks</div> */}
-
-                        {/* Helicopters / Birds / Drones */}
-                        {/* <div>Sky Obstacles: Helicopters</div> */}
-
-                    </div>
-
-                </Modal.Body>
-
-                <Modal.Footer className="justify-content-between">
-
-                    <ArticlesButton variant="danger" onClick={() => {
-                        setCharacter(defaultCharacter)
-                    }}>
-                        <i className="no-controller-only fad fa-redo me-1"></i>
-                        <img src={Y.src} className="controller-only me-1" alt="Reset" />
-                        Reset
-                    </ArticlesButton>
-
-                    <ArticlesButton variant="outline-dark" onClick={() => {
-                        setShow(false)
-                    }}>
-                        <i className="no-controller-only fad fa-times me-1"></i>
-                        <img src={B.src} className="controller-only me-1" alt="Close" />
-                        Close
-                    </ArticlesButton>
-
-                </Modal.Footer>
-
-            </Modal>
-        </>
-    )
-
-}
-
-function RewardDropdownItem({
-    reward,
-    isUnlocked,
-    keyName
-}) {
-
-    const setCharacter = useStore((state) => state.setCharacter)
-    const character = useStore((state) => state.character)
-
-    return (
-        <Dropdown.Item
-            // key={reward.name}
-            onClick={() => {
-                setCharacter({
-                    ...character,
-                    [keyName]: reward.name
-                })
+        <ArticlesModal
+            show={Boolean(show) && showModal}
+            setShow={setShow}
+            title="Customize Game"
+            size="lg"
+            contentSx={{
+                minHeight: 500, display: "flex", flexDirection: "column", p: "1rem",
+                "@media (min-width: 992px)": { flexDirection: "row" },
             }}
-            className={
-                classNames(
-                    `d-flex justify-content-between`,
-                    {
-                        'unlocked': isUnlocked
-                    }
-                )
-            }
-            disabled={!isUnlocked}
+            footerOverride={(setOpen) => (
+                <>
+                    <ArticlesButton ref={(el) => { elementsRef.current[5] = el; }} variant="danger" onClick={() => setCharacter(defaultCharacter)}>
+                        <RestartAltIcon className="no-controller-only" fontSize="small" sx={{ mr: 0.5 }} />
+                        <Box component="img" src={Y.src} className="controller-only" height={20} width={20} alt="Reset" sx={{ mr: 0.5 }} />Reset
+                    </ArticlesButton>
+                    <ArticlesButton ref={(el) => { elementsRef.current[6] = el; }} variant="outline-dark" onClick={() => setOpen(false)}>
+                        <CloseIcon className="no-controller-only" fontSize="small" sx={{ mr: 0.5 }} />
+                        <Box component="img" src={B.src} className="controller-only" height={20} width={20} alt="Close" sx={{ mr: 0.5 }} />Close
+                    </ArticlesButton>
+                </>
+            )}
         >
-
-            <div className="d-flex justify-content-between w-100">
-
-                {isUnlocked ? <i className="fad fa-check"></i> : <i className="fad fa-lock"></i>}
-
-                <div className="text-end">
-
-                    <div>{reward.name}</div>
-
-                    <div>
-                        <div className="text-muted small">
-                            {reward.distance > 0 && <div>{reward.distance} Distance</div>}
-                            {reward.lifetimeDistance > 0 && <div>{reward.lifetimeDistance} Lifetime</div>}
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-
-        </Dropdown.Item>
-    )
+            <Box sx={{
+                bgcolor: "#000", aspectRatio: "1 / 1", width: "100%", mb: "1rem", flexShrink: 0,
+                "@media (min-width: 992px)": { width: 300, height: 300, mb: 0 },
+            }}><ScenePreview /></Box>
+            <Box sx={{ display: "flex", flexDirection: "column", width: "100%", minWidth: 0, "@media (min-width: 992px)": { ml: "1rem" } }}>
+                <Box sx={{ display: "flex", justifyContent: "center", textAlign: "center", mb: "1rem" }}>
+                    <Box sx={{ px: "1rem" }}><Typography variant="h5">{maxDistance}</Typography><Box>max distance</Box></Box>
+                    <Box sx={{ px: "1rem" }}><Typography variant="h5">{lifetimeDistance}</Typography><Box>lifetime distance</Box></Box>
+                </Box>
+                {customizationOptions.map(({ label, keyName, rewardsKey }, index) => (
+                    <FormControl key={keyName} fullWidth size="small" sx={{ mb: "1rem" }}>
+                        <InputLabel id={`customize-${keyName}-label`}>{label}</InputLabel>
+                        <Select
+                            labelId={`customize-${keyName}-label`}
+                            label={label}
+                            value={character[keyName]}
+                            open={openSelect === keyName}
+                            onOpen={() => setOpenSelect(keyName)}
+                            onClose={() => setOpenSelect(null)}
+                            SelectDisplayProps={{ onClick: () => setOpenSelect(keyName) }}
+                            inputRef={(el) => {
+                                elementsRef.current[index] = el?.node?.parentElement?.querySelector('[role="combobox"]') || null;
+                            }}
+                            onChange={(event) => {
+                                setCharacter({ ...character, [keyName]: event.target.value });
+                                setOpenSelect(null);
+                            }}
+                            renderValue={(value) => `${label}: ${value}`}
+                            MenuProps={{ slotProps: { paper: { sx: { maxHeight: 600 } } } }}
+                        >
+                            {defaultCharacter[rewardsKey].map((reward, rewardIndex) => {
+                                const isUnlocked = maxDistance >= reward.distance || lifetimeDistance >= reward.lifetimeDistance || reward.distance === 0;
+                                return (
+                                    <MenuItem key={reward.name} value={reward.name} disabled={!isUnlocked} ref={(el) => { menuElementsRef.current[rewardIndex] = el; }} sx={{ display: "flex", justifyContent: "space-between", gap: 2, "&.Mui-disabled": { opacity: 0.5 } }}>
+                                        {isUnlocked ? <CheckIcon fontSize="small" /> : <LockIcon fontSize="small" />}
+                                        <Box sx={{ textAlign: "right" }}>
+                                            <Box>{reward.name}</Box>
+                                            <Box sx={{ color: "text.secondary", fontSize: "0.875em" }}>
+                                                {reward.distance > 0 && <Box>{reward.distance} Distance</Box>}
+                                                {reward.lifetimeDistance > 0 && <Box>{reward.lifetimeDistance} Lifetime</Box>}
+                                            </Box>
+                                        </Box>
+                                    </MenuItem>
+                                );
+                            })}
+                        </Select>
+                    </FormControl>
+                ))}
+            </Box>
+        </ArticlesModal>
+    );
 }

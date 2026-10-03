@@ -1,28 +1,17 @@
-import ArticlesButton from "@/components/UI/Button";
+"use client";
+
 import Link from "next/link";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import ArticlesButton from "@/components/UI/Button";
 
 export default function NotFound() {
     return (
-        <div
-            style={{
-                height: "100svh",
-                width: "100vw",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexDirection: "column",
-            }}
-        >
-            <img src="img/icon.png" height={200} alt="Logo" />
-            <h1 className="text-4xl font-bold mb-1">404 - Page Not Found</h1>
-            <p className="text-lg">Sorry, the page you are looking for does not exist.</p>
-            <Link
-                href="/"
-            >
-                <ArticlesButton>
-                    Return to Home
-                </ArticlesButton>
-            </Link>
-        </div>
-    )
+        <Box sx={{ height: "100svh", width: "100vw", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" }}>
+            <Box component="img" src="/img/icon.png" height={200} alt="Logo" />
+            <Typography component="h1" variant="h4" sx={{ fontWeight: 700, mb: 0.5 }}>404 - Page Not Found</Typography>
+            <Typography component="p" sx={{ mb: 2 }}>Sorry, the page you are looking for does not exist.</Typography>
+            <ArticlesButton component={Link} href="/">Return to Home</ArticlesButton>
+        </Box>
+    );
 }

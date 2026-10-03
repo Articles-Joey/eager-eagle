@@ -5,6 +5,9 @@ export const useModalNavigation = (elementsRef, onClose) => {
 
     useEffect(() => {
         let animationFrameId;
+        const availableElements = () => elementsRef.current.filter(el =>
+            el && !el.disabled && el.getAttribute('aria-disabled') !== 'true' && el.offsetParent !== null
+        );
 
         const loop = () => {
             const gamepads = navigator.getGamepads();
@@ -58,7 +61,7 @@ export const useModalNavigation = (elementsRef, onClose) => {
         };
 
         const navigate = (dx, dy) => {
-            const els = elementsRef.current.filter(el => el && !el.disabled && el.offsetParent !== null);
+            const els = availableElements();
             
             if (els.length === 0) return;
 
@@ -83,7 +86,7 @@ export const useModalNavigation = (elementsRef, onClose) => {
         };
 
         // Focus first element on mount if nothing focused
-        const els = elementsRef.current.filter(el => el && !el.disabled && el.offsetParent !== null);
+        const els = availableElements();
         if (els.length > 0 && !els.includes(document.activeElement)) {
              els[0].focus();
         }

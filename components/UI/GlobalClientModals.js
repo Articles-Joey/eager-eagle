@@ -1,4 +1,5 @@
 "use client"
+import Box from "@mui/material/Box";
 
 import { useStore } from '@/hooks/useStore'
 import { useGameStore } from '@/hooks/useGameStore'
@@ -6,7 +7,7 @@ import { useGameStore } from '@/hooks/useGameStore'
 import dynamic from 'next/dynamic'
 
 import { useAudioStore } from '@/hooks/useAudioStore'
-import { useTouchControlsStore } from '@/hooks/useTouchControlsStore'
+import useTouchControlsStore from '@/hooks/useTouchControlsStore'
 import ArticlesButton from './Button'
 // import { useStore } from '../hooks/useStore'
 // import CreditsModal from './CreditsModal'
@@ -139,8 +140,8 @@ export default function GlobalClientModals() {
                             },
                             'Debug': {
                                 children: <>
-                                    <div>Disable Death</div>
-                                    <div className="mb-3">
+                                    <Box>Disable Death</Box>
+                                    <Box sx={{ mb: "1rem" }}>
                                         <ArticlesButton
                                             active={disableDeath === false}
                                             onClick={() => {
@@ -157,7 +158,7 @@ export default function GlobalClientModals() {
                                         >
                                             Enabled
                                         </ArticlesButton>
-                                    </div>
+                                    </Box>
                                 </>
                             }
                         }

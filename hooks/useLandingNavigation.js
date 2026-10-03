@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-import { useGameStore } from '@/hooks/useGameStore';
 import { useGameControllerKeyboardStore, usePieMenuStore } from '@articles-media/articles-gamepad-helper';
 import { useStore } from './useStore';
 
@@ -13,15 +12,17 @@ export const useLandingNavigation = (elementsRef) => {
 
     const visible = usePieMenuStore((state) => state.visible);
 
-    const showInfoModal = useGameStore((state) => state.showInfoModal)
-    const showSettingsModal = useGameStore((state) => state.showSettingsModal)
-    const showCreditsModal = useGameStore((state) => state.showCreditsModal)
+    const showInfoModal = useStore((state) => state.showInfoModal)
+    const showSettingsModal = useStore((state) => state.showSettingsModal)
+    const showCreditsModal = useStore((state) => state.showCreditsModal)
+    const customizeModal = useStore((state) => state.customizeModal)
+    const rewardsModal = useStore((state) => state.rewardsModal)
 
     const lastInputTime = useRef(0);
     const currentFocusIndex = useRef(-1);
 
     useEffect(() => {
-        if (showInfoModal || showSettingsModal || showCreditsModal || visible || nicknameKeyboard) return;
+        if (showInfoModal || showSettingsModal || showCreditsModal || customizeModal || rewardsModal || visible || nicknameKeyboard) return;
 
         let animationFrameId;
 
@@ -131,5 +132,5 @@ export const useLandingNavigation = (elementsRef) => {
         animationFrameId = requestAnimationFrame(loop);
 
         return () => cancelAnimationFrame(animationFrameId);
-    }, [elementsRef, showInfoModal, showSettingsModal, showCreditsModal, visible, nicknameKeyboard, lastClosedTime]);
+    }, [elementsRef, showInfoModal, showSettingsModal, showCreditsModal, customizeModal, rewardsModal, visible, nicknameKeyboard, lastClosedTime]);
 };

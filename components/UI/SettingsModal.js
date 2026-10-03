@@ -1,330 +1,129 @@
+"use client";
+
 import { useRef, useState } from "react";
-
-import { Modal, Form } from "react-bootstrap"
-
-import ArticlesButton from "@/components/UI/Button";
-import { useStore } from "@/hooks/useStore";
-
+import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
+import Slider from "@mui/material/Slider";
+import Typography from "@mui/material/Typography";
+import CloseIcon from "@mui/icons-material/Close";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import B from "@articles-media/articles-gamepad-helper/dist/img/Xbox UI/B.svg";
 import Y from "@articles-media/articles-gamepad-helper/dist/img/Xbox UI/Y.svg";
-import { useModalNavigation } from "@/hooks/useModalNavigation";
-// import { set } from "date-fns";
+import ArticlesModal from "./ArticlesModal";
+import ArticlesButton from "./Button";
+import { useStore } from "@/hooks/useStore";
 import { useAudioStore } from "@/hooks/useAudioStore";
+import { useModalNavigation } from "@/hooks/useModalNavigation";
 
-export default function SettingsModal({
-    show,
-    setShow,
-}) {
-
-    const [showModal, setShowModal] = useState(true)
-
-    const [lightboxData, setLightboxData] = useState(null)
-
-    const [tab, setTab] = useState('Graphics')
-
+export default function SettingsModal({ show, setShow }) {
+    const [showModal, setShowModal] = useState(true);
+    const [tab, setTab] = useState("Graphics");
     const elementsRef = useRef([]);
     useModalNavigation(elementsRef, () => setShowModal(false));
 
     return (
-        <>
-            {/* {lightboxData && (
-                <Lightbox
-                    mainSrc={lightboxData?.location}
-                    onCloseRequest={() => setLightboxData(null)}
-                    reactModalStyle={{
-                        overlay: {
-                            zIndex: '2000'
-                        }
-                    }}
-                />
-            )} */}
-
-            <Modal
-                className="articles-modal"
-                size='md'
-                show={showModal}
-                // To much jumping with little content for now
-                // centered
-                scrollable
-                onExited={() => {
-                    setShow(false)
-                }}
-                onHide={() => {
-                    setShowModal(false)
-                }}
-            >
-
-                <Modal.Header closeButton>
-                    <Modal.Title>Game Settings</Modal.Title>
-                </Modal.Header>
-
-                <Modal.Body className="flex-column p-0">
-
-                    <div className='p-2'>
-                        {[
-                            'Graphics',
-                            'Controls',
-                            'Audio',
-                            // 'Chat'
-                        ].map(item =>
-                            <ArticlesButton
-                                key={item}
-                                active={tab == item}
-                                onClick={() => { setTab(item) }}
-                            >
-                                {item}
-                            </ArticlesButton>
-                        )}
-                    </div>
-
-                    <hr className="my-0" />
-
-                    <div className="p-2">
-                        {tab == 'Graphics' &&
-                            <GraphicsSettings />
-                        }
-                        {tab == 'Controls' &&
-                            <ControlsSettings />
-                        }
-                        {tab == 'Audio' &&
-                            <AudioSettings />
-                        }
-                        {tab == 'Chat' &&
-                            <>
-                                <Form.Check
-                                    type="switch"
-                                    id="custom-switch"
-                                    label="Game chat panel"
-                                />
-                                <Form.Check
-                                    type="switch"
-                                    id="custom-switch"
-                                    label="Censor chat"
-                                />
-                                <Form.Check
-                                    type="switch"
-                                    id="custom-switch"
-                                    label="Game chat speech bubbles"
-                                />
-                            </>
-                        }
-                    </div>
-
-                </Modal.Body>
-
-                <Modal.Footer className="justify-content-between">
-
-                    <ArticlesButton
-                        variant="outline-danger "
-                        onClick={() => {
-                            setShow(false)
-                        }}
-                    >
-                        <i className="no-controller-only fad fa-eraser"></i>
-                        <img src={Y.src} className="controller-only me-1" alt="Close" />
-                        Reset
+        <ArticlesModal
+            show={Boolean(show) && showModal}
+            setShow={setShow}
+            title="Game Settings"
+            centered={false}
+            contentSx={{ p: 0 }}
+            footerOverride={(setOpen) => (
+                <>
+                    <ArticlesButton variant="outline-danger" onClick={() => setOpen(false)}>
+                        <RestartAltIcon className="no-controller-only" fontSize="small" sx={{ mr: 0.5 }} />
+                        <Box component="img" src={Y.src} className="controller-only" height={20} width={20} alt="Reset" sx={{ mr: 0.5 }} />Reset
                     </ArticlesButton>
-
-                    <ArticlesButton
-                        variant="outline-dark"
-                        onClick={() => {
-                            setShow(false)
-                        }}
-                    >
-                        <i className="no-controller-only fad fa-times me-1"></i>
-                        <img src={B.src} className="controller-only me-1" alt="Close" />
-                        Close
+                    <ArticlesButton variant="outline-dark" onClick={() => setOpen(false)}>
+                        <CloseIcon className="no-controller-only" fontSize="small" sx={{ mr: 0.5 }} />
+                        <Box component="img" src={B.src} className="controller-only" height={20} width={20} alt="Close" sx={{ mr: 0.5 }} />Close
                     </ArticlesButton>
-
-                </Modal.Footer>
-
-            </Modal>
-        </>
-    )
-
+                </>
+            )}
+        >
+            <Box sx={{ p: "0.5rem" }}>
+                {["Graphics", "Controls", "Audio"].map((item, index) => (
+                    <ArticlesButton key={item} ref={(el) => { elementsRef.current[index] = el; }} active={tab === item} onClick={() => setTab(item)}>{item}</ArticlesButton>
+                ))}
+            </Box>
+            <Divider />
+            <Box sx={{ p: "0.5rem" }}>
+                {tab === "Graphics" && <GraphicsSettings />}
+                {tab === "Controls" && <ControlsSettings />}
+                {tab === "Audio" && <AudioSettings />}
+            </Box>
+        </ArticlesModal>
+    );
 }
 
 function GraphicsSettings() {
-    
-    const darkMode = useStore(state => state.darkMode)
-    const setDarkMode = useStore(state => state.setDarkMode)
-
-    const debug = useStore(state => state.debug)
-    const setDebug = useStore(state => state.setDebug)
-
-    const graphicsQuality = useStore(state => state.graphicsQuality)
-    const setGraphicsQuality = useStore(state => state.setGraphicsQuality)
+    const darkMode = useStore((state) => state.darkMode);
+    const setDarkMode = useStore((state) => state.setDarkMode);
+    const debug = useStore((state) => state.debug);
+    const setDebug = useStore((state) => state.setDebug);
+    const graphicsQuality = useStore((state) => state.graphicsQuality);
+    const setGraphicsQuality = useStore((state) => state.setGraphicsQuality);
 
     return (
         <>
-            <div>
-                <div className="mb-0">Color Mode</div>
-                <div className="mb-3">
-                    <ArticlesButton
-                        variant="articles"
-                        className="border "
-                        active={darkMode}
-                        onClick={() => {
-                            setDarkMode(true)
-                        }}
-                    >
-                        Dark Mode
-                    </ArticlesButton>
-                    <ArticlesButton
-                        variant="articles"
-                        className="border me-2"
-                        active={!darkMode}
-                        onClick={() => {
-                            setDarkMode(false)
-                        }}
-                    >
-                        Light Mode
-                    </ArticlesButton>
-                </div>
-            </div>
-
-            <div>
-                <div className="mb-0">Debug Mode</div>
-                <div className="mb-3">
-                    <ArticlesButton
-                        variant="articles"
-                        className="border "
-                        active={!debug}
-                        onClick={() => {
-                            setDebug(false)
-                        }}
-                    >
-                        Disabled
-                    </ArticlesButton>
-                    <ArticlesButton
-                        variant="articles"
-                        className="border me-2"
-                        active={debug}
-                        onClick={() => {
-                            setDebug(true)
-                        }}
-                    >
-                        Enabled
-                    </ArticlesButton>
-                </div>
-            </div>
-
-            <div className="mb-3">
-                <div className="mb-0">Graphics Quality</div>
-                {['Low', 'Medium', 'High'].map(level =>
-                    <ArticlesButton
-                        variant="articles"
-                        className=""
-                        key={level}
-                        active={graphicsQuality == level}
-                        onClick={() => {
-                            setGraphicsQuality(level)
-                        }}
-                    >
-                        {level}
-                    </ArticlesButton>
-                )
-                }
-            </div>
+            <Box>Color Mode</Box>
+            <Box sx={{ mb: "1rem" }}>
+                <ArticlesButton active={darkMode} onClick={() => setDarkMode(true)}>Dark Mode</ArticlesButton>
+                <ArticlesButton active={!darkMode} onClick={() => setDarkMode(false)}>Light Mode</ArticlesButton>
+            </Box>
+            <Box>Debug Mode</Box>
+            <Box sx={{ mb: "1rem" }}>
+                <ArticlesButton active={!debug} onClick={() => setDebug(false)}>Disabled</ArticlesButton>
+                <ArticlesButton active={debug} onClick={() => setDebug(true)}>Enabled</ArticlesButton>
+            </Box>
+            <Box sx={{ mb: "1rem" }}>
+                <Box>Graphics Quality</Box>
+                {["Low", "Medium", "High"].map((level) => <ArticlesButton key={level} active={graphicsQuality === level} onClick={() => setGraphicsQuality(level)}>{level}</ArticlesButton>)}
+            </Box>
         </>
-    )
+    );
 }
 
 function AudioSettings() {
-
-    const setAudioSettings = useAudioStore(state => state.setAudioSettings)
-    const audioSettings = useAudioStore(state => state.audioSettings)
+    const setAudioSettings = useAudioStore((state) => state.setAudioSettings);
+    const audioSettings = useAudioStore((state) => state.audioSettings);
 
     return (
         <>
-
-            <div>Game Audio</div>
-
-            <div className="mb-3">
-                <ArticlesButton
-                    variant="articles"
-                    className=""
-                    active={!audioSettings.enabled}
-                    onClick={() => {
-                        // setGraphicsQuality(level)
-                        setAudioSettings({ ...audioSettings, enabled: false })
-                    }}
-                >
-                    Disabled
-                </ArticlesButton>
-                <ArticlesButton
-                    variant="articles"
-                    className="me-2"
-                    active={audioSettings.enabled}
-                    onClick={() => {
-                        // setGraphicsQuality(level)
-                        setAudioSettings({ ...audioSettings, enabled: true })
-                    }}
-                >
-                    Enabled
-                </ArticlesButton>
-            </div>
-
-            <Form.Label className="mb-0">Game Volume - {audioSettings?.soundEffectsVolume}</Form.Label>
-            <Form.Range
-                value={audioSettings?.soundEffectsVolume}
-                onChange={(e) => setAudioSettings({
-                    ...audioSettings,
-                    soundEffectsVolume: Number(e.target.value),
-                })}
-            />
-            <Form.Label className="mb-0">Music Volume - {audioSettings?.backgroundMusicVolume}</Form.Label>
-            <Form.Range
-                value={audioSettings?.backgroundMusicVolume}
-                onChange={(e) => setAudioSettings({
-                    ...audioSettings,
-                    backgroundMusicVolume: Number(e.target.value),
-                })}
-            />
+            <Box>Game Audio</Box>
+            <Box sx={{ mb: "1rem" }}>
+                <ArticlesButton active={!audioSettings.enabled} onClick={() => setAudioSettings({ ...audioSettings, enabled: false })}>Disabled</ArticlesButton>
+                <ArticlesButton active={audioSettings.enabled} onClick={() => setAudioSettings({ ...audioSettings, enabled: true })}>Enabled</ArticlesButton>
+            </Box>
+            {[
+                { key: "game_volume", label: "Game Volume" },
+                { key: "music_volume", label: "Music Volume" },
+            ].map(({ key, label }) => (
+                <Box key={key}>
+                    <Typography id={`audio-${key}-label`}>{label} - {audioSettings?.[key]}</Typography>
+                    <Slider aria-labelledby={`audio-${key}-label`} min={0} max={100} value={audioSettings?.[key] ?? 0} onChange={(_, value) => setAudioSettings({ ...audioSettings, [key]: value })} />
+                </Box>
+            ))}
         </>
-    )
+    );
 }
 
 function ControlsSettings() {
     return (
-        <div>
+        <Box>
             {[
-                {
-                    action: 'Jump',
-                    defaultKeyboardKey: 'Space'
-                },
-                {
-                    action: 'Dive',
-                    defaultKeyboardKey: 'Shift'
-                },
-                {
-                    action: 'Use Item',
-                    defaultKeyboardKey: 'Enter'
-                },
-            ].map(obj =>
-                <div key={obj.action}>
-                    <div className="flex-header border-bottom pb-1 mb-1">
-
-                        <div>
-                            <div>{obj.action}</div>
-                            {obj.emote && <div className="span badge border bg-dark">Emote</div>}
-                        </div>
-
-                        <div>
-
-                            <div className="badge badge-hover border bg-articles me-1">{obj.defaultKeyboardKey}</div>
-
-                            <ArticlesButton
-                                className=""
-                                small
-                            >
-                                Change Key
-                            </ArticlesButton>
-
-                        </div>
-                    </div>
-                </div>
-            )}
-        </div>
-    )
+                { action: "Jump", defaultKeyboardKey: "Space" },
+                { action: "Dive", defaultKeyboardKey: "Shift" },
+                { action: "Use Item", defaultKeyboardKey: "Enter" },
+            ].map(({ action, defaultKeyboardKey }) => (
+                <Box key={action} sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: 1, borderColor: "divider", pb: "0.25rem", mb: "0.25rem" }}>
+                    <Box>{action}</Box>
+                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                        <Box component="span" sx={{ border: 1, borderColor: "divider", bgcolor: "primary.main", color: "primary.contrastText", mr: "0.25rem", px: "0.65em", py: "0.35em", fontSize: "0.75em", fontWeight: 700, borderRadius: "0.375rem" }}>{defaultKeyboardKey}</Box>
+                        <ArticlesButton small>Change Key</ArticlesButton>
+                    </Box>
+                </Box>
+            ))}
+        </Box>
+    );
 }

@@ -1,105 +1,48 @@
-import Link from "next/link";
+"use client";
 
-import { useGameStore } from "@/hooks/useGameStore";
-import ArticlesButton from "@/components/UI/Button";
-
-import { useStore } from "@/hooks/useStore";
-import DebugPanel from "./DebugPanel";
-import { useScoreStore } from "@/hooks/useScoreStore";
-import useFullscreen from '@articles-media/articles-dev-box/useFullscreen';
-import useTouchControlsStore from "@/hooks/useTouchControlsStore";
-
-import GameMenuPrimaryButtonGroup from '@articles-media/articles-dev-box/GameMenuPrimaryButtonGroup';
 import { useRouter } from "next/navigation";
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import GameMenuPrimaryButtonGroup from "@articles-media/articles-dev-box/GameMenuPrimaryButtonGroup";
+import { useGameStore } from "@/hooks/useGameStore";
+import { useStore } from "@/hooks/useStore";
+import { useScoreStore } from "@/hooks/useScoreStore";
+import DebugPanel from "./DebugPanel";
 
-export default function LeftPanelContent(props) {
+const cardSx = { bgcolor: "game.card", backgroundImage: "none", fontSize: "0.875rem", border: 1, borderColor: "divider", borderRadius: 0 };
 
-    const { isFullscreen, requestFullscreen, exitFullscreen } = useFullscreen();
-
-    // const {
-    //     touchControls: touchControlsEnabled,
-    //     setTouchControls: setTouchControlsEnabled
-    // } = useTouchControlsStore()
-
-    const enabled = useTouchControlsStore(state => state.enabled)
-    const setEnabled = useTouchControlsStore(state => state.setEnabled)
-
-    // const {
-    //     socket,
-    // } = useSocketStore(state => ({
-    //     socket: state.socket,
-    // }));
-
-    // const showMenu = useStore((state) => state.showMenu)
-    const setShowMenu = useStore((state) => state.setShowMenu)
-    const reloadScene = useStore((state) => state.reloadScene)
-
-    const debug = useStore((state) => state.debug)
+export default function LeftPanelContent() {
+    const reloadScene = useStore((state) => state.reloadScene);
+    const debug = useStore((state) => state.debug);
 
     return (
-        <div className='w-100'>
-
-            <div className="card card-articles card-sm rounded-0">
-
-                <div className="card-body">
-
-                    <div
-                        className="d-flex flex-wrap"
-                    >
-
-                        <GameMenuPrimaryButtonGroup
-                            useStore={useStore}
-                            type="GameMenu"
-                            useRouter={useRouter}
-                        />
-
-                    </div>
-
-                </div>
-            </div>
-
+        <Box sx={{ width: "100%" }}>
+            <Card sx={cardSx}>
+                <CardContent sx={{ p: 1, "&:last-child": { pb: 1 }, display: "flex", flexWrap: "wrap" }}>
+                    <GameMenuPrimaryButtonGroup useStore={useStore} type="GameMenu" useRouter={useRouter} />
+                </CardContent>
+            </Card>
             <DistanceCard />
-
-            {/* Debug Controls */}
-            {debug &&
-                <DebugPanel
-                    reloadScene={reloadScene}
-                />
-            }
-
-        </div>
-    )
-
+            {debug && <DebugPanel reloadScene={reloadScene} />}
+        </Box>
+    );
 }
 
 function DistanceCard() {
-
-    const distance = useGameStore((state) => state.distance)
-    const maxDistance = useScoreStore((state) => state.maxDistance)
-    const lifetimeDistance = useScoreStore((state) => state.lifetimeDistance)
+    const distance = useGameStore((state) => state.distance);
+    const maxDistance = useScoreStore((state) => state.maxDistance);
+    const lifetimeDistance = useScoreStore((state) => state.lifetimeDistance);
 
     return (
-        <div
-            className="card card-articles card-sm rounded-0"
-        >
-            <div className="card-body d-flex justify-content-between align-items-center">
-
-                <div>
-                    <div className="small text-muted">
-                        Distance: {distance}
-                    </div>
-                    {/* <div className="small text-muted">
-                            Diving: {isDiving ? 'True' : 'False'}
-                        </div> */}
-                </div>
-
-                <div className="d-flex flex-column align-items-end">
-                    <div className="small text-muted me-2">Max Distance: {maxDistance}</div>
-                    <div className="small text-muted me-2">Lifetime Distance: {lifetimeDistance}</div>
-                </div>
-
-            </div>
-        </div>
-    )
-
+        <Card sx={cardSx}>
+            <CardContent sx={{ p: 1, "&:last-child": { pb: 1 }, display: "flex", justifyContent: "space-between", alignItems: "center", color: "text.secondary" }}>
+                <Box>Distance: {distance}</Box>
+                <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-end", mr: "0.5rem" }}>
+                    <Box>Max Distance: {maxDistance}</Box>
+                    <Box>Lifetime Distance: {lifetimeDistance}</Box>
+                </Box>
+            </CardContent>
+        </Card>
+    );
 }

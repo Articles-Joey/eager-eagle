@@ -1,104 +1,52 @@
-import { defaultCharacter, useStore } from "@/hooks/useStore"
-import ArticlesButton from "./Button"
-// import { set } from "date-fns"
-// import { useGameStore } from "@/hooks/useGameStore"
-import { Modal } from "react-bootstrap"
-import { useState } from "react"
-import { useScoreStore } from "@/hooks/useScoreStore"
+"use client";
 
-export default function ScoreCard({ score }) {
+import { useState } from "react";
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
+import ArticlesModal from "./ArticlesModal";
+import ArticlesButton from "./Button";
+import { defaultCharacter, useStore } from "@/hooks/useStore";
+import { useScoreStore } from "@/hooks/useScoreStore";
 
-    const setCharacter = useStore((state) => state.setCharacter)
-
-    const maxDistance = useScoreStore((state) => state.maxDistance)
-    const setMaxDistance = useScoreStore((state) => state.setMaxDistance)
-
-    const lifetimeDistance = useScoreStore((state) => state.lifetimeDistance)
-    const setLifetimeDistance = useScoreStore((state) => state.setLifetimeDistance)
-
-    const [ confirmReset, setConfirmReset ] = useState(false)
+export default function ScoreCard() {
+    const setCharacter = useStore((state) => state.setCharacter);
+    const maxDistance = useScoreStore((state) => state.maxDistance);
+    const setMaxDistance = useScoreStore((state) => state.setMaxDistance);
+    const lifetimeDistance = useScoreStore((state) => state.lifetimeDistance);
+    const setLifetimeDistance = useScoreStore((state) => state.setLifetimeDistance);
+    const [confirmReset, setConfirmReset] = useState(false);
 
     return (
-        <div
-            className="card card-articles card-sm w-100"            
-        >
-
-            <Modal show={confirmReset} onHide={() => setConfirmReset(false)} centered>
-
-                <Modal.Header closeButton>
-                    <Modal.Title>Reset High Score?</Modal.Title>
-                </Modal.Header>
-
-                <Modal.Body className="p-3">
-
-                    <div className="mb-0">Are you sure you want to reset your high score? This will also reset your lifetime distance and unlocked rewards.</div>
-
-                </Modal.Body>
-
-                <Modal.Footer className="d-flex justify-content-between">
-
-                    <ArticlesButton
-                        onClick={() => {
-                            setConfirmReset(false)
-                        }}
-                    >
-                        Cancel
-                    </ArticlesButton>
-
-                    <ArticlesButton
-                        onClick={() => {
-                            setMaxDistance(0)
-                            setLifetimeDistance(0)
-                            setCharacter(defaultCharacter)
-                            setConfirmReset(false)
-                        }}
-                        variant="danger"
-                    >
-                        Confirm
-                    </ArticlesButton>
-
-                    
-                </Modal.Footer>
-                
-            </Modal>
-
-            {/* <div style={{ position: 'relative', height: '200px' }}>
-                <Image
-                    src={Logo}ddda
-                    alt=""
-                    fill
-                    style={{ objectFit: 'cover' }}
-                />
-            </div> */}
-
-            <div className='card-header flex-header'>
-
-                <div>High Score</div>
-
-                <ArticlesButton
-                    className=''
-                    small
-                    onClick={() => {
-                        setConfirmReset(true)
-                    }}
-                >
-                    <i className="fad fa-redo"></i>
-                </ArticlesButton>
-
-            </div>
-
-            <div className="card-body d-flex justify-content-between">
-
-                <span>{maxDistance}</span>
-
-                <span className="text-muted">(lifetime: {lifetimeDistance})</span>
-
-            </div>
-
-            {/* <div className="card-footer d-flex flex-wrap justify-content-center">
-
-            </div> */}
-
-        </div>
-    )
+        <Card sx={{ width: "100%", bgcolor: "game.card", backgroundImage: "none", border: 1, borderColor: "divider", fontSize: "0.875rem" }}>
+            <ArticlesModal
+                show={confirmReset}
+                setShow={setConfirmReset}
+                title="Reset High Score?"
+                size="sm"
+                footerOverride={(setOpen) => (
+                    <>
+                        <ArticlesButton onClick={() => setOpen(false)}>Cancel</ArticlesButton>
+                        <ArticlesButton variant="danger" onClick={() => {
+                            setMaxDistance(0);
+                            setLifetimeDistance(0);
+                            setCharacter(defaultCharacter);
+                            setOpen(false);
+                        }}>Confirm</ArticlesButton>
+                    </>
+                )}
+            >
+                Are you sure you want to reset your high score? This will also reset your lifetime distance and unlocked rewards.
+            </ArticlesModal>
+            <Box sx={{ p: 1, borderBottom: 1, borderColor: "divider", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <Box>High Score</Box>
+                <ArticlesButton small aria-label="Reset high score" onClick={() => setConfirmReset(true)}><RestartAltIcon fontSize="small" /></ArticlesButton>
+            </Box>
+            <CardContent sx={{ p: 1, "&:last-child": { pb: 1 }, display: "flex", justifyContent: "space-between" }}>
+                <Box component="span">{maxDistance}</Box>
+                <Box component="span" sx={{ color: "text.secondary" }}>(lifetime: {lifetimeDistance})</Box>
+            </CardContent>
+        </Card>
+    );
 }
