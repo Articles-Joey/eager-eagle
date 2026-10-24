@@ -1,17 +1,20 @@
-import { useMemo } from "react"
-import MovingObstacle from "./MovingObstacle"
-
-const BUILDING_COUNT = 10
+import MovingObstacle from "./MovingObstacle";
+import AirshipField from "./AirshipField";
+import { useWorldMotion } from "./WorldMotion";
 
 export default function ObstacleManager() {
-
-    const buildings = useMemo(() => Array.from({ length: BUILDING_COUNT }).map((_, i) => i), [])
-
+    const { tiles } = useWorldMotion();
     return (
         <group>
-            {buildings.map(i => (
-                <MovingObstacle key={i} index={i} />
-            ))}
+            <AirshipField />
+            {tiles
+                .filter((index) => index > 0)
+                .map((index) => (
+                    <MovingObstacle
+                        key={index}
+                        index={index}
+                    />
+                ))}
         </group>
-    )
+    );
 }

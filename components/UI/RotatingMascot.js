@@ -8,10 +8,12 @@ import { ModelEagle } from "../Models/Eagle";
 
 export default function RotatingMascot() {
     return (
-        <Box className="rotating-mascot-container" sx={{ width: "100%", height: "100%" }}>
+        <Box
+            className="rotating-mascot-container"
+            sx={{ width: "100%", height: "100%" }}
+        >
             <Suspense>
                 <Canvas>
-    
                     <OrbitControls
                         autoRotate
                         enableZoom={false}
@@ -19,24 +21,23 @@ export default function RotatingMascot() {
                         enableRotate={false}
                         autoRotateSpeed={10}
                     />
-    
+
                     {/* <ambientLight intensity={2} /> */}
 
                     <directionalLight
                         position={[0, 10, 10]}
                         intensity={5}
                     />
-    
+
                     <Suspense fallback={null}>
                         {/* <ModelBackpack
                             scale={3}
                         /> */}
-                        <ModelEagle 
+                        <ModelEagle
                             scale={0.04}
                             position={[0, -2, 0]}
                         />
                     </Suspense>
-    
                 </Canvas>
             </Suspense>
         </Box>

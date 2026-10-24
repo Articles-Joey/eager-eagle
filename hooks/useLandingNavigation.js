@@ -1,28 +1,43 @@
-import { useEffect, useRef } from 'react';
-import { useGameControllerKeyboardStore, usePieMenuStore } from '@articles-media/articles-gamepad-helper';
-import { useStore } from './useStore';
+import { useEffect, useRef } from "react";
+import {
+    useGameControllerKeyboardStore,
+    usePieMenuStore,
+} from "@articles-media/articles-gamepad-helper";
+import { useStore } from "./useStore";
 
 export const useLandingNavigation = (elementsRef) => {
-
     const nicknameKeyboard = useStore((state) => state.nicknameKeyboard);
     const setNicknameKeyboard = useStore((state) => state.setNicknameKeyboard);
 
-    const lastClosedTime = useGameControllerKeyboardStore((state) => state.lastClosedTime);
-    const setStoreVisible = useGameControllerKeyboardStore((state) => state.setVisible);
+    const lastClosedTime = useGameControllerKeyboardStore(
+        (state) => state.lastClosedTime,
+    );
+    const setStoreVisible = useGameControllerKeyboardStore(
+        (state) => state.setVisible,
+    );
 
     const visible = usePieMenuStore((state) => state.visible);
 
-    const showInfoModal = useStore((state) => state.showInfoModal)
-    const showSettingsModal = useStore((state) => state.showSettingsModal)
-    const showCreditsModal = useStore((state) => state.showCreditsModal)
-    const customizeModal = useStore((state) => state.customizeModal)
-    const rewardsModal = useStore((state) => state.rewardsModal)
+    const showInfoModal = useStore((state) => state.showInfoModal);
+    const showSettingsModal = useStore((state) => state.showSettingsModal);
+    const showCreditsModal = useStore((state) => state.showCreditsModal);
+    const customizeModal = useStore((state) => state.customizeModal);
+    const rewardsModal = useStore((state) => state.rewardsModal);
 
     const lastInputTime = useRef(0);
     const currentFocusIndex = useRef(-1);
 
     useEffect(() => {
-        if (showInfoModal || showSettingsModal || showCreditsModal || customizeModal || rewardsModal || visible || nicknameKeyboard) return;
+        if (
+            showInfoModal ||
+            showSettingsModal ||
+            showCreditsModal ||
+            customizeModal ||
+            rewardsModal ||
+            visible ||
+            nicknameKeyboard
+        )
+            return;
 
         let animationFrameId;
 
@@ -35,13 +50,12 @@ export const useLandingNavigation = (elementsRef) => {
 
                 // Only process input every 150ms
                 if (now - lastInputTime.current > 150) {
-
                     const axes = gp.axes;
                     const buttons = gp.buttons;
                     const threshold = 0.5;
 
                     const activeElement = document.activeElement;
-                    if (activeElement && activeElement.tagName === 'INPUT') {
+                    if (activeElement && activeElement.tagName === "INPUT") {
                         for (let i = 0; i < buttons.length; i++) {
                             if (buttons[i].pressed) {
                                 console.log(activeElement.id);
@@ -62,9 +76,9 @@ export const useLandingNavigation = (elementsRef) => {
 
                     // D-Pad
                     if (buttons[12].pressed) dy = -1; // Up
-                    if (buttons[13].pressed) dy = 1;  // Down
+                    if (buttons[13].pressed) dy = 1; // Down
                     if (buttons[14].pressed) dx = -1; // Left
-                    if (buttons[15].pressed) dx = 1;  // Right
+                    if (buttons[15].pressed) dx = 1; // Right
 
                     // Left Stick
                     if (axes[1] < -threshold) dy = -1;
@@ -96,13 +110,16 @@ export const useLandingNavigation = (elementsRef) => {
             const len = els.length;
 
             // If nothing focused, focus first available
-            if (currentFocusIndex.current === -1 || !els[currentFocusIndex.current]) {
-                const first = els.findIndex(e => e);
+            if (
+                currentFocusIndex.current === -1 ||
+                !els[currentFocusIndex.current]
+            ) {
+                const first = els.findIndex((e) => e);
                 if (first !== -1) focus(first);
                 return;
             }
 
-            const direction = (dx > 0 || dy > 0) ? 1 : -1;
+            const direction = dx > 0 || dy > 0 ? 1 : -1;
             let next = currentFocusIndex.current + direction;
             let count = 0;
 
@@ -132,5 +149,15 @@ export const useLandingNavigation = (elementsRef) => {
         animationFrameId = requestAnimationFrame(loop);
 
         return () => cancelAnimationFrame(animationFrameId);
-    }, [elementsRef, showInfoModal, showSettingsModal, showCreditsModal, customizeModal, rewardsModal, visible, nicknameKeyboard, lastClosedTime]);
+    }, [
+        elementsRef,
+        showInfoModal,
+        showSettingsModal,
+        showCreditsModal,
+        customizeModal,
+        rewardsModal,
+        visible,
+        nicknameKeyboard,
+        lastClosedTime,
+    ]);
 };

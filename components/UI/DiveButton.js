@@ -13,10 +13,17 @@ export default function DiveButton() {
     const lifetimeDistance = useScoreStore((state) => state.lifetimeDistance);
     const maxDistance = useScoreStore((state) => state.maxDistance);
 
-    if (!hasHydrated || !enabled || !(lifetimeDistance > 40 || maxDistance > 10)) return null;
+    if (
+        !hasHydrated ||
+        !enabled ||
+        !(lifetimeDistance > 40 || maxDistance > 10)
+    )
+        return null;
 
     return (
         <IconButton
+            id="dive-button"
+            className="hidden-in-screenshot-mode"
             aria-label="Dive"
             onMouseDown={() => setIsDiving(true)}
             onMouseUp={() => setIsDiving(false)}
@@ -25,9 +32,20 @@ export default function DiveButton() {
             onTouchEnd={() => setIsDiving(false)}
             onTouchCancel={() => setIsDiving(false)}
             sx={{
-                position: "absolute", right: "calc(50px + 1rem)", bottom: "calc(50px + 1rem)", zIndex: 1,
-                bgcolor: "rgba(0,0,0,0.75)", border: "none", color: "#fff", width: 100, height: 100,
-                opacity: 0.8, borderRadius: "25px", display: "flex", justifyContent: "center", alignItems: "center",
+                position: "absolute",
+                right: "calc(50px + 1rem)",
+                bottom: "calc(50px + 1rem)",
+                zIndex: 1,
+                bgcolor: "rgba(0,0,0,0.75)",
+                border: "none",
+                color: "#fff",
+                width: 100,
+                height: 100,
+                opacity: 0.8,
+                borderRadius: "25px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
                 "&:hover": { opacity: 1, bgcolor: "rgba(0,0,0,0.75)" },
             }}
         >

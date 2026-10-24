@@ -47,7 +47,6 @@ const rewards = [
     //     distance: 200,
     //     lifetimeDistance: 800,
     // },
+];
 
-]
-
-export default rewards
+export default rewards;

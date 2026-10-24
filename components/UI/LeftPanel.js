@@ -9,8 +9,16 @@ import { useGameStore } from "@/hooks/useGameStore";
 import { useStore } from "@/hooks/useStore";
 import { useScoreStore } from "@/hooks/useScoreStore";
 import DebugPanel from "./DebugPanel";
+import { useAudioStore } from "@/hooks/useAudioStore";
 
-const cardSx = { bgcolor: "game.card", backgroundImage: "none", fontSize: "0.875rem", border: 1, borderColor: "divider", borderRadius: 0 };
+const cardSx = {
+    bgcolor: "game.card",
+    backgroundImage: "none",
+    fontSize: "0.875rem",
+    border: 1,
+    borderColor: "divider",
+    borderRadius: 0,
+};
 
 export default function LeftPanelContent() {
     const reloadScene = useStore((state) => state.reloadScene);
@@ -19,8 +27,20 @@ export default function LeftPanelContent() {
     return (
         <Box sx={{ width: "100%" }}>
             <Card sx={cardSx}>
-                <CardContent sx={{ p: 1, "&:last-child": { pb: 1 }, display: "flex", flexWrap: "wrap" }}>
-                    <GameMenuPrimaryButtonGroup useStore={useStore} type="GameMenu" useRouter={useRouter} />
+                <CardContent
+                    sx={{
+                        p: 1,
+                        "&:last-child": { pb: 1 },
+                        display: "flex",
+                        flexWrap: "wrap",
+                    }}
+                >
+                    <GameMenuPrimaryButtonGroup
+                        useStore={useStore}
+                        type="GameMenu"
+                        useRouter={useRouter}
+                        useAudioStore={useAudioStore}
+                    />
                 </CardContent>
             </Card>
             <DistanceCard />
@@ -36,9 +56,25 @@ function DistanceCard() {
 
     return (
         <Card sx={cardSx}>
-            <CardContent sx={{ p: 1, "&:last-child": { pb: 1 }, display: "flex", justifyContent: "space-between", alignItems: "center", color: "text.secondary" }}>
+            <CardContent
+                sx={{
+                    p: 1,
+                    "&:last-child": { pb: 1 },
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    color: "text.secondary",
+                }}
+            >
                 <Box>Distance: {distance}</Box>
-                <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-end", mr: "0.5rem" }}>
+                <Box
+                    sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "flex-end",
+                        mr: "0.5rem",
+                    }}
+                >
                     <Box>Max Distance: {maxDistance}</Box>
                     <Box>Lifetime Distance: {lifetimeDistance}</Box>
                 </Box>

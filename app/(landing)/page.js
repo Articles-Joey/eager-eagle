@@ -1,15 +1,13 @@
-import LobbyPage from "."
+import LobbyPage from ".";
 
 export const metadata = {
-  title: `Eager Eagle Lobby`,
-}
+    title: `Eager Eagle Lobby`,
+};
 
 export default function Home() {
-
-  return (
-    // <Suspense>
-    <LobbyPage />
-    // </Suspense>
-  )
-
+    return (
+        // <Suspense>
+        <LobbyPage />
+        // </Suspense>
+    );
 }

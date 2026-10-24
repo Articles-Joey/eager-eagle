@@ -1,40 +1,45 @@
-"use client"
+"use client";
 
-import { useEffect, useRef } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
-import { useGameStore } from '@/hooks/useGameStore';
-import { useControllerStore } from '@/hooks/useControllerStore';
-import { useStore } from '@/hooks/useStore';
+import { useEffect, useRef } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useGameStore } from "@/hooks/useGameStore";
+import { useControllerStore } from "@/hooks/useControllerStore";
+import { useStore } from "@/hooks/useStore";
 
 export default function ControllerInputHandler() {
+    const pathname = usePathname();
 
-    const pathname = usePathname()
+    const router = useRouter();
 
-    const router = useRouter()
+    const gameOver = useGameStore((state) => state.gameOver);
+    const setGameOver = useGameStore((state) => state.setGameOver);
+    const setDistance = useGameStore((state) => state.setDistance);
+    const setIsDiving = useStore((state) => state.setIsDiving);
 
-    const gameOver = useGameStore((state) => state.gameOver)
-    const setGameOver = useGameStore((state) => state.setGameOver)
-    const setDistance = useGameStore((state) => state.setDistance)
-    const setIsDiving = useStore((state) => state.setIsDiving)
+    const controllerState = useControllerStore(
+        (state) => state.controllerState,
+    );
+    const setControllerState = useControllerStore(
+        (state) => state.setControllerState,
+    );
 
-    const controllerState = useControllerStore((state) => state.controllerState)
-    const setControllerState = useControllerStore((state) => state.setControllerState)
+    const setCanvasClicked = useGameStore((state) => state.setCanvasClicked);
 
-    const setCanvasClicked = useGameStore((state) => state.setCanvasClicked)
-
-    const prevJumpPressed = useRef(false)
-    const prevDivePressed = useRef(false)
+    const prevJumpPressed = useRef(false);
+    const prevDivePressed = useRef(false);
 
     useEffect(() => {
         let animationFrameId;
         const pollGamepad = () => {
-            const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+            const gamepads = navigator.getGamepads
+                ? navigator.getGamepads()
+                : [];
             const gp = gamepads[0];
             if (gp) {
                 const axes = gp.axes.map((axis) => parseFloat(axis.toFixed(2)));
                 const buttons = gp.buttons.map((button) => ({
                     pressed: button.pressed,
-                    value: parseFloat(button.value.toFixed(2))
+                    value: parseFloat(button.value.toFixed(2)),
                 }));
                 setControllerState({ axes, buttons });
             }
@@ -45,11 +50,8 @@ export default function ControllerInputHandler() {
     }, [setControllerState]);
 
     useEffect(() => {
-
-        if (pathname == '/') {
-
+        if (pathname == "/") {
             // const isJumpPressed = controllerState?.buttons?.[0]?.pressed
-
             // if (!gameOver) {
             //     // Button A Jump
             //     if (isJumpPressed && !prevJumpPressed.current) {
@@ -61,60 +63,54 @@ export default function ControllerInputHandler() {
             //     prevJumpPressed.current = isJumpPressed
             //     return;
             // }
-
             // // if (prevJumpPressed.current = isJumpPressed) {
             // //     return;
             // // }
-
             // // if (!controllerState?.buttons) return
-
             // // Button A (index 0) => Play Again
             // if (controllerState.buttons[0]?.pressed) {
             //     setDistance(0)
             //     setGameOver(false)
             // }
-
             // // Button B (index 1) => Go Back
             // if (controllerState.buttons[1]?.pressed) {
             //     router.push('/')
             // }
-
             // return
-
         }
 
-        if (pathname == '/play') {
-
+        if (pathname == "/play") {
             // if (!controllerState?.buttons) return
 
-            const isJumpPressed = controllerState?.buttons?.[0]?.pressed
+            const isJumpPressed = controllerState?.buttons?.[0]?.pressed;
 
-            const diveButton = controllerState?.buttons?.[7]
-            const xButton = controllerState?.buttons?.[2]
-            const isDivePressed = diveButton?.pressed || (diveButton?.value > 0.1) || xButton?.pressed
+            const diveButton = controllerState?.buttons?.[7];
+            const xButton = controllerState?.buttons?.[2];
+            const isDivePressed =
+                diveButton?.pressed ||
+                diveButton?.value > 0.1 ||
+                xButton?.pressed;
 
             if (!gameOver) {
                 // Button A Jump
                 if (isJumpPressed && !prevJumpPressed.current) {
-                    console.log("Jump 123")
-                    setCanvasClicked(true)
+                    console.log("Jump 123");
+                    setCanvasClicked(true);
                 } else if (!isJumpPressed && prevJumpPressed.current) {
-                    setCanvasClicked(false)
+                    setCanvasClicked(false);
                 }
-                prevJumpPressed.current = isJumpPressed
+                prevJumpPressed.current = isJumpPressed;
 
                 if (isDivePressed !== prevDivePressed.current) {
-
                     if (
-                        useStore.getState().lifetimeDistance > 40
-                        ||
+                        useStore.getState().lifetimeDistance > 40 ||
                         useGameStore.getState().maxDistance > 10
                     ) {
-                        return
+                        return;
                     }
 
-                    setIsDiving(!!isDivePressed)
-                    prevDivePressed.current = !!isDivePressed
+                    setIsDiving(!!isDivePressed);
+                    prevDivePressed.current = !!isDivePressed;
                 }
 
                 return;
@@ -128,22 +124,18 @@ export default function ControllerInputHandler() {
 
             // Button A (index 0) => Play Again
             if (isJumpPressed) {
-                setDistance(0)
-                setGameOver(false)
+                setDistance(0);
+                setGameOver(false);
             }
 
             // Button B (index 1) => Go Back
             if (controllerState?.buttons?.[1]?.pressed) {
-                router.push('/')
+                router.push("/");
             }
 
-            return
-
+            return;
         }
-
-
-    }, [controllerState, gameOver, router, setDistance, setGameOver, pathname])
+    }, [controllerState, gameOver, router, setDistance, setGameOver, pathname]);
 
     return null;
-
 }

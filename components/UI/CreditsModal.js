@@ -23,9 +23,28 @@ export default function CreditsModal({ show, setShow }) {
             footerOverride={(setOpen) => (
                 <>
                     <Box />
-                    <ArticlesButton ref={(el) => { elementsRef.current[3] = el; }} variant="outline-dark" onClick={() => setOpen(false)}>
-                        <CloseIcon className="no-controller-only" fontSize="small" sx={{ mr: 0.5 }} />
-                        <Box component="img" src={B.src} className="controller-only" height={20} width={20} alt="Close" sx={{ mr: 0.5 }} />Close
+                    <ArticlesButton
+                        ref={(el) => {
+                            elementsRef.current[3] = el;
+                        }}
+                        variant="outline-dark"
+                        onClick={() => setOpen(false)}
+                    >
+                        <CloseIcon
+                            className="no-controller-only"
+                            fontSize="small"
+                            sx={{ mr: 0.5 }}
+                        />
+                        <Box
+                            component="img"
+                            src={B.src}
+                            className="controller-only"
+                            height={20}
+                            width={20}
+                            alt="Close"
+                            sx={{ mr: 0.5 }}
+                        />
+                        Close
                     </ArticlesButton>
                 </>
             )}
@@ -33,8 +52,20 @@ export default function CreditsModal({ show, setShow }) {
             <Box>Developed by: ArticlesJoey</Box>
             <Box>Published by: Articles Media</Box>
             <Box sx={{ mt: "1rem" }}>Attributions:</Box>
-            <ArticlesButton component="a" href="https://github.com/Articles-Joey/race-game/blob/main/README.md" target="_blank" rel="noopener noreferrer" ref={(el) => { elementsRef.current[0] = el; }}>
-                <GitHubIcon fontSize="small" sx={{ mr: 0.5 }} />View on GitHub
+            <ArticlesButton
+                component="a"
+                href="https://github.com/Articles-Joey/race-game/blob/main/README.md"
+                target="_blank"
+                rel="noopener noreferrer"
+                ref={(el) => {
+                    elementsRef.current[0] = el;
+                }}
+            >
+                <GitHubIcon
+                    fontSize="small"
+                    sx={{ mr: 0.5 }}
+                />
+                View on GitHub
             </ArticlesButton>
         </ArticlesModal>
     );

@@ -1,48 +1,47 @@
 // import { create } from 'zustand'
-import { createWithEqualityFn as create } from 'zustand/traditional'
+import { createWithEqualityFn as create } from "zustand/traditional";
 
-const initialPlayers = [...Array(30)].map( (obj, obj_i) => {
-    return ({
+const initialPlayers = [...Array(30)].map((obj, obj_i) => {
+    return {
         npc: true,
         dead: false,
         number: obj_i,
-    })
-})
+    };
+});
 
 export const useGameStore = create((set) => ({
-
     isHost: false,
     setIsHost: (newValue) => {
         set((prev) => ({
-            isHost: newValue
-        }))
+            isHost: newValue,
+        }));
     },
 
-    cameraModes: ['Side', 'Player', 'Free'],
-    cameraMode: 'Free',
+    cameraModes: ["Side", "Player", "Free"],
+    cameraMode: "Free",
     setCameraMode: (newValue) => {
         set((prev) => ({
-            cameraMode: newValue
-        }))
+            cameraMode: newValue,
+        }));
     },
 
     playerLocation: false,
     setPlayerLocation: (newValue) => {
         set((prev) => ({
-            playerLocation: newValue
-        }))
+            playerLocation: newValue,
+        }));
     },
 
     players: initialPlayers,
     resetPlayers: (newValue) => {
         set((prev) => ({
-            players: initialPlayers
-        }))
+            players: initialPlayers,
+        }));
     },
     setPlayers: (newValue) => {
         set((prev) => ({
-            players: newValue
-        }))
+            players: newValue,
+        }));
     },
 
     // bullets: 3,
@@ -79,65 +78,69 @@ export const useGameStore = create((set) => ({
     distance: 0,
     setDistance: (newValue) => {
         set((prev) => ({
-            distance: newValue
-        }))
+            distance: newValue,
+        }));
     },
     addDistance: (newValue) => {
         set((prev) => ({
-            distance: (prev.distance + newValue)
-        }))
+            distance: prev.distance + newValue,
+        }));
     },
 
     obstacles: [],
     setObstacles: (newValue) => {
         set((prev) => ({
-            obstacles: newValue
-        }))
+            obstacles: newValue,
+        }));
     },
 
     shift: false,
     setShift: (newValue) => {
         set((prev) => ({
-            shift: newValue
-        }))
+            shift: newValue,
+        }));
     },
 
     touchControls: {
         jump: false,
         left: false,
-        right: false
+        right: false,
     },
     setTouchControls: (newValue) => {
         set((prev) => ({
-            touchControls: newValue
-        }))
+            touchControls: newValue,
+        }));
     },
 
     canvasClicked: false,
+    pointerJump: false,
+    setPointerJump: (pointerJump) => set((state) => state.pointerJump === pointerJump ? state : { pointerJump }),
+    pointerDive: false,
+    setPointerDive: (pointerDive) => set((state) => state.pointerDive === pointerDive ? state : { pointerDive }),
     setCanvasClicked: (newValue) => {
         set((prev) => ({
-            canvasClicked: newValue
-        }))
+            canvasClicked: newValue,
+        }));
     },
 
     teleport: false,
     setTeleport: (newValue) => {
         set((prev) => ({
-            teleport: newValue
-        }))
+            teleport: newValue,
+        }));
     },
 
     gameState: {},
     setGameState: (newValue) => {
         set((prev) => ({
-            gameState: newValue
-        }))
+            gameState: newValue,
+        }));
     },
 
     gameOver: false,
     setGameOver: (newValue) => {
         set((prev) => ({
-            gameOver: newValue
-        }))
+            gameOver: newValue,
+        }));
     },
-}))
+}));

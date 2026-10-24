@@ -6,22 +6,25 @@ Source: https://sketchfab.com/3d-models/flappy-bird3d-7ff4cd098aa84dcabac64defc9
 Title: Flappy Bird3D
 */
 
-import React, { useRef } from 'react'
-import { useGLTF } from '@react-three/drei'
+import React, { useRef } from "react";
+import { useGLTF } from "@react-three/drei";
 
 export default function ModelFlappyBird(props) {
-  const { nodes, materials } = useGLTF('models/flappy_bird3d.glb')
-  return (
-    <group {...props} dispose={null}>
-      <mesh
-        castShadow
-        receiveShadow
-        geometry={nodes.Object_2.geometry}
-        material={materials.palette}
-        rotation={[-Math.PI / 2, 0, 0]}
-      />
-    </group>
-  )
+    const { nodes, materials } = useGLTF("models/flappy_bird3d.glb");
+    return (
+        <group
+            {...props}
+            dispose={null}
+        >
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_2.geometry}
+                material={materials.palette}
+                rotation={[-Math.PI / 2, 0, 0]}
+            />
+        </group>
+    );
 }
 
-useGLTF.preload('models/flappy_bird3d.glb')
+useGLTF.preload("models/flappy_bird3d.glb");

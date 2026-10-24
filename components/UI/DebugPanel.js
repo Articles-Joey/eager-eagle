@@ -16,19 +16,93 @@ export default function DebugPanel({ reloadScene }) {
     const toggleDisableDeath = useStore((state) => state.toggleDisableDeath);
     const disableDeath = useStore((state) => state.disableDeath);
     const setMaxDistance = useScoreStore((state) => state.setMaxDistance);
-    const setLifetimeDistance = useScoreStore((state) => state.setLifetimeDistance);
+    const setLifetimeDistance = useScoreStore(
+        (state) => state.setLifetimeDistance,
+    );
 
     return (
-        <Card sx={{ bgcolor: "game.card", backgroundImage: "none", border: 1, borderColor: "divider", borderRadius: 0 }}>
+        <Card
+            sx={{
+                bgcolor: "game.card",
+                backgroundImage: "none",
+                border: 1,
+                borderColor: "divider",
+                borderRadius: 0,
+            }}
+        >
             <CardContent sx={{ p: 1, "&:last-child": { pb: 1 } }}>
-                <Box sx={{ fontSize: "0.875rem", color: "text.secondary" }}>Debug Controls</Box>
-                <Box sx={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))" }}>
-                    <ArticlesButton small onClick={reloadScene}><RestartAltIcon fontSize="small" sx={{ mr: 0.5 }} />Reload Game</ArticlesButton>
-                    <ArticlesButton small onClick={reloadScene}><RestartAltIcon fontSize="small" sx={{ mr: 0.5 }} />Reset Camera</ArticlesButton>
-                    <ArticlesButton small onClick={toggleDisableDeath}><RestartAltIcon fontSize="small" sx={{ mr: 0.5 }} />{disableDeath ? "Enable" : "Disable"} Death</ArticlesButton>
-                    <ArticlesButton small disabled><CameraAltIcon fontSize="small" sx={{ mr: 0.5 }} />Camera</ArticlesButton>
-                    <ArticlesButton small onClick={toggleDebug}><BugReportIcon fontSize="small" sx={{ mr: 0.5 }} />Debug: {debug ? "True" : "Disable"}</ArticlesButton>
-                    <ArticlesButton small onClick={() => { setMaxDistance(9999); setLifetimeDistance(9999); }}><BugReportIcon fontSize="small" sx={{ mr: 0.5 }} />Give Max</ArticlesButton>
+                <Box sx={{ fontSize: "0.875rem", color: "text.secondary" }}>
+                    Debug Controls
+                </Box>
+                <Box
+                    sx={{
+                        display: "grid",
+                        gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                    }}
+                >
+                    <ArticlesButton
+                        small
+                        onClick={reloadScene}
+                    >
+                        <RestartAltIcon
+                            fontSize="small"
+                            sx={{ mr: 0.5 }}
+                        />
+                        Reload Game
+                    </ArticlesButton>
+                    <ArticlesButton
+                        small
+                        onClick={reloadScene}
+                    >
+                        <RestartAltIcon
+                            fontSize="small"
+                            sx={{ mr: 0.5 }}
+                        />
+                        Reset Camera
+                    </ArticlesButton>
+                    <ArticlesButton
+                        small
+                        onClick={toggleDisableDeath}
+                    >
+                        <RestartAltIcon
+                            fontSize="small"
+                            sx={{ mr: 0.5 }}
+                        />
+                        {disableDeath ? "Enable" : "Disable"} Death
+                    </ArticlesButton>
+                    <ArticlesButton
+                        small
+                        disabled
+                    >
+                        <CameraAltIcon
+                            fontSize="small"
+                            sx={{ mr: 0.5 }}
+                        />
+                        Camera
+                    </ArticlesButton>
+                    <ArticlesButton
+                        small
+                        onClick={toggleDebug}
+                    >
+                        <BugReportIcon
+                            fontSize="small"
+                            sx={{ mr: 0.5 }}
+                        />
+                        Debug: {debug ? "True" : "Disable"}
+                    </ArticlesButton>
+                    <ArticlesButton
+                        small
+                        onClick={() => {
+                            setMaxDistance(9999);
+                            setLifetimeDistance(9999);
+                        }}
+                    >
+                        <BugReportIcon
+                            fontSize="small"
+                            sx={{ mr: 0.5 }}
+                        />
+                        Give Max
+                    </ArticlesButton>
                 </Box>
             </CardContent>
         </Card>

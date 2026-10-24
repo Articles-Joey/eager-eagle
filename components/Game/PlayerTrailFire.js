@@ -12,9 +12,11 @@ const PARTICLE_COUNT = 100;
 export default function PlayerTrailFire({ positionRef, demoMode }) {
     const lineRef = useRef();
     const particlesRef = useRef();
-    
+
     const points = useMemo(() => {
-        return new Array(POINT_COUNT).fill(0).map(() => new THREE.Vector3(0, 0, 0));
+        return new Array(POINT_COUNT)
+            .fill(0)
+            .map(() => new THREE.Vector3(0, 0, 0));
     }, []);
 
     const particlePositions = useMemo(() => {
@@ -32,9 +34,17 @@ export default function PlayerTrailFire({ positionRef, demoMode }) {
             const t = i / (POINT_COUNT - 1);
             const color = new THREE.Color();
             if (t < 0.5) {
-                color.lerpColors(new THREE.Color(fireColors[0]), new THREE.Color(fireColors[1]), t * 2);
+                color.lerpColors(
+                    new THREE.Color(fireColors[0]),
+                    new THREE.Color(fireColors[1]),
+                    t * 2,
+                );
             } else {
-                color.lerpColors(new THREE.Color(fireColors[1]), new THREE.Color(fireColors[2]), (t - 0.5) * 2);
+                color.lerpColors(
+                    new THREE.Color(fireColors[1]),
+                    new THREE.Color(fireColors[2]),
+                    (t - 0.5) * 2,
+                );
             }
             colors.push(color);
         }
@@ -48,7 +58,9 @@ export default function PlayerTrailFire({ positionRef, demoMode }) {
         if (!lineRef.current) return;
         if (!demoMode && !positionRef?.current) return;
 
-        let x = 0, y = 0, z = 0;
+        let x = 0,
+            y = 0,
+            z = 0;
         if (positionRef?.current) {
             [x, y, z] = positionRef.current;
         }
@@ -66,16 +78,17 @@ export default function PlayerTrailFire({ positionRef, demoMode }) {
         points[0].set(x, y, z);
 
         if (lineRef.current.geometry) {
-            const flatPoints = points.flatMap(p => [p.x, p.y, p.z]);
+            const flatPoints = points.flatMap((p) => [p.x, p.y, p.z]);
             lineRef.current.geometry.setPositions(flatPoints);
         }
 
         // Update particles
         if (particlesRef.current) {
-            const positions = particlesRef.current.geometry.attributes.position.array;
+            const positions =
+                particlesRef.current.geometry.attributes.position.array;
             for (let i = 0; i < PARTICLE_COUNT; i++) {
                 particleLifetimes[i] -= delta * 2; // Particle speed
-                
+
                 if (particleLifetimes[i] <= 0) {
                     // Reset particle to current position with some random offset
                     particleLifetimes[i] = 1;

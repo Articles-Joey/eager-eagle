@@ -1,14 +1,14 @@
-"use client"
+"use client";
 import Box from "@mui/material/Box";
 
-import { useStore } from '@/hooks/useStore'
-import { useGameStore } from '@/hooks/useGameStore'
+import { useStore } from "@/hooks/useStore";
+import { useGameStore } from "@/hooks/useGameStore";
 // import { Suspense } from 'react';
-import dynamic from 'next/dynamic'
+import dynamic from "next/dynamic";
 
-import { useAudioStore } from '@/hooks/useAudioStore'
-import useTouchControlsStore from '@/hooks/useTouchControlsStore'
-import ArticlesButton from './Button'
+import { useAudioStore } from "@/hooks/useAudioStore";
+import useTouchControlsStore from "@/hooks/useTouchControlsStore";
+import ArticlesButton from "./Button";
 // import { useStore } from '../hooks/useStore'
 // import CreditsModal from './CreditsModal'
 
@@ -18,51 +18,49 @@ import ArticlesButton from './Button'
 // )
 
 const SettingsModal = dynamic(
-    () => import('@articles-media/articles-dev-box/SettingsModal'),
-    { ssr: false }
-)
+    () => import("@articles-media/articles-dev-box/SettingsModal"),
+    { ssr: false },
+);
 
 const CreditsModal = dynamic(
-    () => import('@articles-media/articles-dev-box/CreditsModal'),
-    { ssr: false }
-)
+    () => import("@articles-media/articles-dev-box/CreditsModal"),
+    { ssr: false },
+);
 
-const InfoModal = dynamic(
-    () => import('@/components/UI/InfoModal'),
-    { ssr: false }
-)
+const InfoModal = dynamic(() => import("@/components/UI/InfoModal"), {
+    ssr: false,
+});
 
-const GameOverModal = dynamic(
-    () => import('@/components/UI/GameOverOverlay'),
-    { ssr: false }
-)
+const GameOverModal = dynamic(() => import("@/components/UI/GameOverOverlay"), {
+    ssr: false,
+});
 
 export default function GlobalClientModals() {
+    const showInfoModal = useStore((state) => state.showInfoModal);
+    const setShowInfoModal = useStore((state) => state.setShowInfoModal);
 
-    const showInfoModal = useStore((state) => state.showInfoModal)
-    const setShowInfoModal = useStore((state) => state.setShowInfoModal)
+    const showSettingsModal = useStore((state) => state.showSettingsModal);
+    const setShowSettingsModal = useStore(
+        (state) => state.setShowSettingsModal,
+    );
 
-    const showSettingsModal = useStore((state) => state.showSettingsModal)
-    const setShowSettingsModal = useStore((state) => state.setShowSettingsModal)
+    const showCreditsModal = useStore((state) => state.showCreditsModal);
+    const setShowCreditsModal = useStore((state) => state.setShowCreditsModal);
 
-    const showCreditsModal = useStore((state) => state.showCreditsModal)
-    const setShowCreditsModal = useStore((state) => state.setShowCreditsModal)
+    const gameOver = useGameStore((state) => state.gameOver);
+    const setGameOver = useGameStore((state) => state.setGameOver);
 
-    const gameOver = useGameStore((state) => state.gameOver)
-    const setGameOver = useGameStore((state) => state.setGameOver)
+    const customizeModal = useStore((state) => state.customizeModal);
+    const setCustomizeModal = useStore((state) => state.setCustomizeModal);
 
-    const customizeModal = useStore((state) => state.customizeModal)
-    const setCustomizeModal = useStore((state) => state.setCustomizeModal)
+    const rewardsModal = useStore((state) => state.rewardsModal);
+    const setRewardsModal = useStore((state) => state.setRewardsModal);
 
-    const rewardsModal = useStore((state) => state.rewardsModal)
-    const setRewardsModal = useStore((state) => state.setRewardsModal)
-
-    const disableDeath = useStore((state) => state.disableDeath)
-    const setDisableDeath = useStore((state) => state.setDisableDeath)
+    const disableDeath = useStore((state) => state.disableDeath);
+    const setDisableDeath = useStore((state) => state.setDisableDeath);
 
     return (
         <>
-
             {/* {kickedStore &&
                 <KickedModal
                     show={kickedStore}
@@ -70,30 +68,30 @@ export default function GlobalClientModals() {
                 />
             } */}
 
-            {gameOver &&
+            {gameOver && (
                 <GameOverModal
                     show={gameOver}
                     setShow={setGameOver}
                 />
-            }
+            )}
 
-            {showCreditsModal &&
+            {showCreditsModal && (
                 <CreditsModal
                     show={showCreditsModal}
                     setShow={setShowCreditsModal}
                     owner="Articles-Joey"
                     repo="eager-eagle"
                 />
-            }
+            )}
 
-            {showInfoModal &&
+            {showInfoModal && (
                 <InfoModal
                     show={showInfoModal}
                     setShow={setShowInfoModal}
                 />
-            }
+            )}
 
-            {showSettingsModal &&
+            {showSettingsModal && (
                 <SettingsModal
                     show={showSettingsModal}
                     setShow={setShowSettingsModal}
@@ -103,24 +101,24 @@ export default function GlobalClientModals() {
                     // useSocketStore={useSocketStore}
                     config={{
                         tabs: {
-                            'Graphics': {
+                            Graphics: {
                                 darkMode: true,
                                 landingAnimation: true,
                                 children: <></>,
                             },
-                            'Audio': {
+                            Audio: {
                                 sliders: [
                                     {
                                         key: "gameVolume",
-                                        label: "Game Volume"
+                                        label: "Game Volume",
                                     },
                                     {
                                         key: "musicVolume",
-                                        label: "Music Volume"
-                                    }
-                                ]
+                                        label: "Music Volume",
+                                    },
+                                ],
                             },
-                            'Controls': {
+                            Controls: {
                                 // defaultKeyBindings: {
                                 //     // moveUp: "W",
                                 //     // moveDown: "S",
@@ -128,48 +126,45 @@ export default function GlobalClientModals() {
                                 //     // moveRight: "D",
                                 // }
                             },
-                            'Multiplayer': {
+                            Multiplayer: {
                                 // serverUrl: true,
                                 // children: <>Test</>
                             },
-                            'Other': {
+                            Other: {
                                 toontownMode: false,
-                                children: <>
-
-                                </>,
+                                children: <></>,
                             },
-                            'Debug': {
-                                children: <>
-                                    <Box>Disable Death</Box>
-                                    <Box sx={{ mb: "1rem" }}>
-                                        <ArticlesButton
-                                            active={disableDeath === false}
-                                            onClick={() => {
-                                                setDisableDeath(false);
-                                            }}
-                                        >
-                                            Disabled
-                                        </ArticlesButton>
-                                        <ArticlesButton
-                                            active={disableDeath === true}
-                                            onClick={() => {
-                                                setDisableDeath(true);
-                                            }}
-                                        >
-                                            Enabled
-                                        </ArticlesButton>
-                                    </Box>
-                                </>
-                            }
-                        }
+                            Debug: {
+                                children: (
+                                    <>
+                                        <Box>Disable Death</Box>
+                                        <Box sx={{ mb: "1rem" }}>
+                                            <ArticlesButton
+                                                active={disableDeath === false}
+                                                onClick={() => {
+                                                    setDisableDeath(false);
+                                                }}
+                                            >
+                                                Disabled
+                                            </ArticlesButton>
+                                            <ArticlesButton
+                                                active={disableDeath === true}
+                                                onClick={() => {
+                                                    setDisableDeath(true);
+                                                }}
+                                            >
+                                                Enabled
+                                            </ArticlesButton>
+                                        </Box>
+                                    </>
+                                ),
+                            },
+                        },
                     }}
                 />
-            }
-
-            
+            )}
 
             {/* <GameControllerKeyboard onFinish={(text) => console.log("Keyboard finished:", text)} /> */}
-
         </>
-    )
+    );
 }

@@ -9,8 +9,18 @@ export default function ReturnToLauncherButton() {
     if (searchParams.get("launcher_mode") !== "1") return null;
 
     return (
-        <ArticlesButton small sx={{ width: "100%", zIndex: 10, position: "relative" }} onClick={() => { window.location.href = "https://games.articles.media"; }}>
-            <SportsEsportsIcon fontSize="small" sx={{ mr: 0.5 }} />Return to Games
+        <ArticlesButton
+            small
+            sx={{ width: "100%", zIndex: 10, position: "relative" }}
+            onClick={() => {
+                window.location.href = "https://games.articles.media";
+            }}
+        >
+            <SportsEsportsIcon
+                fontSize="small"
+                sx={{ mr: 0.5 }}
+            />
+            Return to Games
         </ArticlesButton>
     );
 }

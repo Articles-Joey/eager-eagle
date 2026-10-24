@@ -1,211 +1,104 @@
-import { createContext, createRef, forwardRef, memo, Suspense, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-
-import { Canvas, useFrame, useThree } from "@react-three/fiber"
-import { Sky, useDetectGPU, useTexture, OrbitControls, Cylinder, QuadraticBezierLine, Text, Outlines, Billboard } from "@react-three/drei";
-
-import { NearestFilter, RepeatWrapping, TextureLoader, Vector3 } from "three";
-
-import { Debug, Physics, useBox, useCylinder, useSphere } from "@react-three/cannon";
-import { degToRad } from "three/src/math/MathUtils";
-// import FloorPlane from "./FloorPlane";
-// import { Model as SpacesuitModel } from "@/components/Games/Assets/Quaternius/men/Spacesuit";
-// import { Model as SpacesuitModel } from "./Spacesuit";
-import Player from "./Player";
-// import { SpotLight } from "three";
-// import { useGameStore } from "@/hooks/useGameStore";
-// import TilePlane from "./Wall";
-// import LavaPlane from "./LavaPlane";
-// import LavaBurst from "./LavaBurst";
-// import { socket } from "@/components/context/best-socket";
-// import { useSocketStore } from "@/hooks/useSocketStore";
+import { memo, Suspense, useCallback, useEffect } from "react";
+import { Canvas } from "@react-three/fiber";
+import { OrbitControls, Stats } from "@react-three/drei";
+import { Physics } from "@react-three/rapier";
 import { useStore } from "@/hooks/useStore";
-// import { ModelBuildingOne } from "../Models/Building 1";
-import ObstacleManager from "./ObstacleManager";
 import { useGameStore } from "@/hooks/useGameStore";
+import Player from "./Player";
+import ObstacleManager from "./ObstacleManager";
+import Ground from "./Ground";
 import SkyBox from "./SkyBox";
-// import Npcs from "./Players";
+import { WorldMotion } from "./WorldMotion";
 
-const game_name = 'Eager Eagle'
-const game_key = 'eager-eagle'
+function GameCanvas({ landingAnimationMode = false }) {
+    const darkMode = useStore((state) => state.darkMode);
+    const showPhysicsDebug = useStore((state) => state?.debugConfig?.showPhysicsDebug);
+    const showStats = useStore((state) => state?.debugConfig?.showStats);
+    const gameOver = useGameStore((state) => state.gameOver);
+    const setPointerJump = useGameStore((state) => state.setPointerJump);
+    const setPointerDive = useGameStore((state) => state.setPointerDive);
 
-// const texture = new TextureLoader().load(`${process.env.NEXT_PUBLIC_CDN}games/Race Game/grass.jpg`)
+    const clearPointerControls = useCallback(() => {
+        setPointerJump(false);
+        setPointerDive(false);
+    }, [setPointerJump, setPointerDive]);
 
-// const GrassPlane = () => {
+    const updatePointerButtons = useCallback((event) => {
+        if (useGameStore.getState().gameOver) {
+            clearPointerControls();
+            return;
+        }
+        setPointerJump((event.buttons & 1) !== 0);
+        setPointerDive((event.buttons & 2) !== 0);
+    }, [setPointerJump, setPointerDive, clearPointerControls]);
 
-//     const width = 110; // Set the width of the plane
-//     const height = 170; // Set the height of the plane
+    const handlePointerDown = useCallback((event) => {
+        if (event.button === 2) event.preventDefault();
+        updatePointerButtons(event);
+        if (event.buttons & 3) event.currentTarget.setPointerCapture(event.pointerId);
+    }, [updatePointerButtons]);
 
-//     texture.magFilter = NearestFilter;
-//     texture.wrapS = RepeatWrapping
-//     texture.wrapT = RepeatWrapping
-//     texture.repeat.set(5, 5)
+    const handlePointerUp = useCallback((event) => {
+        updatePointerButtons(event);
+        if (event.buttons === 0 && event.currentTarget.hasPointerCapture(event.pointerId)) {
+            event.currentTarget.releasePointerCapture(event.pointerId);
+        }
+    }, [updatePointerButtons]);
 
-//     return (
-//         <>
-//             <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.1, 0]}>
-//                 <planeGeometry attach="geometry" args={[width, height]} />
-//                 <meshStandardMaterial attach="material" map={texture} />
-//             </mesh>
-//         </>
-//     );
-// };
+    useEffect(() => {
+        if (landingAnimationMode) return;
+        const handleVisibilityChange = () => {
+            if (document.hidden) clearPointerControls();
+        };
+        window.addEventListener("pointerup", updatePointerButtons);
+        window.addEventListener("pointercancel", clearPointerControls);
+        window.addEventListener("blur", clearPointerControls);
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+        return () => {
+            window.removeEventListener("pointerup", updatePointerButtons);
+            window.removeEventListener("pointercancel", clearPointerControls);
+            window.removeEventListener("blur", clearPointerControls);
+            document.removeEventListener("visibilitychange", handleVisibilityChange);
+            clearPointerControls();
+        };
+    }, [landingAnimationMode, clearPointerControls, updatePointerButtons]);
 
-// TODO Create a collision item that fips the camera 90deg at a time
-
-function GameCanvas({
-    landingAnimationMode
-}) {
-
-    const darkMode = useStore((state) => state.darkMode)
-    const debug = useStore((state) => state.debug)
-    const setCanvasClicked = useGameStore((state) => state.setCanvasClicked)
+    useEffect(() => {
+        if (gameOver) clearPointerControls();
+    }, [gameOver, clearPointerControls]);
 
     return (
         <Canvas
-            camera={{
-                position: [30, 3, 0],
-                fov: 50
-            }}
-            onPointerDown={() => {
-                setCanvasClicked(true)
-            }}
-            onPointerUp={() => {
-                setCanvasClicked(false)
-            }}
+            camera={{ position: [30, 3, 0], fov: 50 }}
+            onPointerDown={landingAnimationMode ? undefined : handlePointerDown}
+            onPointerMove={landingAnimationMode ? undefined : updatePointerButtons}
+            onPointerUp={landingAnimationMode ? undefined : handlePointerUp}
+            onPointerLeave={landingAnimationMode ? undefined : clearPointerControls}
+            onPointerCancel={landingAnimationMode ? undefined : clearPointerControls}
+            onLostPointerCapture={landingAnimationMode ? undefined : clearPointerControls}
+            onContextMenu={(event) => { if (!landingAnimationMode) event.preventDefault(); }}
         >
-
-            <OrbitControls
-            // autoRotate={gameState?.status == 'In Lobby'}
-            />
-
-            {/* <Sky
-                sunPosition={
-                    darkMode ?
-                        [0, -100, 0]
-                        :
-                        [0, 100, 0]
-                }
-            /> */}
-
+            {showStats && <Stats className="stats-overlay" />}
+            <OrbitControls enableRotate={landingAnimationMode} enablePan={landingAnimationMode} />
             <SkyBox />
-
             <ambientLight intensity={darkMode ? 0.5 : 2.5} />
-            {/* <spotLight intensity={30000} position={[-50, 100, 50]} angle={5} penumbra={1} /> */}
-
-            {/* <TilePlane
-                args={[150, 75]}
-                position={[
-                    0,
-                    (75 / 2),
-                    -25
-                ]}
-            // rotation={[degToRad(-90), 0, 0]}
-            /> */}
-
-
-
-            {/* <LavaPlane
-                args={[150, 150]}
-                position={[
-                    0,
-                    -0.2,
-                    0
-                ]}
-                rotation={[degToRad(-90), 0, 0]}
-            /> */}
-
-            {/* <LavaBurst /> */}
-
-            <Physics>
-
-                <Debug scale={debug ? 1 : 0}>
-
-                    {/* <Player /> */}
-                    {!landingAnimationMode &&
-                        <Suspense>
-                            <Player />
-                        </Suspense>
-                    }
-
-                    <Suspense>
-                        <group>
-                            <ObstacleManager />
-                        </group>
-                    </Suspense>
-
-                    {/* <Npc /> */}
-                    {/* <Npcs /> */}
-
-                    <Suspense><Ground /></Suspense>
-
-                </Debug>
-
-            </Physics>
-
+            <directionalLight position={[20, 35, -20]} intensity={darkMode ? 0.6 : 2} />
+            <Suspense fallback={null}>
+                <WorldMotion preview={landingAnimationMode}>
+                    <Physics
+                        debug={showPhysicsDebug}
+                        gravity={[0, -9.81, 0]}
+                        paused={gameOver && !landingAnimationMode}
+                        interpolation={false}
+                    >
+                        {!landingAnimationMode && <Player />}
+                        <ObstacleManager />
+                        <Ground />
+                    </Physics>
+                </WorldMotion>
+            </Suspense>
         </Canvas>
-    )
+    );
 }
 
-export default memo(GameCanvas)
-
-function Ground() {
-
-    // const {
-    //     socket,
-    // } = useSocketStore(state => ({
-    //     socket: state.socket,
-    // }));
-
-    const [ref, api] = useBox(() => ({
-        mass: 0,
-        type: 'Static',
-        args: [100, 0.5, 100],
-        position: [0, -5, 0],
-        collisionFilterGroup: 2, // Rocks are in group 2
-        collisionFilterMask: 1,  // Rocks collide with players
-        userData: { type: 'ground' }
-    }))
-
-    const base_link = `${process.env.NEXT_PUBLIC_CDN}games/Assassin/`
-
-    const texture = useTexture({
-        map: `${base_link}rock.webp`,
-        // displacementMap: `${base_link}GroundSand005_DISP_1K.jpg`,
-        // normalMap: `${base_link}GroundSand005_NRM_1K.jpg`,
-        // roughnessMap: `${base_link}GroundSand005_BUMP_1K.jpg`,
-        // aoMap: `${base_link}GroundSand005_AO_1K.jpg`,
-    })
-
-    texture.map.repeat.set(20, 20);
-    texture.map.wrapS = texture.map.wrapT = RepeatWrapping;
-
-    return (
-        <group>
-
-            <mesh
-                ref={ref}
-                castShadow
-            // onPointerMove={e => handlePointerMove(e, socket)} // Listen for pointer move
-            // onPointerOut={handlePointerOut} // Handle when the pointer leaves
-            // onClick={handleOnClick}
-            >
-                <boxGeometry args={[100, 0.5, 100]} />
-                {/* <BeachBall /> */}
-                {/* <meshStandardMaterial opacity={0} transparent={true} color="#08e8de" /> */}
-                <meshStandardMaterial {...texture} />
-            </mesh>
-
-            {/* <FloorPlane
-                args={[50, 50]}
-                position={[
-                    0,
-                    0,
-                    0
-                ]}
-                rotation={[degToRad(-90), 0, 0]}
-            /> */}
-
-        </group>
-    )
-
-}
+export default memo(GameCanvas);
