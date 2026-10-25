@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -19,7 +18,6 @@ import { useStore } from "@/hooks/useStore";
 import { useScoreStore } from "@/hooks/useScoreStore";
 
 export default function GameOverOverlay() {
-    const router = useRouter();
     const setGameOver = useGameStore((state) => state.setGameOver);
     const distance = useGameStore((state) => state.distance);
     const setDistance = useGameStore((state) => state.setDistance);
@@ -84,10 +82,7 @@ export default function GameOverOverlay() {
                     <Box sx={{ my: "1.5rem", display: "flex" }}>
                         <ArticlesButton
                             sx={{ width: "50%", mt: "0.5rem" }}
-                            onClick={() => {
-                                router.push("/");
-                                setCustomizeModal(true);
-                            }}
+                            onClick={() => setCustomizeModal(true)}
                         >
                             <PaletteIcon
                                 fontSize="small"
@@ -97,10 +92,7 @@ export default function GameOverOverlay() {
                         </ArticlesButton>
                         <ArticlesButton
                             sx={{ width: "50%", mt: "0.5rem" }}
-                            onClick={() => {
-                                router.push("/");
-                                setRewardsModal(true);
-                            }}
+                            onClick={() => setRewardsModal(true)}
                         >
                             <RedeemIcon
                                 fontSize="small"

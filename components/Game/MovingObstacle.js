@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { memo, useRef, useState } from "react";
 import {
     CuboidCollider,
     interactionGroups,
@@ -9,7 +9,7 @@ import { useStore } from "@/hooks/useStore";
 import { useGameStore } from "@/hooks/useGameStore";
 import { useScoreStore } from "@/hooks/useScoreStore";
 import { GroundObject, SkyObject } from "./SceneObject";
-import { terrainHeight } from "./terrain";
+import { MOUNTAIN_SCENERY_HEIGHT_SCALE, terrainHeight } from "./terrain";
 import {
     getGroundHeight,
     getSkyMotion,
@@ -27,15 +27,18 @@ import {
 } from "./WorldMotion";
 
 const obstacleGroups = interactionGroups(1, [0]);
+const GROUND_BODY_DATA = { type: "ground-object" };
+const SKY_BODY_DATA = { type: "sky-object" };
 
-export default function MovingObstacle({ index }) {
-    const character = useStore((state) => state.character);
+function MovingObstacle({ index }) {
+    const groundType = useStore((state) => state.character.groundObject);
+    const skyType = useStore((state) => state.character.skyObject);
     const groundBody = useRef();
     const skyBody = useRef();
     const passed = useRef(false);
     const generation = useRef(-1);
+    const skyTarget = useRef({ x: 0, y: 0, z: 0 });
     const { motion, preview } = useWorldMotion();
-    const groundType = character.groundObject;
     const {
         baseY: skyBaseY,
         phase,
@@ -43,29 +46,43 @@ export default function MovingObstacle({ index }) {
         amplitude,
     } = getSkyMotion(index);
     const baseY = GROUND_Y + GROUND_SURFACE_OFFSET;
+    // JSX only supplies a body's mount pose. All later movement belongs to
+    // Rapier; rerenders must never reapply the sky object's starting phase.
+    const [initialPositions] = useState(() => {
+        const z = motion.current.distance - index * TILE_LENGTH;
+        return {
+            ground: [0, 0, z],
+            sky: [
+                0,
+                skyBaseY +
+                    Math.sin(motion.current.time * frequency + phase) *
+                        amplitude,
+                z,
+            ],
+        };
+    });
     useScrollingBody(groundBody, index);
 
     useBeforePhysicsStep(() => {
         const z = motion.current.distance - index * TILE_LENGTH;
-        const y =
+        skyTarget.current.y =
             skyBaseY +
             Math.sin(motion.current.time * frequency + phase) * amplitude;
+        skyTarget.current.z = z;
         if (generation.current !== motion.current.generation) {
             passed.current = false;
-            skyBody.current?.setTranslation({ x: 0, y, z }, true);
+            skyBody.current?.setTranslation(skyTarget.current, true);
             generation.current = motion.current.generation;
         }
-        skyBody.current?.setNextKinematicTranslation({ x: 0, y, z });
+        skyBody.current?.setNextKinematicTranslation(skyTarget.current);
 
         if (!passed.current && z > 0) {
             passed.current = true;
             if (preview || useGameStore.getState().gameOver) return;
             const game = useGameStore.getState();
-            const score = useScoreStore.getState();
+            const nextDistance = game.distance + 1;
             game.addDistance(1);
-            score.incrementLifetimeDistance();
-            if (game.distance + 1 > score.maxDistance)
-                score.setMaxDistance(game.distance + 1);
+            useScoreStore.getState().recordObstaclePassed(nextDistance);
         }
     });
 
@@ -74,14 +91,16 @@ export default function MovingObstacle({ index }) {
             <RigidBody
                 ref={groundBody}
                 type="kinematicPosition"
-                position={[0, 0, motion.current.distance - index * TILE_LENGTH]}
+                position={initialPositions.ground}
                 colliders={false}
-                userData={{ type: "ground-object" }}
+                userData={GROUND_BODY_DATA}
             >
                 {ROW_X.map((x, row) => {
                     const height = getGroundHeight(index, row);
                     const visualY =
-                        row === 0 || groundType === "Building"
+                        row === 0 ||
+                        groundType === "Building" ||
+                        groundType === "Pipe"
                             ? baseY
                             : GROUND_Y +
                               terrainHeight(
@@ -91,25 +110,32 @@ export default function MovingObstacle({ index }) {
                               );
                     return (
                         <group key={x}>
-                            <CuboidCollider
-                                args={[
-                                    GROUND_OBJECT_WIDTH / 2,
-                                    height / 2,
-                                    GROUND_OBJECT_DEPTH / 2,
-                                ]}
-                                position={[x, baseY + height / 2, 0]}
-                                collisionGroups={obstacleGroups}
-                                name="ground-object"
-                            />
+                            {row === 0 && (
+                                <CuboidCollider
+                                    args={[
+                                        GROUND_OBJECT_WIDTH / 2,
+                                        height / 2,
+                                        GROUND_OBJECT_DEPTH / 2,
+                                    ]}
+                                    position={[x, baseY + height / 2, 0]}
+                                    collisionGroups={obstacleGroups}
+                                    name="ground-object"
+                                />
+                            )}
                             <GroundObject
                                 type={groundType}
+                                rockSeed={index * 107 + row * 13}
                                 treeVariant={
                                     row === 0 || (index + row) % 2 === 0
                                         ? "Quaternius"
                                         : "Classic"
                                 }
                                 position={[x, visualY, 0]}
-                                height={height}
+                                height={
+                                    groundType === "Mountain" && row > 0
+                                        ? height * MOUNTAIN_SCENERY_HEIGHT_SCALE
+                                        : height
+                                }
                                 width={
                                     row === 0 ? GROUND_OBJECT_WIDTH : undefined
                                 }
@@ -125,15 +151,11 @@ export default function MovingObstacle({ index }) {
             <RigidBody
                 ref={skyBody}
                 type="kinematicPosition"
-                position={[
-                    0,
-                    skyBaseY + Math.sin(phase) * amplitude,
-                    motion.current.distance - index * TILE_LENGTH,
-                ]}
+                position={initialPositions.sky}
                 colliders={false}
-                userData={{ type: "sky-object" }}
+                userData={SKY_BODY_DATA}
             >
-                <SkyObject type={character.skyObject} />
+                <SkyObject type={skyType} />
                 <CuboidCollider
                     args={[SKY_OBJECT_SIZE[0] / 2, 0.5, SKY_OBJECT_SIZE[2] / 2]}
                     collisionGroups={obstacleGroups}
@@ -163,3 +185,5 @@ export default function MovingObstacle({ index }) {
         </group>
     );
 }
+
+export default memo(MovingObstacle);

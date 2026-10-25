@@ -6,9 +6,10 @@ Files: Airship by Poly by Google - dRpj4_t2keh.glb [51.51KB] > F:\My Documents\S
 
 import React from 'react'
 import { useGLTF } from '@react-three/drei'
+import getAssetSource from '@articles-media/articles-dev-box/getAssetSource'
 
 export function ModelGoogleAirship(props) {
-  const { nodes, materials } = useGLTF('/models/Google/Airship by Poly by Google - dRpj4_t2keh-transformed.glb')
+  const { nodes, materials } = useGLTF(getAssetSource('models/Google/Airship/Airship by Poly by Google - dRpj4_t2keh-transformed.glb'))
   return (
     <group {...props} dispose={null}>
       <mesh geometry={nodes.Airship.geometry} material={materials.Mat} />
@@ -16,4 +17,4 @@ export function ModelGoogleAirship(props) {
   )
 }
 
-useGLTF.preload('/models/Google/Airship by Poly by Google - dRpj4_t2keh-transformed.glb')
+useGLTF.preload(getAssetSource('models/Google/Airship/Airship by Poly by Google - dRpj4_t2keh-transformed.glb'))

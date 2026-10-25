@@ -3,7 +3,10 @@
 import { useEffect, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useGameStore } from "@/hooks/useGameStore";
-import { useControllerStore } from "@/hooks/useControllerStore";
+import {
+    isPrimaryGamepadButtonPressed,
+    useControllerStore,
+} from "@/hooks/useControllerStore";
 import { useStore } from "@/hooks/useStore";
 
 export default function ControllerInputHandler() {
@@ -82,7 +85,9 @@ export default function ControllerInputHandler() {
         if (pathname == "/play") {
             // if (!controllerState?.buttons) return
 
-            const isJumpPressed = controllerState?.buttons?.[0]?.pressed;
+            const isJumpPressed = isPrimaryGamepadButtonPressed(
+                controllerState?.buttons,
+            );
 
             const diveButton = controllerState?.buttons?.[7];
             const xButton = controllerState?.buttons?.[2];
@@ -92,7 +97,7 @@ export default function ControllerInputHandler() {
                 xButton?.pressed;
 
             if (!gameOver) {
-                // Button A Jump
+                // A or LT jumps using the same held/released state.
                 if (isJumpPressed && !prevJumpPressed.current) {
                     console.log("Jump 123");
                     setCanvasClicked(true);
@@ -122,7 +127,7 @@ export default function ControllerInputHandler() {
 
             // if (!controllerState?.buttons) return
 
-            // Button A (index 0) => Play Again
+            // A or LT => Play Again
             if (isJumpPressed) {
                 setDistance(0);
                 setGameOver(false);

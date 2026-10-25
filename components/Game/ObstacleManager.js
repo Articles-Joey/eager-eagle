@@ -1,9 +1,10 @@
+import { memo } from "react";
 import MovingObstacle from "./MovingObstacle";
 import AirshipField from "./AirshipField";
-import { useWorldMotion } from "./WorldMotion";
+import { useWorldTiles } from "./WorldMotion";
 
-export default function ObstacleManager() {
-    const { tiles } = useWorldMotion();
+function ObstacleManager() {
+    const { tiles } = useWorldTiles();
     return (
         <group>
             <AirshipField />
@@ -18,3 +19,4 @@ export default function ObstacleManager() {
         </group>
     );
 }
+export default memo(ObstacleManager);

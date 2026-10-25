@@ -6,9 +6,12 @@ Files: Airplane.glb [377.65KB] > F:\My Documents\Sites\games\eager-eagle\public\
 
 import React from "react";
 import { useGLTF } from "@react-three/drei";
+import getAssetSource from "@articles-media/articles-dev-box/getAssetSource";
 
 export function ModelAirplane(props) {
-    const { nodes, materials } = useGLTF("models/Airplane-transformed.glb");
+    const { nodes, materials } = useGLTF(
+        getAssetSource("models/Airplane-transformed.glb"),
+    );
     return (
         <group
             {...props}
@@ -22,4 +25,4 @@ export function ModelAirplane(props) {
     );
 }
 
-useGLTF.preload("models/Airplane-transformed.glb");
+useGLTF.preload(getAssetSource("models/Airplane-transformed.glb"));

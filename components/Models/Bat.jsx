@@ -8,10 +8,13 @@ import React from "react";
 import { useGraph } from "@react-three/fiber";
 import { useGLTF, useAnimations } from "@react-three/drei";
 import { SkeletonUtils } from "three-stdlib";
+import getAssetSource from "@articles-media/articles-dev-box/getAssetSource";
 
 export function ModelBat(props) {
     const group = React.useRef();
-    const { scene, animations } = useGLTF("models/Bat-transformed.glb");
+    const { scene, animations } = useGLTF(
+        getAssetSource("models/Bat-transformed.glb"),
+    );
     const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene]);
     const { nodes, materials } = useGraph(clone);
     const { actions } = useAnimations(animations, group);
@@ -65,4 +68,4 @@ export function ModelBat(props) {
     );
 }
 
-useGLTF.preload("models/Bat-transformed.glb");
+useGLTF.preload(getAssetSource("models/Bat-transformed.glb"));

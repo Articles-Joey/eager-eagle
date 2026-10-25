@@ -6,6 +6,7 @@ export const GROUND_OBJECT_WIDTH = 2.8;
 export const GROUND_OBJECT_DEPTH = 2.8;
 export const SKY_OBJECT_SIZE = [2.5, 1.5, 3];
 export const AIRSHIP_SIZE = [5.5, 2.2, 8];
+export const HOT_AIR_BALLOON_SIZE = [2.8, 3.5, 2.8];
 export const PLAY_AREA_TOP = 13;
 
 // Gameplay measurements depend on the obstacle index, never its cosmetic model.

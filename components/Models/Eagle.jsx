@@ -6,9 +6,12 @@ Files: Eagle.glb [502.71KB] > F:\My Documents\Sites\games\games-showcase\public\
 
 import React from "react";
 import { useGLTF } from "@react-three/drei";
+import getAssetSource from "@articles-media/articles-dev-box/getAssetSource";
 
 export function ModelEagle(props) {
-    const { nodes, materials } = useGLTF("models/Eagle-transformed.glb");
+    const { nodes, materials } = useGLTF(
+        getAssetSource("models/Eagle-transformed.glb"),
+    );
     return (
         <group
             {...props}
@@ -34,4 +37,4 @@ export function ModelEagle(props) {
     );
 }
 
-useGLTF.preload("models/Eagle-transformed.glb");
+useGLTF.preload(getAssetSource("models/Eagle-transformed.glb"));

@@ -59,6 +59,7 @@ export default function RewardsModal({ show, setShow }) {
             show={Boolean(show) && showModal}
             setShow={setShow}
             title="Distance Rewards"
+            size={"xs"}
             contentSx={{ p: "1rem" }}
             footerOverride={(setOpen) => (
                 <>
@@ -110,7 +111,10 @@ export default function RewardsModal({ show, setShow }) {
                 .filter((reward) => reward.distance)
                 .sort((a, b) => a.distance - b.distance)
                 .map((reward) => {
-                    const unlocked = maxDistance >= reward.distance;
+                    const unlocked =
+                        maxDistance >= reward.distance ||
+                        (reward.lifetimeDistance != null &&
+                            lifetimeDistance >= reward.lifetimeDistance);
                     return (
                         <Box
                             key={reward.name}

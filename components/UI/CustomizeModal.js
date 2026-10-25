@@ -197,8 +197,9 @@ export default function CustomizeModal({ show, setShow }) {
                                     (reward, rewardIndex) => {
                                         const isUnlocked =
                                             maxDistance >= reward.distance ||
-                                            lifetimeDistance >=
-                                                reward.lifetimeDistance ||
+                                            (reward.lifetimeDistance != null &&
+                                                lifetimeDistance >=
+                                                    reward.lifetimeDistance) ||
                                             reward.distance === 0;
                                         return (
                                             <MenuItem

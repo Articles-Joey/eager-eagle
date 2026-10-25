@@ -6,9 +6,10 @@ Files: Tree by Quaternius - qZtx0AHhcy.glb [2.54MB] > F:\My Documents\Sites game
 
 import React from 'react'
 import { useGLTF } from '@react-three/drei'
+import getAssetSource from '@articles-media/articles-dev-box/getAssetSource'
 
 export function ModelQuaterniusTree(props) {
-  const { nodes, materials } = useGLTF('/models/Quaternius/Tree by Quaternius - qZtx0AHhcy-transformed.glb')
+  const { nodes, materials } = useGLTF(getAssetSource('models/Quaternius/Tree by Quaternius - qZtx0AHhcy-transformed.glb'))
   return (
     <group {...props} dispose={null}>
       <mesh geometry={nodes.CommonTree_1_1.geometry} material={materials.Bark_NormalTree} />
@@ -17,4 +18,4 @@ export function ModelQuaterniusTree(props) {
   )
 }
 
-useGLTF.preload('/models/Quaternius/Tree by Quaternius - qZtx0AHhcy-transformed.glb')
+useGLTF.preload(getAssetSource('models/Quaternius/Tree by Quaternius - qZtx0AHhcy-transformed.glb'))

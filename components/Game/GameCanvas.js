@@ -8,11 +8,15 @@ import Player from "./Player";
 import ObstacleManager from "./ObstacleManager";
 import Ground from "./Ground";
 import SkyBox from "./SkyBox";
-import { WorldMotion } from "./WorldMotion";
+import { PHYSICS_STEP, WorldMotion, WorldStepper } from "./WorldMotion";
+
+const GAME_CAMERA = { position: [30, 3, 0], fov: 50 };
 
 function GameCanvas({ landingAnimationMode = false }) {
     const darkMode = useStore((state) => state.darkMode);
-    const showPhysicsDebug = useStore((state) => state?.debugConfig?.showPhysicsDebug);
+    const showPhysicsDebug = useStore(
+        (state) => state?.debugConfig?.showPhysicsDebug,
+    );
     const showStats = useStore((state) => state?.debugConfig?.showStats);
     const gameOver = useGameStore((state) => state.gameOver);
     const setPointerJump = useGameStore((state) => state.setPointerJump);
@@ -23,27 +27,40 @@ function GameCanvas({ landingAnimationMode = false }) {
         setPointerDive(false);
     }, [setPointerJump, setPointerDive]);
 
-    const updatePointerButtons = useCallback((event) => {
-        if (useGameStore.getState().gameOver) {
-            clearPointerControls();
-            return;
-        }
-        setPointerJump((event.buttons & 1) !== 0);
-        setPointerDive((event.buttons & 2) !== 0);
-    }, [setPointerJump, setPointerDive, clearPointerControls]);
+    const updatePointerButtons = useCallback(
+        (event) => {
+            if (useGameStore.getState().gameOver) {
+                clearPointerControls();
+                return;
+            }
+            setPointerJump((event.buttons & 1) !== 0);
+            setPointerDive((event.buttons & 2) !== 0);
+        },
+        [setPointerJump, setPointerDive, clearPointerControls],
+    );
 
-    const handlePointerDown = useCallback((event) => {
-        if (event.button === 2) event.preventDefault();
-        updatePointerButtons(event);
-        if (event.buttons & 3) event.currentTarget.setPointerCapture(event.pointerId);
-    }, [updatePointerButtons]);
+    const handlePointerDown = useCallback(
+        (event) => {
+            if (event.button === 2) event.preventDefault();
+            updatePointerButtons(event);
+            if (event.buttons & 3)
+                event.currentTarget.setPointerCapture(event.pointerId);
+        },
+        [updatePointerButtons],
+    );
 
-    const handlePointerUp = useCallback((event) => {
-        updatePointerButtons(event);
-        if (event.buttons === 0 && event.currentTarget.hasPointerCapture(event.pointerId)) {
-            event.currentTarget.releasePointerCapture(event.pointerId);
-        }
-    }, [updatePointerButtons]);
+    const handlePointerUp = useCallback(
+        (event) => {
+            updatePointerButtons(event);
+            if (
+                event.buttons === 0 &&
+                event.currentTarget.hasPointerCapture(event.pointerId)
+            ) {
+                event.currentTarget.releasePointerCapture(event.pointerId);
+            }
+        },
+        [updatePointerButtons],
+    );
 
     useEffect(() => {
         if (landingAnimationMode) return;
@@ -58,7 +75,10 @@ function GameCanvas({ landingAnimationMode = false }) {
             window.removeEventListener("pointerup", updatePointerButtons);
             window.removeEventListener("pointercancel", clearPointerControls);
             window.removeEventListener("blur", clearPointerControls);
-            document.removeEventListener("visibilitychange", handleVisibilityChange);
+            document.removeEventListener(
+                "visibilitychange",
+                handleVisibilityChange,
+            );
             clearPointerControls();
         };
     }, [landingAnimationMode, clearPointerControls, updatePointerButtons]);
@@ -69,28 +89,46 @@ function GameCanvas({ landingAnimationMode = false }) {
 
     return (
         <Canvas
-            camera={{ position: [30, 3, 0], fov: 50 }}
+            camera={GAME_CAMERA}
             onPointerDown={landingAnimationMode ? undefined : handlePointerDown}
-            onPointerMove={landingAnimationMode ? undefined : updatePointerButtons}
+            onPointerMove={
+                landingAnimationMode ? undefined : updatePointerButtons
+            }
             onPointerUp={landingAnimationMode ? undefined : handlePointerUp}
-            onPointerLeave={landingAnimationMode ? undefined : clearPointerControls}
-            onPointerCancel={landingAnimationMode ? undefined : clearPointerControls}
-            onLostPointerCapture={landingAnimationMode ? undefined : clearPointerControls}
-            onContextMenu={(event) => { if (!landingAnimationMode) event.preventDefault(); }}
+            onPointerLeave={
+                landingAnimationMode ? undefined : clearPointerControls
+            }
+            onPointerCancel={
+                landingAnimationMode ? undefined : clearPointerControls
+            }
+            onLostPointerCapture={
+                landingAnimationMode ? undefined : clearPointerControls
+            }
+            onContextMenu={(event) => {
+                if (!landingAnimationMode) event.preventDefault();
+            }}
         >
             {showStats && <Stats className="stats-overlay" />}
-            <OrbitControls enableRotate={landingAnimationMode} enablePan={landingAnimationMode} />
+            <OrbitControls
+                enableRotate={landingAnimationMode}
+                enablePan={landingAnimationMode}
+            />
             <SkyBox />
             <ambientLight intensity={darkMode ? 0.5 : 2.5} />
-            <directionalLight position={[20, 35, -20]} intensity={darkMode ? 0.6 : 2} />
+            <directionalLight
+                position={[20, 35, -20]}
+                intensity={darkMode ? 0.6 : 2}
+            />
             <Suspense fallback={null}>
                 <WorldMotion preview={landingAnimationMode}>
                     <Physics
                         debug={showPhysicsDebug}
                         gravity={[0, -9.81, 0]}
                         paused={gameOver && !landingAnimationMode}
-                        interpolation={false}
+                        timeStep={PHYSICS_STEP}
+                        interpolate
                     >
+                        <WorldStepper />
                         {!landingAnimationMode && <Player />}
                         <ObstacleManager />
                         <Ground />

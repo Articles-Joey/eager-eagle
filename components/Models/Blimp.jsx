@@ -6,9 +6,12 @@ Files: Blimp.glb [359.96KB] > F:\My Documents\Sites\games\eager-eagle\public\mod
 
 import React from "react";
 import { useGLTF } from "@react-three/drei";
+import getAssetSource from "@articles-media/articles-dev-box/getAssetSource";
 
 export function ModelBlimp(props) {
-    const { nodes, materials } = useGLTF("models/Blimp-transformed.glb");
+    const { nodes, materials } = useGLTF(
+        getAssetSource("models/Blimp-transformed.glb"),
+    );
     return (
         <group
             {...props}
@@ -22,4 +25,4 @@ export function ModelBlimp(props) {
     );
 }
 
-useGLTF.preload("models/Blimp-transformed.glb");
+useGLTF.preload(getAssetSource("models/Blimp-transformed.glb"));

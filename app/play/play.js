@@ -11,6 +11,7 @@ import { useGameStore } from "@/hooks/useGameStore";
 import { useStore } from "@/hooks/useStore";
 import AudioHandler from "@/components/Game/AudioHandler";
 import DiveButton from "@/components/UI/DiveButton";
+import DistanceCounter from "@/components/UI/DistanceCounter";
 
 const GameCanvas = dynamic(() => import("@/components/Game/GameCanvas"), {
     ssr: false,
@@ -21,7 +22,6 @@ const GameOverOverlay = dynamic(
 );
 
 export default function GamePage() {
-    const distance = useGameStore((state) => state.distance);
     const sidebar = useStore((state) => state.sidebar);
     const showMenu = useStore((state) => state.showMenu);
     const sceneKey = useStore((state) => state.sceneKey);
@@ -63,29 +63,7 @@ export default function GamePage() {
                 <Suspense>
                     <DiveButton />
                 </Suspense>
-                {!sidebar && (
-                    <Box
-                        sx={{
-                            position: "absolute",
-                            left: "50%",
-                            bottom: "calc(50px + 1rem)",
-                            transform: "translateX(-50%)",
-                            zIndex: 1,
-                            bgcolor: "#000",
-                            color: "#fff",
-                            border: 1,
-                            borderColor: "divider",
-                            borderRadius: "0.375rem",
-                            px: "0.65em",
-                            py: "0.35em",
-                            fontSize: "0.75em",
-                            fontWeight: 700,
-                            lineHeight: 1,
-                        }}
-                    >
-                        Distance: {distance}
-                    </Box>
-                )}
+                {!sidebar && <DistanceCounter />}
                 <GameCanvas key={sceneKey} />
             </Box>
         </Box>

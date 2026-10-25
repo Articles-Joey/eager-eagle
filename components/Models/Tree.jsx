@@ -6,9 +6,12 @@ Files: Tree.gltf [211.35KB] > F:\My Documents\Sites\games\eager-eagle\public\mod
 
 import React from "react";
 import { useGLTF } from "@react-three/drei";
+import getAssetSource from "@articles-media/articles-dev-box/getAssetSource";
 
 export function ModelTree(props) {
-    const { nodes, materials } = useGLTF("/models/Tree-transformed.glb");
+    const { nodes, materials } = useGLTF(
+        getAssetSource("models/Tree-transformed.glb"),
+    );
     return (
         <group
             {...props}
@@ -22,4 +25,4 @@ export function ModelTree(props) {
     );
 }
 
-useGLTF.preload("/models/Tree-transformed.glb");
+useGLTF.preload(getAssetSource("models/Tree-transformed.glb"));

@@ -4,6 +4,7 @@ import {
     usePieMenuStore,
 } from "@articles-media/articles-gamepad-helper";
 import { useStore } from "./useStore";
+import { isPrimaryGamepadButtonPressed } from "./useControllerStore";
 
 export const useLandingNavigation = (elementsRef) => {
     const nicknameKeyboard = useStore((state) => state.nicknameKeyboard);
@@ -91,8 +92,8 @@ export const useLandingNavigation = (elementsRef) => {
                         navigate(dx, dy);
                     }
 
-                    // A Button (Select)
-                    if (buttons[0].pressed) {
+                    // A or LT (Select)
+                    if (isPrimaryGamepadButtonPressed(buttons)) {
                         lastInputTime.current = now; // Debounce click too
                         const active = document.activeElement;
                         // Check if active element is one of ours

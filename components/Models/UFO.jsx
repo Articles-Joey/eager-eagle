@@ -6,10 +6,11 @@ Files: Flying saucer.glb [67.08KB] > F:\My Documents\Sites\games\eager-eagle\pub
 
 import React from "react";
 import { useGLTF } from "@react-three/drei";
+import getAssetSource from "@articles-media/articles-dev-box/getAssetSource";
 
 export function ModelUFO(props) {
     const { nodes, materials } = useGLTF(
-        "models/Flying saucer-transformed.glb",
+        getAssetSource("models/Flying saucer-transformed.glb"),
     );
     return (
         <group
@@ -24,4 +25,4 @@ export function ModelUFO(props) {
     );
 }
 
-useGLTF.preload("models/Flying saucer-transformed.glb");
+useGLTF.preload(getAssetSource("models/Flying saucer-transformed.glb"));

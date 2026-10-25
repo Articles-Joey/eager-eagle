@@ -1,5 +1,7 @@
 // import { create } from 'zustand'
 import { createWithEqualityFn as create } from "zustand/traditional";
+import { useScoreStore } from "./useScoreStore";
+import { useStore } from "./useStore";
 
 const initialPlayers = [...Array(30)].map((obj, obj_i) => {
     return {
@@ -9,7 +11,7 @@ const initialPlayers = [...Array(30)].map((obj, obj_i) => {
     };
 });
 
-export const useGameStore = create((set) => ({
+export const useGameStore = create((set, get) => ({
     isHost: false,
     setIsHost: (newValue) => {
         set((prev) => ({
@@ -114,9 +116,15 @@ export const useGameStore = create((set) => ({
 
     canvasClicked: false,
     pointerJump: false,
-    setPointerJump: (pointerJump) => set((state) => state.pointerJump === pointerJump ? state : { pointerJump }),
+    setPointerJump: (pointerJump) =>
+        set((state) =>
+            state.pointerJump === pointerJump ? state : { pointerJump },
+        ),
     pointerDive: false,
-    setPointerDive: (pointerDive) => set((state) => state.pointerDive === pointerDive ? state : { pointerDive }),
+    setPointerDive: (pointerDive) =>
+        set((state) =>
+            state.pointerDive === pointerDive ? state : { pointerDive },
+        ),
     setCanvasClicked: (newValue) => {
         set((prev) => ({
             canvasClicked: newValue,
@@ -139,8 +147,10 @@ export const useGameStore = create((set) => ({
 
     gameOver: false,
     setGameOver: (newValue) => {
-        set((prev) => ({
-            gameOver: newValue,
-        }));
+        const { gameOver, distance } = get();
+        if (gameOver === newValue) return;
+        const nickname = useStore.getState().nickname;
+        set({ gameOver: newValue });
+        if (newValue) useScoreStore.getState().recordDeath(distance, nickname);
     },
 }));

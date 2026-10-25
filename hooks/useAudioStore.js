@@ -2,6 +2,7 @@
 
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import getAssetSource from "@articles-media/articles-dev-box/getAssetSource";
 
 const initialAudioSettings = {
     enabled: true,
@@ -120,7 +121,10 @@ export const useAudioStore = create()(
                 };
                 const volume = soundVolume(sound, get().audioSettings);
                 if (volume === 0 && !sound.loop) return null;
-                const audio = new Audio(src);
+                const assetSource = getAssetSource(src.replace(/^\/+/, ""));
+                const audio = new Audio(
+                    new URL(assetSource, window.location.origin).href,
+                );
                 audio.volume = volume;
                 audio.loop = sound.loop;
                 audio.preload = "auto";

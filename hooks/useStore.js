@@ -22,6 +22,14 @@ export const defaultCharacter = {
             distance: 60,
             lifetimeDistance: 60 * 4,
         },
+        {
+            name: "Helicopter",
+            distance: 90,
+        },
+        {
+            name: "UFO",
+            distance: 120,
+        },
     ],
     model: "Eagle",
 
@@ -41,9 +49,18 @@ export const defaultCharacter = {
             lifetimeDistance: 50 * 4,
         },
         {
+            name: "Bubbles",
+            distance: 75,
+        },
+        {
             name: "Fire",
             distance: 100,
             lifetimeDistance: 100 * 4,
+        },
+        {
+            name: "Rainbow",
+            distance: 125,
+            lifetimeDistance: 500,
         },
     ],
     trail: "None",
@@ -64,6 +81,10 @@ export const defaultCharacter = {
             distance: 70,
             lifetimeDistance: 70 * 4,
         },
+        {
+            name: "Pipe",
+            distance: 100,
+        },
     ],
     groundObject: "Building",
 
@@ -83,6 +104,10 @@ export const defaultCharacter = {
             distance: 80,
             lifetimeDistance: 80 * 4,
         },
+        {
+            name: "Pipe",
+            distance: 100,
+        },
     ],
     skyObject: "Helicopter",
 
@@ -101,6 +126,10 @@ export const defaultCharacter = {
             name: "Forest",
             distance: 66,
             lifetimeDistance: 66 * 4,
+        },
+        {
+            name: "Flappy Bird",
+            distance: 100,
         },
     ],
     background: "City",

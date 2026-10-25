@@ -9,10 +9,16 @@ import { ModelEagle } from "../Models/Eagle";
 import ModelFlappyBird from "../Models/ModelFlappyBird";
 import PlayerTrail from "./PlayerTrail";
 import PlayerTrailFire from "./PlayerTrailFire";
+import PlayerTrailBubbles from "./PlayerTrailBubbles";
+import PlayerTrailRainbow from "./PlayerTrailRainbow";
 import ObstacleManager from "./ObstacleManager";
 import Ground from "./Ground";
 import SkyBox from "./SkyBox";
-import { WorldMotion } from "./WorldMotion";
+import { PlayerVehicleObject } from "./SceneObject";
+import { PHYSICS_STEP, WorldMotion, WorldStepper } from "./WorldMotion";
+
+const PREVIEW_CAMERA = { position: [28, 10, 16], fov: 50 };
+const PREVIEW_TARGET = [0, 0, -8];
 
 function ScenePreview() {
     const darkMode = useStore((state) => state.darkMode);
@@ -23,8 +29,8 @@ function ScenePreview() {
     const character = useStore((state) => state.character);
 
     return (
-        <Canvas camera={{ position: [28, 10, 16], fov: 50 }}>
-            <OrbitControls target={[0, 0, -8]} />
+        <Canvas camera={PREVIEW_CAMERA}>
+            <OrbitControls target={PREVIEW_TARGET} />
             <SkyBox />
             <ambientLight intensity={darkMode ? 0.5 : 2.5} />
             <directionalLight
@@ -32,6 +38,10 @@ function ScenePreview() {
                 intensity={darkMode ? 0.6 : 2}
             />
             <Suspense fallback={null}>
+                {(character.model === "Helicopter" ||
+                    character.model === "UFO") && (
+                    <PlayerVehicleObject type={character.model} />
+                )}
                 {character.model === "Eagle" && (
                     <ModelEagle
                         scale={0.02}
@@ -50,6 +60,10 @@ function ScenePreview() {
                 )}
                 {character.trail === "Fire" ? (
                     <PlayerTrailFire demoMode />
+                ) : character.trail === "Bubbles" ? (
+                    <PlayerTrailBubbles demoMode />
+                ) : character.trail === "Rainbow" ? (
+                    <PlayerTrailRainbow demoMode />
                 ) : (
                     <PlayerTrail demoMode />
                 )}
@@ -57,8 +71,10 @@ function ScenePreview() {
                     <Physics
                         debug={showPhysicsDebug}
                         gravity={[0, 0, 0]}
-                        interpolation={false}
+                        timeStep={PHYSICS_STEP}
+                        interpolate
                     >
+                        <WorldStepper />
                         <ObstacleManager />
                         <Ground />
                     </Physics>

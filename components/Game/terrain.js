@@ -10,6 +10,8 @@ import {
     SRGBColorSpace,
 } from "three";
 
+export const MOUNTAIN_SCENERY_HEIGHT_SCALE = 0.75;
+
 export function variation(seed) {
     const value = Math.sin(seed * 127.1 + 311.7) * 43758.5453;
     return value - Math.floor(value);
@@ -57,7 +59,8 @@ export function terrainHeight(type, x, z, background = false) {
         0.175 + smooth((x - 4) / 12) * noise(x * 0.15, z * 0.15) * 0.65;
     return (
         smooth((x + 42) / 6) *
-        (nearTerrain * (1 - mountainWeight) + mountains * mountainWeight)
+        (nearTerrain * (1 - mountainWeight) +
+            mountains * MOUNTAIN_SCENERY_HEIGHT_SCALE * mountainWeight)
     );
 }
 

@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { useGLTF } from "@react-three/drei";
+import getAssetSource from "@articles-media/articles-dev-box/getAssetSource";
 import {
     CuboidCollider,
     interactionGroups,
@@ -8,7 +9,9 @@ import {
 import { Vector3 } from "three";
 
 export function ModelBuildingOne({ noPhysics = false, ...props }) {
-    const { nodes, materials } = useGLTF("/models/Building 1-transformed.glb");
+    const { nodes, materials } = useGLTF(
+        getAssetSource("models/Building 1-transformed.glb"),
+    );
     const { size, offset } = useMemo(() => {
         const geometry = nodes.skyscraper.geometry;
         geometry.computeBoundingBox();
@@ -47,4 +50,4 @@ export function ModelBuildingOne({ noPhysics = false, ...props }) {
     );
 }
 
-useGLTF.preload("/models/Building 1-transformed.glb");
+useGLTF.preload(getAssetSource("models/Building 1-transformed.glb"));

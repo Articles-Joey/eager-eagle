@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { memo, useCallback, useEffect, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import {
     BallCollider,
@@ -20,21 +20,25 @@ import ModelFlappyBird from "../Models/ModelFlappyBird";
 import { rewards } from "@/components/UI/RewardsModal";
 import PlayerTrail from "./PlayerTrail";
 import PlayerTrailFire from "./PlayerTrailFire";
+import PlayerTrailBubbles from "./PlayerTrailBubbles";
+import PlayerTrailRainbow from "./PlayerTrailRainbow";
 import { PLAY_AREA_TOP } from "./obstacleLayout";
+import { PlayerVehicleObject } from "./SceneObject";
 
 const JUMP_FORCE = 7.5;
+const PLAYER_BODY_DATA = { type: "player" };
 
-export default function Player() {
+function Player() {
     const character = useStore((state) => state.character);
     const isDiving = useStore((state) => state.isDiving);
     const gameOver = useGameStore((state) => state.gameOver);
     const canvasClicked = useGameStore((state) => state.canvasClicked);
     const pointerJump = useGameStore((state) => state.pointerJump);
     const pointerDive = useGameStore((state) => state.pointerDive);
-    const lifetimeDistance = useScoreStore((state) => state.lifetimeDistance);
-    const maxDistance = useScoreStore((state) => state.maxDistance);
+    const canDive = useScoreStore(
+        (state) => state.lifetimeDistance >= 40 || state.maxDistance >= 10,
+    );
     const { jump, dive } = useKeyboard();
-    const canDive = lifetimeDistance >= 40 || maxDistance >= 10;
     const diving = (dive || isDiving || pointerDive) && canDive && !gameOver;
     const body = useRef();
     const playerModel = useRef();
@@ -96,7 +100,7 @@ export default function Player() {
         lastY.current = null;
     }, [gameOver]);
 
-    function onCollision({ other }) {
+    const onCollision = useCallback(({ other }) => {
         if (useGameStore.getState().gameOver) return;
         const type =
             other.colliderObject?.name || other.rigidBodyObject?.userData?.type;
@@ -116,7 +120,7 @@ export default function Player() {
         hitAudio.current = useAudioStore.getState().playSound("/audio/Hit.mp3");
         if (useStore.getState().disableDeath) return;
         useGameStore.getState().setGameOver(true);
-    }
+    }, []);
 
     useBeforePhysicsStep((world) => {
         if (useGameStore.getState().gameOver || !body.current) return;
@@ -158,16 +162,19 @@ export default function Player() {
     useFrame((_, delta) => {
         if (!playerModel.current || gameOver) return;
         jumpRotation.current *= Math.pow(0.85, delta * 60);
-        playerModel.current.rotation.x =
-            diving
-                ? degToRad(-45)
-                : jumpRotation.current;
+        playerModel.current.rotation.x = diving
+            ? degToRad(-45)
+            : jumpRotation.current;
     });
 
     return (
         <group>
             {character.trail === "Fire" ? (
                 <PlayerTrailFire positionRef={position} />
+            ) : character.trail === "Bubbles" ? (
+                <PlayerTrailBubbles positionRef={position} />
+            ) : character.trail === "Rainbow" ? (
+                <PlayerTrailRainbow positionRef={position} />
             ) : (
                 <PlayerTrail positionRef={position} />
             )}
@@ -180,7 +187,7 @@ export default function Player() {
                 canSleep={false}
                 ccd
                 onCollisionEnter={onCollision}
-                userData={{ type: "player" }}
+                userData={PLAYER_BODY_DATA}
             >
                 <BallCollider
                     args={[0.5]}
@@ -188,6 +195,10 @@ export default function Player() {
                     collisionGroups={interactionGroups(0, [1])}
                 />
                 <group ref={playerModel}>
+                    {(character.model === "Helicopter" ||
+                        character.model === "UFO") && (
+                        <PlayerVehicleObject type={character.model} />
+                    )}
                     {character.model === "Eagle" && (
                         <ModelEagle
                             scale={0.02}
@@ -212,3 +223,5 @@ export default function Player() {
         </group>
     );
 }
+
+export default memo(Player);

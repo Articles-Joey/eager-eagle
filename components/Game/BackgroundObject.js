@@ -16,6 +16,8 @@ export default function BackgroundObject({ index = 0, textures }) {
     const forest = background === "Forest";
     const columns = [-48, -60, -72, -84, -96, -108, -120, -132];
 
+    if (background === "Flappy Bird") return null;
+
     return (
         <group>
             <TerrainSurface

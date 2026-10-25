@@ -6,11 +6,14 @@ Files: Helicopter.glb [69.22KB] > F:\My Documents\Sites\games\eager-eagle\public
 
 import React from "react";
 import { useGLTF } from "@react-three/drei";
+import getAssetSource from "@articles-media/articles-dev-box/getAssetSource";
 import { MeshStandardMaterial } from "three";
 import { useStore } from "@/hooks/useStore";
 
 export function ModelHelicopter(props) {
-    const { nodes, materials } = useGLTF("models/Helicopter-transformed.glb");
+    const { nodes, materials } = useGLTF(
+        getAssetSource("models/Helicopter-transformed.glb"),
+    );
     const darkMode = useStore((state) => state.darkMode);
 
     return (
@@ -79,4 +82,4 @@ export function ModelHelicopter(props) {
     );
 }
 
-useGLTF.preload("models/Helicopter-transformed.glb");
+useGLTF.preload(getAssetSource("models/Helicopter-transformed.glb"));

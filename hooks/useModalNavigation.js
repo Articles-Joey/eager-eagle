@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { isPrimaryGamepadButtonPressed } from "./useControllerStore";
 
 export const useModalNavigation = (elementsRef, onClose) => {
     const lastInputTime = useRef(0);
@@ -46,8 +47,8 @@ export const useModalNavigation = (elementsRef, onClose) => {
                         navigate(dx, dy);
                     }
 
-                    // A Button (Select)
-                    if (buttons[0].pressed) {
+                    // A or LT (Select)
+                    if (isPrimaryGamepadButtonPressed(buttons)) {
                         lastInputTime.current = now;
                         const active = document.activeElement;
                         if (active && elementsRef.current.includes(active)) {

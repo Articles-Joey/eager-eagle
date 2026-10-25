@@ -8,9 +8,12 @@ Title: Flappy Bird3D
 
 import React, { useRef } from "react";
 import { useGLTF } from "@react-three/drei";
+import getAssetSource from "@articles-media/articles-dev-box/getAssetSource";
 
 export default function ModelFlappyBird(props) {
-    const { nodes, materials } = useGLTF("models/flappy_bird3d.glb");
+    const { nodes, materials } = useGLTF(
+        getAssetSource("models/flappy_bird3d.glb"),
+    );
     return (
         <group
             {...props}
@@ -27,4 +30,4 @@ export default function ModelFlappyBird(props) {
     );
 }
 
-useGLTF.preload("models/flappy_bird3d.glb");
+useGLTF.preload(getAssetSource("models/flappy_bird3d.glb"));

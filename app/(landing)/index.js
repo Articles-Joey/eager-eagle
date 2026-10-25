@@ -20,6 +20,7 @@ import {
 import PageTemplateLandingPage from "@articles-media/articles-dev-box/PageTemplateLandingPage";
 import ArticlesButton from "@/components/UI/Button";
 import ScoreCard from "@/components/UI/ScoreCard";
+import LocalScoreboard from "@/components/UI/LocalScoreboard";
 import RotatingMascot from "@/components/UI/RotatingMascot";
 import { useControllerStore } from "@/hooks/useControllerStore";
 import { useStore } from "@/hooks/useStore";
@@ -115,6 +116,7 @@ export default function LobbyPage() {
                     width: "100%",
                     mt: "3rem",
                     "@media (min-width: 992px)": { mt: 0 },
+                    "& .card-footer": { display: "none" },
                 },
                 "& .ad-wrap": {
                     mt: "1rem",
@@ -212,7 +214,8 @@ export default function LobbyPage() {
                                 }}
                             >
                                 {lobbyDetails?.online_player_count || 0} player
-                                {lobbyDetails?.online_player_count !== 1 && "s"}{" "}
+                                {lobbyDetails?.online_player_count !== 1 &&
+                                    "s"}{" "}
                                 online.
                             </Box>
                         )}
@@ -319,23 +322,12 @@ export default function LobbyPage() {
                 NicknameInputConfig={{ PreComponent: <></> }}
                 multiplayerConfig={{}}
                 gameScoreboardConfig={{
-                    append_score_text: "m",
-                    metrics: [
-                        {
-                            label: "Max Distance",
-                            key: "score",
-                            format: (value) => `${value} m`,
-                        },
-                        {
-                            label: "Distance Traveled",
-                            key: "total_distance",
-                            format: (value) => `${value} m`,
-                        },
-                    ],
+                    game: null,
+                    disableRefreshButton: true,
+                    disableJoinScoreboardSetting: true,
+                    CardBodyOverride: <LocalScoreboard />,
                 }}
-                disableGameScoreboard={
-                    process.env.NEXT_PUBLIC_ENABLE_ARTICLES !== "true"
-                }
+                disableGameScoreboard={false}
                 disableAd={process.env.NEXT_PUBLIC_ENABLE_ARTICLES !== "true"}
             />
         </Box>

@@ -13,6 +13,31 @@ export const useScoreStore = create()(
 
             maxDistance: 0,
             setMaxDistance: (value) => set({ maxDistance: value }),
+            recordObstaclePassed: (distance) =>
+                set((state) => ({
+                    lifetimeDistance: state.lifetimeDistance + 1,
+                    maxDistance: Math.max(state.maxDistance, distance),
+                })),
+
+            maxDistances: [],
+            recentDistances: [],
+            recordDeath: (distance, nickname) => {
+                const entry = {
+                    distance,
+                    date: new Date().toISOString(),
+                    nickname: nickname?.trim() || "Player",
+                };
+                set((state) => ({
+                    maxDistance: Math.max(state.maxDistance, distance),
+                    maxDistances: [entry, ...state.maxDistances]
+                        .sort((a, b) => b.distance - a.distance)
+                        .slice(0, 20),
+                    recentDistances: [entry, ...state.recentDistances].slice(
+                        0,
+                        20,
+                    ),
+                }));
+            },
 
             lifetimeDistance: 0,
             setLifetimeDistance: (value) => set({ lifetimeDistance: value }),

@@ -6,10 +6,11 @@ Files: Mountain Group.glb [58.43KB] > F:\My Documents\Sites\games\eager-eagle\pu
 
 import React from "react";
 import { useGLTF } from "@react-three/drei";
+import getAssetSource from "@articles-media/articles-dev-box/getAssetSource";
 
 export function ModelMountainGroup(props) {
     const { nodes, materials } = useGLTF(
-        "models/Mountain Group-transformed.glb",
+        getAssetSource("models/Mountain Group-transformed.glb"),
     );
     return (
         <group
@@ -37,4 +38,4 @@ export function ModelMountainGroup(props) {
     );
 }
 
-useGLTF.preload("models/Mountain Group-transformed.glb");
+useGLTF.preload(getAssetSource("models/Mountain Group-transformed.glb"));
